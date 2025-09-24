@@ -1,0 +1,836 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[
+    colorlinks=true,   % Usa colores en el texto en lugar de marcos
+    linkcolor=black,   % Color para enlaces internos (índice, citas): negro
+    urlcolor=blue,     % Color para URLs externas: azul (buena práctica)
+    citecolor=green    % Color para citas bibliográficas: verde (opcional)
+]{hyperref}
+\usepackage{enumitem} % For custom list formatting
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{microtype} % Mejora la justificación y el espaciado del texto
+
+\title{Manual Detallado de Uso de FreeCAD v1.0}
+\author{Basado en los videos de \textbf{MangoJelly Solutions for FreeCAD}}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introducción}
+FreeCAD es un software CAD (Diseño Asistido por Computadora) paramétrico de código abierto, diseñado para el modelado 3D de objetos. Este manual tiene como objetivo guiarle a través de los fundamentos de FreeCAD, específicamente la versión 0.22, que se conocerá como FreeCAD versión 1. Aprenderá no solo a usar FreeCAD de manera competente, sino también a desarrollar una sólida comprensión de cómo transformar un objeto del mundo real en un modelo digital.
+
+El curso se enfoca en técnicas de modelado básicas, explorando workbenches clave como Part Design, Sketcher y, posteriormente, Part. A lo largo de este manual, se integrarán diversas herramientas y se destacarán las particularidades de las versiones de FreeCAD, como los cambios en los iconos de operaciones del Part workbench (de amarillo a azul) o la unificación de ciertas restricciones en la interfaz.
+
+\newpage
+
+\section{Interfaz de Usuario}
+La interfaz de FreeCAD está diseñada para ser configurable, permitiendo ajustar elementos visuales y de control para adaptarse a las necesidades del usuario, especialmente si se tienen discapacidades visuales.
+
+\subsection{Vistas 3D}
+La \textbf{Vista 3D} (3D View) es el espacio principal donde se visualizan y manipulan los modelos.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Sistema de Coordenadas:} Ubicado en la esquina inferior derecha, muestra la orientación de los ejes X (rojo), Y (verde) y Z (azul) del espacio 3D. Su tamaño puede ajustarse en \textbf{`Editar > Preferencias > Visualización > Vista 3D`}.
+    \item \textbf{Cubo de Navegación:} En la esquina superior derecha, permite cambiar rápidamente entre vistas estándar (Frontal, Superior, Lateral, etc.), así como vistas desde esquinas y bordes específicos del modelo.
+    \item \textbf{Punto de Origen y Cruz de Ejes:} El punto de origen (0,0,0) representa el centro del espacio 3D. Se puede activar o desactivar la visualización de la cruz de ejes en \textbf{`Ver > Alternar cruz de ejes`} para mostrar este punto.
+    \item \textbf{Navegación (Panorámica, Zoom, Rotación):} Estas acciones son fundamentales para interactuar con el modelo.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Panorámica (Pan):} Mover la vista lateralmente. Por defecto, se realiza manteniendo \textbf{`Shift`} y moviendo el ratón (estilo Touchpad). La cruz de ejes se mueve con la panorámica, pero el sistema de coordenadas de la esquina permanece estático.
+        \item \textbf{Zoom:} Acercar o alejar la vista. Por defecto, se usa la \textbf{rueda del ratón}. El zoom se centra en el puntero del ratón (\textbf{`Zoom at mouse pointer`}), lo que permite enfocarse en vértices, bordes o caras específicas.
+        \item \textbf{Rotación:} Girar la vista alrededor del modelo. Por defecto, se mantiene \textbf{`Alt`} y se mueve el ratón (estilo Touchpad). Un punto de rotación (esfera rosa) aparece en la posición del puntero del ratón, y la vista rota alrededor de este punto. El comportamiento de rotación puede configurarse en \textbf{`Editar > Preferencias > Visualización > Navegación`} con opciones como `Drag cursor` (por defecto), `Window Center` u `Object Center`.
+    \end{itemize}
+    \item \textbf{Vistas Predefinidas y Atajos:} Además del cubo de navegación, la barra de herramientas estándar ofrece botones para vistas como `Vista isométrica`, `Vista frontal`, etc.. La tecla \textbf{`Inicio`} (`Home`) restablece la vista por defecto, lo cual es útil para reorientarse.
+    \item \textbf{Ajuste de Vista:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Ajustar todo (`Fit all`):} Encaja todos los objetos visibles en la vista actual.
+        \item \textbf{Ajustar selección (`Fit selection`):} Encaja el/los objeto(s) seleccionado(s) en la vista actual, incluso si se selecciona un vértice, borde o cara.
+    \end{itemize}
+\end{itemize}
+
+% \begin{figure}[htbp]
+%    \centering
+%    \includegraphics[width=0.8\textwidth]{placeholder_3d_view_elements}
+%    \caption{Elementos clave de la interfaz de la Vista 3D de FreeCAD, incluyendo el sistema de coordenadas, cubo de navegación y punto de origen. Se mostraría un cubo de ejemplo con los ejes X, Y, Z visibles y el cubo de navegación en la esquina.}
+% \end{figure}
+
+\subsection{Barras de Herramientas y Paneles}
+La organización de la interfaz de usuario se puede personalizar ampliamente.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Sistema de Menús:} La barra de menús superior cambia su contenido dinámicamente según el entorno de trabajo (Workbench) activo.
+    \item \textbf{Workbenches (Entornos de Trabajo):} FreeCAD se organiza en workbenches, cada uno con un conjunto de herramientas dedicadas a tareas específicas (ej. `Sketcher` para 2D, `Part` para sólidos, `Part Design` para modelado de features, `Draft` para dibujo 2D, `Assembly` para ensamblajes). Se puede seleccionar el workbench desde un menú desplegable en la barra de herramientas estándar.
+    \item \textbf{Organización de Barras de Herramientas:} Las barras de herramientas se pueden \textbf{arrastrar y soltar} (manteniendo el clic izquierdo sobre la línea punteada vertical) para reubicarlas, crear nuevas filas o acoplarse en espacios vacíos. Algunos iconos tienen flechas desplegables que indican herramientas adicionales.
+    \item \textbf{Personalización:} Se puede hacer clic derecho en una barra de herramientas para \textbf{mostrar/ocultar} ciertas opciones (ej. macros) o \textbf{añadir herramientas} de otros workbenches.
+    \item \textbf{Paneles (Tareas y Modelo):} Por defecto, se encuentran en el lado izquierdo. El panel \textbf{`Tareas`} (`Task`) guía a través de las operaciones, mientras que el panel \textbf{`Modelo`} (`Model`) muestra el árbol de construcción del modelo. Ambos se pueden acoplar como \textbf{pestañas} o \textbf{separarse} arrastrándolos.
+\end{itemize}
+
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_ui_layout}
+%     \caption{Ejemplo de la interfaz de FreeCAD con las barras de herramientas estándar y del workbench, y los paneles de Tareas y Modelo. Se resaltarían las áreas personalizables como el arrastre de barras y la combinación de paneles.}
+% \end{figure}
+
+\subsection{Preferencias Generales (\textbf{`Editar > Preferencias`})}
+La ventana de preferencias permite ajustar numerosos aspectos del comportamiento y la apariencia de FreeCAD.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{General:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Idioma:} Establece el idioma de la interfaz (ej. `Español`).
+        \item \textbf{Sistema de unidades:} `mm` (milímetros) es el estándar, pero se puede cambiar a Imperial u otros. Note que también se puede cambiar desde la parte inferior de la interfaz.
+        \item \textbf{Número de decimales:} Define la precisión al dimensionar la geometría (por defecto 2).
+        \item \textbf{Tema:} Cambia la apariencia visual de la interfaz (ej. `FEMA classic`).
+    \end{itemize}
+    \item \textbf{Visualización (`Display`):}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Tamaño de iconos de barra de herramientas:} Se puede aumentar a \textbf{`Grande`} (`Large`) para mejorar la visibilidad, especialmente para demostraciones o usuarios con discapacidad visual.
+        \item \textbf{Preselección:} Define el color que se muestra al pasar el ratón por las caras, vértices o bordes de un objeto. Se puede atenuar este color para evitar molestias visuales.
+        \item \textbf{Vista de informe y Notificaciones:} Las notificaciones activadas por mensajes o errores aparecen como una pequeña ventana emergente en la parte inferior. Se recomienda \textbf{desactivar `Mostrar vista de informe en error`} y otros mensajes de vista de informe, y usar solo el área de notificación para evitar paneles emergentes que pueden ser irritantes.
+        \item \textbf{Vista 3D:} Ajustes para la visualización del modelo.
+        \begin{itemize}[label=\textendash]
+            \item \textbf{Mostrar sistema de coordenadas en la esquina:} Se puede aumentar su tamaño (ej. 20-30\%).
+            \item \textbf{Renderizado (`Rendering`):}
+            \begin{itemize}[label=\textendash]
+                \item \textbf{Tamaño del marcador (`Marker size`):} Define el tamaño de los vértices en Sketcher y TechDraw (ej. 15 píxeles).
+                \item \textbf{Tipo de cámara (`Camera type`):} `Ortográfica` (por defecto, sin distorsión, ideal para medidas precisas) o `Perspectiva` (con distorsión, para renders realistas, anuncios o marketing).
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Navegación:} Permite ajustar el comportamiento del zoom y la rotación.
+    \end{itemize}
+    \item \textbf{Sketcher (`Bocetador`) > Visualización:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Tamaño de fuente (`Font size`):} Afecta el tamaño de las dimensiones y las restricciones en los bocetos (ej. 24).
+    \end{itemize}
+    \item \textbf{Part (`Pieza`) / Part Design (`Diseño de Piezas`) > Apariencia de la Forma (`Shape Appearance`):}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Ancho de línea (`Line width`) y Tamaño de vértice (`Vertex size`):} Se pueden aumentar para facilitar la selección de elementos.
+    \end{itemize}
+    \item \textbf{General > Selección:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Radio de selección (`Pick radius`):} Define el área alrededor del puntero del ratón donde se pueden seleccionar vértices y bordes. Aumentarlo (ej. a 15 píxeles) facilita la selección, pero un valor muy alto puede dificultar la selección de elementos cercanos.
+    \end{itemize}
+\end{itemize}
+\newpage
+
+\section{Funcionalidades Básicas}
+Este apartado cubre las tareas fundamentales en FreeCAD, desde la creación de un nuevo proyecto hasta el dibujo de formas básicas y la aplicación de operaciones 3D esenciales.
+
+\subsection{Inicio de un Proyecto y Estructura del Modelo}
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Crear un Nuevo Documento:} Utilice el icono \textbf{`Nuevo`} en la barra de herramientas estándar o `Archivo > Nuevo`.
+    \item \textbf{Seleccionar Workbench (`Entorno de Trabajo`):} Para comenzar el modelado, es fundamental seleccionar el entorno de trabajo adecuado. Para modelado sólido basado en características, se usará \textbf{`Part Design`}.
+    \item \textbf{Guardar el Archivo:} Guarde su progreso regularmente usando \textbf{`Archivo > Guardar como`} y asignando un nombre (ej. \texttt{shim\_perforado.FCStd}).
+    \item \textbf{Estructura del Modelo en Part Design:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Cuerpo (`Body`):} En `Part Design`, todo el modelado se realiza dentro de un \textbf{`Body`}. Este contenedor organiza las diferentes partes del diseño.
+        \begin{itemize}[label=\textendash]
+            \item \textit{Crear Body:} Se puede hacer desde la barra de tareas o la barra de herramientas. Es crucial que un cuerpo esté \textbf{`activo`} (indicado en negrita en el árbol del modelo y con un tick al hacer clic derecho) para añadir bocetos u operaciones.
+            \item \textit{Origen del Cuerpo:} Cada `Body` tiene su propio `Origen`, que incluye planos de coordenadas (XY, XZ, YZ) y ejes. Si el cuerpo se mueve, su origen se mueve con él.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection{El Bocetador (`Sketcher`)}
+El \textbf{`Sketcher`} es el entorno de trabajo dedicado a la creación de formas 2D, las cuales son la base para muchas operaciones 3D.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Crear un Boceto:}
+    \begin{enumerate}[label=\arabic*)]
+        \item Seleccione el \textbf{`Body` activo} en el árbol del modelo.
+        \item Haga clic en \textbf{`Crear boceto`} desde la barra de tareas o la barra de herramientas.
+        \item FreeCAD le presentará los planos del cuerpo. Seleccione uno (ej. `Plano XY` para una vista superior) para adjuntar el boceto.
+        \item La `Vista 3D` y el `Cubo de Navegación` se ajustarán para mostrar el plano 2D seleccionado.
+        \item Dentro del `Sketcher`, verá los \textbf{ejes X e Y del boceto}, que no deben confundirse con los ejes globales 3D.
+    \end{enumerate}
+    \item \textbf{Crear Perfiles (Formas 2D):} Un perfil es una colección cerrada de geometría que representa una sección transversal del objeto.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Rectángulo:} Seleccione la herramienta `Rectángulo`. Haga clic una vez para el primer punto, mueva el ratón y haga clic de nuevo para el segundo punto. Las dimensiones se pueden introducir directamente (ej. `50` y `Tab`, luego `30` y `Enter`).
+        \item \textbf{Círculo:} Use la herramienta \textbf{`Círculo (Centro y Radio)`}. Haga clic para el centro, arrastre para el radio y haga clic de nuevo.
+        \item \textbf{Polilínea:} Permite dibujar una secuencia de líneas conectadas. Haga clic para cada punto intermedio. Si vuelve al punto de inicio, puede cerrar automáticamente el perfil si `Auto constraints` está activado.
+        \item \textbf{Slot (Ranura):} Herramientas como \textbf{`Crear ranura de arco`} o \textbf{`Crear ranura de arco con centro`} permiten dibujar formas de ranura útiles para perfiles.
+        \item \textbf{Arcos:} Herramientas como \textbf{`Arco por tres puntos`} o \textbf{`Arco por centro`} para crear segmentos curvos.
+        \item \textbf{B-spline:} Para crear curvas orgánicas y complejas.
+        \item \textit{Cancelar Herramienta:} Presione \textbf{`Esc`} o haga clic derecho con el ratón para cancelar la herramienta de dibujo activa.
+    \end{itemize}
+
+%    \begin{figure}[htbp]
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{placeholder_sketcher_tools}
+%        \caption{Barra de herramientas del Sketcher con ejemplos de herramientas de dibujo como Rectángulo, Círculo, Polilínea y Arco. Se ilustraría un boceto simple con estas formas.}
+%    \end{figure}
+
+    \item \textbf{Restricciones (`Constraints`):} Las restricciones definen la geometría del boceto, bloqueando su posición y tamaño.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Auto-restricciones (`Auto constraints`):} Por defecto, FreeCAD intenta añadir restricciones automáticamente al dibujar.
+        \item \textbf{Eliminar redundancias automáticamente (`Auto remove redundant`):} Elimina restricciones que son innecesarias o que causan conflictos.
+        \item \textbf{Tipos de Restricciones Comunes:}
+        \begin{itemize}[label=\textendash]
+            \item \textbf{Horizontal / Vertical (Restricción de dirección):} Fuerza a una línea a ser perfectamente horizontal o vertical.
+            \item \textbf{Distancia Horizontal / Vertical (Restricción de dimensión):} Define la longitud horizontal o vertical de una línea o la distancia entre puntos (ej. `60 mm`).
+            \item \textbf{Coincidente (`Coincident`):} Une dos puntos, o un punto a una línea o arco. En FreeCAD v1, esto a menudo se combina con la restricción `Punto en objeto`.
+            \item \textbf{Simétrico (`Symmetrical`):} Hace que dos puntos sean simétricos con respecto a un tercer punto o un eje.
+            \item \textbf{Igualdad (`Equality`):} Fuerza a múltiples elementos (líneas, arcos, círculos) a tener la misma longitud, radio o diámetro.
+            \item \textbf{Tangente (`Tangent`):} Crea una relación de tangencia entre una línea y un arco/círculo, o entre dos arcos/círculos.
+            \item \textbf{Paralelo (`Parallel`):} Fuerza a dos líneas a ser paralelas entre sí.
+        \end{itemize}
+        \item \textbf{Grados de Libertad (`Degrees of Freedom`):} Indica cuánta geometría en el boceto aún puede moverse o cambiar de tamaño. Un boceto \textbf{`fully constrained`} (completamente restringido) no tiene grados de libertad y se muestra en color verde.
+    \end{itemize}
+
+%    \begin{figure}[htbp]
+%        \centering
+%        \includegraphics[width=0.8\textwidth]{placeholder_sketch_constraints}
+%        \caption{Ejemplo de un boceto con restricciones de dimensión (horizontal, vertical), dirección (horizontal, vertical) y simetría. Se mostrarían las líneas y puntos del boceto en verde si está completamente restringido.}
+%    \end{figure}
+
+    \item \textbf{Edición y Herramientas Avanzadas del Bocetador:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Selección:} Haga clic en líneas, puntos o dimensiones para seleccionarlos. \textbf{`Selección hambrienta`} (`Hungry selection`) permite seleccionar múltiples elementos haciendo clic sin mantener `Control`.
+        \item \textbf{Geometría de Construcción (`Construction Geometry`):} Son elementos de ayuda (líneas punteadas) que no forman parte de la geometría final del modelo. Son útiles para crear puntos de referencia o alinear otras geometrías. Se activa con el botón \textbf{`Alternar geometría de construcción`}.
+        \item \textbf{Validar Boceto (`Sketch > Validar boceto`):} Herramienta para identificar problemas en el boceto. \textbf{`Resaltar vértices problemáticos`} (`Highlight tresome vertices`) puede encontrar huecos en perfiles que deberían estar cerrados.
+        \item \textbf{Geometría Externa (`External Geometry`):} Importa bordes, vértices o líneas de objetos 3D existentes al boceto 2D, lo que permite referenciar y construir nueva geometría sobre ellos.
+        \item \textbf{Offset de Geometría (`Offset Geometry`):} Crea una copia de la geometría seleccionada desplazada a una distancia específica, útil para paredes uniformes. Si se desea un perfil cerrado con un "muro", la geometría original a menudo se convierte en `Construction Geometry`.
+        \item \textbf{Recortar / Dividir Borde (`Trim / Split Edge`):} Herramientas para modificar segmentos de línea o arco. `Split Edge` puede añadir nuevos vértices a un arco.
+        \item \textbf{Carbon Copy:} Crea una copia vinculada de un boceto. Si el boceto maestro cambia, la copia también cambia. Se puede usar para sketches no paralelos manteniendo `Control + Alt`.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Operaciones 3D Básicas en Part Design}
+Una vez que se tiene un boceto cerrado (un perfil), se pueden aplicar operaciones 3D para añadir o quitar material.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Pad (Extruir):} Operación aditiva que toma un perfil 2D y le da altura o volumen.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Crear formas 3D a partir de bocetos 2D, como una placa o un cilindro.
+        \item \textbf{Ejemplo práctico (Placa simple):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Cree un boceto de un rectángulo (ej. 50x30 mm) en el plano XY.
+            \item Cierre el boceto.
+            \item Seleccione el boceto en el árbol del modelo.
+            \item Haga clic en la herramienta \textbf{`Pad`} en la barra de herramientas.
+            \item En el panel `Tareas`, ajuste la \textbf{`Longitud`} (ej. `2 mm`) para definir la altura de la extrusión.
+            \item Opcionalmente, active \textbf{`Simétrico al plano`} (`Symmetrical to plane`) para extruir en ambas direcciones desde el plano del boceto.
+            \item Opcionalmente, use \textbf{`Ángulo de conicidad`} (`Taper angle`) para que los lados de la extrusión se inclinen hacia adentro o hacia afuera.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un boceto de rectángulo y el resultado de la operación `Pad`.
+    \end{itemize}
+    \item \textbf{Pocket (Vaciar):} Operación sustractiva que remueve material de un sólido existente basándose en un perfil 2D.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Crear agujeros, ranuras o vaciados en un sólido.
+        \item \textbf{Ejemplo práctico (Agujero pasante):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Tenga un sólido existente (ej. la placa creada con `Pad`).
+            \item Seleccione una cara del sólido y cree un nuevo boceto sobre ella.
+            \item Dibuje un círculo en el boceto (ej. diámetro de 10 mm).
+            \item Cierre el boceto.
+            \item Seleccione el boceto.
+            \item Haga clic en la herramienta \textbf{`Pocket`} en la barra de herramientas.
+            \item En el panel `Tareas`, para `Tipo`, seleccione \textbf{`A través de todo`} (`Through all`) para que el agujero atraviese todo el sólido.
+            \item Opcionalmente, use \textbf{`Invertir`} (`Reversed`) para cambiar la dirección del vaciado.
+            \item Opcionalmente, use \textbf{`Ángulo de conicidad`} para los lados del vaciado.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un sólido con un boceto de círculo en una cara, y el resultado de la operación `Pocket` creando un agujero.
+    \end{itemize}
+    \item \textbf{Revolve (Revolución):} Operación aditiva que gira un perfil 2D alrededor de un eje para crear un objeto 3D con simetría rotacional.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Crear objetos como tazas, anillos, o formas cónicas.
+        \item \textbf{Ejemplo práctico (Anillo):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Cree un boceto en el plano XZ que represente la mitad de la sección transversal del anillo (un perfil cerrado). La posición del perfil con respecto al eje de rotación (ej. el eje Z) determinará si el anillo es sólido o tiene un vacío interno.
+            \item Cierre el boceto.
+            \item Seleccione el boceto.
+            \item Haga clic en la herramienta \textbf{`Revolve`}.
+            \item En el panel `Tareas`, asegúrese de que el \textbf{`Eje`} de revolución sea el correcto (ej. `Eje Z` o `Eje vertical del boceto`).
+            \item Defina el \textbf{`Ángulo`} (ej. `360°` para un giro completo).
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un boceto de perfil de anillo con el eje de rotación, y el resultado de la operación `Revolve`.
+    \end{itemize}
+    \item \textbf{Groove (Ranura):} Operación sustractiva que gira un perfil 2D alrededor de un eje para remover material. Es la contraparte sustractiva de `Revolve`.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Crear cortes o ranuras de forma radial en un objeto 3D.
+        \item \textbf{Ejemplo práctico (Corte en forma de cuña):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Tenga un sólido existente (ej. un cilindro).
+            \item Cree un boceto en el plano XZ que represente la forma de la ranura.
+            \item Cierre el boceto.
+            \item Seleccione el boceto.
+            \item Haga clic en la herramienta \textbf{`Groove`}.
+            \item Ajuste el \textbf{`Eje`} y el \textbf{`Ángulo`} según sea necesario (ej. `70°` para una cuña).
+            \item La opción \textbf{`Refinar`} (`Refine`) puede fusionar caras coplanares resultantes.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un cilindro con un boceto de cuña y el resultado de la operación `Groove`.
+    \end{itemize}
+    \item \textbf{Hole (Agujero):} Crea agujeros predefinidos con opciones para roscas y formas de punta de broca, siguiendo estándares ISO.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Crear agujeros técnicos precisos para tornillos, pernos o pasadores.
+        \item \textbf{Ejemplo práctico (Agujero roscado M5):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Tenga un sólido existente.
+            \item Seleccione una cara plana o un boceto con un círculo.
+            \item Haga clic en la herramienta \textbf{`Hole`}.
+            \item En el panel `Tareas`:
+            \begin{itemize}[label=\textendash]
+                \item \textbf{Profundidad (`Depth`):} `Dimensión` o `A través de todo`.
+                \item \textbf{Tipo de perfil (`Profile`):} Seleccione un estándar (ej. `ISO Metric Regular Profile`).
+                \item \textbf{Tamaño (`Size`):} Elija el tamaño de la rosca (ej. `M5`).
+                \item \textbf{Roscado (`Threaded`):} Active esta opción para un agujero roscado.
+                \item \textbf{Rosca modelo (`Model Thread`):} Marque esta opción para visualizar la rosca en 3D (puede consumir más recursos, es mejor activarla al final).
+            \end{itemize}
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un sólido con un agujero roscado M5 visible, mostrando los parámetros del panel `Tareas`.
+    \end{itemize}
+    \item \textbf{Fillet (Redondeo) y Chamfer (Chaflán):} Operaciones de acabado que redondean o biselan los bordes de un sólido.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Mejorar la estética, la seguridad o la capacidad de fabricación de las piezas.
+        \item \textbf{Ejemplo práctico (Redondear borde):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Seleccione uno o más bordes de un sólido.
+            \item Haga clic en la herramienta \textbf{`Fillet`} o \textbf{`Chamfer`}.
+            \item En el panel `Tareas`, defina el \textbf{`Radio`} (para `Fillet`) o `Distancia`/`Ángulo` (para `Chamfer`).
+            \item La opción \textbf{`Refinar`} puede fusionar caras coplanares resultantes.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un cubo con un borde redondeado o biselado.
+    \end{itemize}
+    \item \textbf{Thickness (Espesor / Ahuecar):} Crea un sólido hueco a partir de un sólido existente, eliminando material interior y dejando paredes de un grosor específico.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Crear carcasas o contenedores huecos.
+        \item \textbf{Ejemplo práctico (Cubo hueco):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Tenga un sólido (ej. un cubo).
+            \item Seleccione las \textbf{caras que desea abrir} o quitar (ej. la cara superior si quiere una caja con la parte superior abierta).
+            \item Haga clic en la herramienta \textbf{`Thickness`}.
+            \item En el panel `Tareas`, defina el \textbf{`Grosor`} (ej. `1 mm`).
+            \item Active \textbf{`Hacer grosor hacia adentro`} (`Make thickness inwards`) para que el grosor se aplique hacia el interior, manteniendo las dimensiones exteriores originales.
+            \item Seleccione \textbf{`Tipo de unión`} (`Joint Type`) (`Arc` o `Intersection`) para controlar cómo se conectan las esquinas.
+            \item \textit{Advertencia:} Esta operación puede fallar en geometrías complejas o con curvaturas pronunciadas debido a auto-intersecciones. Puede ser necesario reducir el grosor o ajustar la geometría subyacente.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un cubo con una cara superior abierta y un espesor de pared uniforme.
+    \end{itemize}
+\end{itemize}
+\newpage
+
+\section{Funcionalidades Avanzadas}
+Las funcionalidades avanzadas de FreeCAD permiten crear modelos más complejos, gestionar múltiples componentes y aplicar transformaciones sofisticadas.
+
+\subsection{Modelado Multi-Cuerpo (`Multi-Body Modeling`)}
+En Part Design, el modelado multi-cuerpo implica la creación de múltiples contenedores `Body`, cada uno con su propia parte del modelo. Permite compartir información y geometría entre ellos.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Body (`Cuerpo`):} Un `Body` por defecto solo puede contener un único sólido.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Permitir Compuesto (`Allow Compound`):} Esta propiedad (en la pestaña `Datos` del `Body`) permite que un cuerpo contenga múltiples sólidos no conectados. Esto es útil en casos específicos, como con operaciones de patrón que generan múltiples sólidos disjuntos.
+    \end{itemize}
+    \item \textbf{Subshape Binder (`Enlazador de Subformas`):} Permite referenciar geometría (objetos, features, caras, bordes, vértices) de objetos "padre" que están fuera del `Body` activo. Si la geometría original cambia, el `binder` se actualiza.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Facilitar el modelado `top-down` (donde las partes se construyen referenciando geometrías de otras partes), crear tolerancias o usar una forma existente como "máscara" para aplicar operaciones.
+        \item \textbf{Ejemplo práctico (Copia de borde):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Tenga dos cuerpos. Active el cuerpo donde desea crear el `binder`.
+            \item Seleccione un borde del otro cuerpo.
+            \item Haga clic en la herramienta \textbf{`Subshape Binder`} en la barra de herramientas.
+            \item Un nuevo objeto `Subshape Binder` aparecerá en el `Body` activo, referenciando el borde seleccionado.
+            \item Puede usar esta geometría en un boceto o para otras operaciones.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Dos cuerpos, uno con un borde seleccionado, y el `Subshape Binder` resultante en el otro cuerpo.
+    \end{itemize}
+    \item \textbf{Clone de Part Design (`Clon de Diseño de Piezas`):} Crea una copia paramétrica exacta de un `Body` entero o de una `Feature` individual dentro de un `Body`. Si el original se modifica, el clon se actualiza automáticamente.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Útil para flujos de trabajo `branching` (ramificación), donde varias partes comparten una base común pero divergen en etapas posteriores (ej. las partes macho y hembra de una bisagra). Los cambios en la feature original o anteriores a ella se propagan al clon; las operaciones posteriores a la clonación solo afectan al clon.
+        \item \textbf{Ejemplo práctico (Bisagra bifurcada):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Cree el `Body` de la bisagra hasta el punto donde las partes macho y hembra aún son idénticas (ej. hasta la operación `Pocket` para los agujeros).
+            \item Seleccione la `Feature` (`Pocket`) en el árbol del modelo y haga clic en la herramienta \textbf{`Clone`}.
+            \item Se creará un nuevo `Body` con el clon como su `Base Feature`. Este nuevo `Body` puede transformarse (`Transform`) y moverse.
+            \item Active el nuevo `Body` y continúe modelando la parte macho o hembra (ej. añadiendo un `Pad` o un `Pocket` adicional). Los cambios en el `Body` original (`Template Body`) en las operaciones previas o en la `Feature` clonada se reflejarán en el clon.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un `Template Body` de bisagra y dos `Clone Bodies` (macho y hembra) derivados de una `Feature` común, con sus respectivas modificaciones finales.
+    \end{itemize}
+    \item \textbf{Clone de Draft (`Clon de Dibujo`):} A diferencia del `Part Design Clone`, esta es una herramienta de clonación de propósito general que funciona en la mayoría de los `workbenches`. Puede duplicar `features`, `bodies`, `sketches`, y permite escalar el clon. No los contiene dentro de un `Body` de `Part Design`.
+    \item \textbf{Base Feature (`Característica Base`):} Permite que un `Body` Part Design utilice un objeto (como un `Draft Clone` o un sólido de otro `workbench`) como su plantilla o punto de partida.
+    \item \textbf{Operaciones Booleanas en Part Design (`Boolean Operations`):} Permiten manipular múltiples cuerpos de diferentes maneras. Se acceden desde la barra de herramientas (dos esferas juntas) o `Part Design > Operación booleana`.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Fuse (Fusión):} Une múltiples cuerpos en uno solo.
+        \item \textbf{Cut (Corte):} Remueve el volumen de un cuerpo "herramienta" del `Body` activo. Es ideal para crear moldes o vaciados precisos.
+        \item \textbf{Common (Común / Intersección):} Extrae las regiones superpuestas o el volumen común entre dos o más cuerpos, eliminando el resto.
+        \item \textbf{Flujo de Trabajo (General):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Asegúrese de que el `Body` activo sea el "objetivo".
+            \item Haga clic en la herramienta \textbf{`Operación booleana`}.
+            \item En el panel `Tareas`, haga clic en `Añadir cuerpo` y seleccione el cuerpo "herramienta".
+            \item Elija la operación (`Fusión`, `Corte` o `Común`).
+            \item \textit{Consideración:} Es mejor cambiar la posición del cuerpo "herramienta" que la del cuerpo "activo" antes de la operación, si el cuerpo activo no está en el origen, para evitar que el cuerpo herramienta se mueva inesperadamente.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un ejemplo de dos cuerpos que se fusionan, se cortan o se intersecan, mostrando el resultado de cada operación booleana.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Modelado de Superficies Complejas (Lofts y Sweeps)}
+Estas operaciones son esenciales para crear formas orgánicas y complejas que no pueden hacerse con extrusiones o revoluciones simples.
+
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Loft (Sobrerrrevolución):} Crea una forma 3D conectando una serie de perfiles 2D (secciones transversales) dispuestos a lo largo de una trayectoria simple o compleja.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Modelar cascos de barcos, carcasas de productos, o transiciones suaves entre diferentes formas.
+        \item \textbf{Principios Clave:}
+        \begin{itemize}[label=\textendash]
+            \item \textbf{Perfiles:} Se utilizan múltiples bocetos como secciones transversales. Deben seleccionarse en orden.
+            \item \textbf{Splines de Interpolación:} FreeCAD interpola una superficie entre los vértices de los perfiles usando splines.
+            \item \textbf{Vértices y Alineación:} El número y la alineación de los vértices entre perfiles son cruciales para una superficie suave.
+            \item \textbf{Torsión (`Twist`):} Se puede introducir rotando un perfil individual en sus propiedades de `Attachment Offset > Ángulo`.
+        \end{itemize}
+        \item \textbf{Tipos de Lofts:}
+        \begin{itemize}[label=\textendash]
+            \item \textbf{Loft Sólido (`Additive Loft`):} Crea un sólido llenando el espacio entre los perfiles.
+            \item \textbf{Loft Hueco (`Hollow Loft`):} Crea un sólido con un vacío interno. Métodos:
+            \begin{enumerate}[label=\arabic*)]
+                \item Dibujar perfiles internos y externos en cada boceto.
+                \item Crear un `Additive Loft` con perfiles externos, y luego usar `Draft Clones` escalados de estos perfiles para crear un `Subtractive Loft` interno.
+            \end{enumerate}
+            \item \textbf{Lofting a un Punto (`Lofting to a Point`):} Terminar un `loft` en un extremo cónico utilizando un perfil que contiene un solo vértice. Para esto, se puede usar un boceto con un solo punto o un `Draft Clone` escalado a un tamaño muy pequeño (ej. 0.01).
+            \item \textbf{Loft Sustractivo (`Subtractive Loft`):} Elimina material de un sólido existente, útil para crear formas cóncavas o "filetes" personalizados.
+        \end{itemize}
+        \item \textbf{Captura de Pantalla:} Una secuencia de tres perfiles de boceto (dos cuadrados y un círculo) en diferentes planos y un `Additive Loft` que los conecta, mostrando cómo un perfil intermedio girado causa una torsión.
+    \end{itemize}
+
+    \item \textbf{Pipe / Sweep (Tubería / Barrido) en Part Design:} Barre un perfil 2D (o múltiples perfiles) a lo largo de una trayectoria predefinida para crear un sólido.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Ideal para crear tuberías, cables, mangos u otras formas donde un perfil se extruye a lo largo de un camino complejo o no lineal. Simplifica el flujo de trabajo en comparación con `Lofts` para trayectorias complejas.
+        \item \textbf{Elementos Clave:}
+        \begin{itemize}[label=\textendash]
+            \item \textbf{Perfil (`Cross-section profile`):} Un boceto 2D que define la forma de la sección transversal.
+            \item \textbf{Trayectoria (`Path`):} Un boceto 2D (abierto o cerrado) o un borde de otra operación que define el camino que seguirá el perfil.
+            \item \textbf{Perfiles Múltiples:} Se pueden usar varios perfiles a lo largo de la trayectoria para crear formas más orgánicas (ej. un señuelo de pesca).
+            \item \textbf{Attachment Modes:} Para posicionar y orientar perfiles a lo largo de la trayectoria. Opciones como `Normal a Borde` (`Normal to Edge`) o `CS Inercial` (`Inertial CS`) son comunes para adjuntar a vértices o bordes de la trayectoria.
+        \end{itemize}
+        \item \textbf{Tipos de Pipe:}
+        \begin{itemize}[label=\textendash]
+            \item \textbf{Tubería Aditiva (`Additive Pipe`):} Añade volumen.
+            \item \textbf{Tubería Sustractiva (`Subtractive Pipe`):} Remueve volumen.
+        \end{itemize}
+        \item \textbf{Transición de Esquina (`Corner Transition`):} Controla cómo se unen las esquinas del barrido (`Right corner`, `Rounded Corner`).
+        \item \textbf{Captura de Pantalla:} Un boceto de un perfil cuadrado y un boceto de una trayectoria curva, junto con el resultado de la operación `Additive Pipe` creando una tubería curva.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Ensamblajes (`Assembly Workbench`)}
+El `Assembly Workbench` permite combinar múltiples piezas individuales, modeladas por separado, en un conjunto funcional.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Concepto:} Se modelan los componentes individuales (Partes) y luego se importan y ensamblan. Un ensamblaje puede contener subensamblajes.
+    \item \textbf{Insertar Componente (`Insert Component`):} Herramienta para importar los archivos de las piezas al entorno de ensamblaje.
+    \item \textbf{Fijar Componente (`Grounding`):} Se "fija" un componente para que no pueda moverse, sirviendo como ancla para el resto del ensamblaje.
+    \item \textbf{Uniones (`Joints`):} Definen las relaciones de movimiento entre componentes.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Unión Deslizante (`Slider Joint`):} Permite que una pieza se mueva linealmente a lo largo de un eje definido. Se puede restringir el rango de movimiento (mínimo y máximo).
+        \item \textbf{Unión de Revolución (`Revolute Joint`):} Permite que una pieza rote alrededor de un eje definido.
+        \item \textbf{Unión de Tornillo (`Screw Joint`):} Simula el movimiento helicoidal de un tornillo o tuerca. Requiere el \textbf{`paso`} (`pitch`) de la rosca para una animación realista.
+    \end{itemize}
+    \item \textbf{Ejes de las Partes para Uniones:} Para las uniones, el eje relevante en una pieza circular es el que atraviesa la arista circular.
+    \item \textbf{Fasteners Workbench:} Un entorno de trabajo adicional (instalable desde `Add-on Manager`) que proporciona una biblioteca de sujetadores (tornillos, tuercas, arandelas) con roscas realistas, que se pueden usar en ensamblajes.
+    \item \textbf{Captura de Pantalla:} Un ensamblaje simple de tuerca y perno, mostrando una `Slider Joint` o `Screw Joint` entre ellos.
+\end{itemize}
+
+\subsection{Modelado Paramétrico con Conjuntos de Variables (`VarSet`)}
+Los \textbf{`VarSet`} (Conjuntos de Variables) permiten definir y gestionar variables (ej. dimensiones) de manera centralizada en un documento, que luego pueden ser referenciadas por expresiones en otros documentos o partes.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Propósito:} Facilitar el diseño paramétrico de ensamblajes, donde un cambio en una variable (ej. `longitud`) se propaga a todas las partes que la referencian.
+    \item \textbf{Crear un VarSet:} Se puede añadir un `VarSet` a un documento y definir variables con sus nombres y valores (ej. `longitud` = `20 mm`).
+    \item \textbf{Referenciar desde Otros Archivos:} Use el \textbf{`Editor de Expresiones`} (el icono `fx`) en las propiedades de una pieza para enlazar una dimensión a una variable de un `VarSet` en otro documento. La sintaxis es \textbf{\texttt{[nombre\_del\_documento]\#VarSet.nombre\_de\_la\_variable}}.
+    \item \textbf{Actualización y Dependencias:} Para que las referencias funcionen correctamente, los documentos "padre" (con el `VarSet`) deben estar abiertos junto con los documentos "hijo" (que referencian el `VarSet`). Puede ser necesario cerrar y reabrir los documentos para establecer correctamente las dependencias.
+    \item \textbf{Evitar Referencias Circulares:} No se recomienda colocar un `VarSet` directamente dentro de un archivo de ensamblaje si este ensamblaje lo usa para controlar sus partes, ya que esto puede crear un bucle de dependencia infinito. Es mejor tener el `VarSet` en un archivo `data file` separado.
+    \item \textbf{Captura de Pantalla:} El `Editor de Expresiones` mostrando cómo referenciar una variable `longitud` de un `VarSet` en un documento llamado `parent`.
+\end{itemize}
+
+\subsection{Objetos de Referencia (`Datum Objects`)}
+Los objetos de referencia (planos y líneas) son geometrías personalizables que proporcionan precisión y control en el modelado, especialmente en `Part Design`.
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Datum Planes (`Planos de Referencia`):} Son planos adicionales que se pueden desplazar (`offset`), rotar o inclinar con precisión. Sirven para posicionar bocetos y features en orientaciones complejas.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Organizar el modelo, establecer planos de simetría personalizados o adjuntar bocetos de manera que hereden la orientación de un plano de referencia, facilitando ajustes masivos.
+        \item \textbf{Ejemplo práctico (Boceto en plano rotado):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Active un `Body` y muestre su `Origen`.
+            \item Haga clic en \textbf{`Crear un Datum Plane`} y adjúntelo al `Plano XY`.
+            \item En las propiedades del `Datum Plane`, en `Attachment Offset`, ajuste la `Posición Z` (ej. `40 mm`) y el `Ángulo` (ej. `45°` alrededor del eje Y).
+            \item Seleccione el `Datum Plane` y cree un nuevo boceto. Este boceto se adjuntará al `Datum Plane` y, por lo tanto, a la posición y rotación definidas en él.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Un `Datum Plane` rotado y un boceto creado sobre él, mostrando cómo el boceto hereda la orientación.
+    \end{itemize}
+    \item \textbf{Datum Lines (`Líneas de Referencia`):} Sirven como ejes adicionales para definir direcciones o ejes de rotación.
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Propósito:} Útiles para operaciones de patrón (`Polar Pattern`), espejado (`Mirror`) o transformaciones complejas. Pueden ser controladas paramétricamente, incluso por hojas de cálculo.
+        \item \textbf{Ejemplo práctico (Patrón alrededor de una línea de referencia):}
+        \begin{enumerate}[label=\arabic*)]
+            \item Cree dos líneas en un boceto.
+            \item Haga clic en \textbf{`Crear un Datum Line`} y adjúntela a `Referencia 1` (primera línea) y `Referencia 2` (segunda línea), seleccionando `Segundo Eje Principal` para que se coloque en el medio.
+            \item Cree un boceto con una forma (ej. un círculo) en una cara y aplique un `Pocket`.
+            \item Seleccione la operación `Pocket` y use `Polar Pattern`. En las opciones de `Eje`, seleccione `Referencia` y elija el `Datum Line` creado.
+        \end{enumerate}
+        \item \textbf{Captura de Pantalla:} Una `Datum Line` entre dos líneas, y un `Polar Pattern` de un agujero que usa esa `Datum Line` como eje de rotación.
+    \end{itemize}
+    \item \textbf{Uso Eficiente de Datum Objects:} Los `Datum Objects` pueden añadir sobrecarga innecesaria al proyecto. A menudo, un boceto con el `attachment mode` y los `offsets` correctos puede lograr el mismo posicionamiento que un `Datum Plane` sin añadir complejidad al árbol del modelo. Se recomienda \textbf{reservar los `Datum Planes` y `Lines` para operaciones de espejado, direcciones de patrón o necesidades de adjunto muy específicas} para evitar ralentizar los recálculos del modelo.
+\end{itemize}
+\newpage
+
+\section{Casos Prácticos}
+Esta sección presenta ejemplos de proyectos completos realizados en FreeCAD, ilustrando la aplicación de las funcionalidades descritas.
+
+\subsection{Shim Perforado (`Drilled Shim`)}
+Un ejercicio básico para crear una placa rectangular con agujeros.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Crear Boceto Base:} Inicie un nuevo documento y un `Body`. Cree un boceto en el plano XY. Dibuje un \textbf{`Rectángulo`} y dimenciónelo (ej. `50 mm` de largo, `30 mm` de ancho). Use restricciones `Simétricas` para centrarlo.
+    \item \textbf{Operación Pad:} Seleccione el boceto y aplique un \textbf{`Pad`} con una `Longitud` (ej. `2 mm`) para darle espesor a la placa.
+    \item \textbf{Añadir Agujeros al Mismo Boceto:} Edite el boceto original del `Pad`. Dibuje \textbf{cuatro `Círculos`} en las esquinas.
+    \item \textbf{Restringir Agujeros:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione los cuatro círculos y aplique una restricción de \textbf{`Igualdad`} (`Equality`) para que todos tengan el mismo `Diámetro` (ej. `4 mm`).
+        \item Use restricciones \textbf{`Horizontal/Vertical`} para alinear los centros de los círculos.
+        \item Use restricciones de \textbf{`Distancia Horizontal/Vertical`} para posicionar los centros de los círculos a una distancia específica de los bordes del rectángulo (ej. `5 mm` desde cada borde).
+    \end{itemize}
+    \item \textbf{Finalizar Modelo:} Cierre el boceto. El `Pad` se actualizará automáticamente para incluir los agujeros, creando la placa perforada.
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_drilled_shim}
+%    \caption{Representación de un shim perforado, mostrando el boceto con el rectángulo y los cuatro círculos con sus restricciones, y el resultado del Pad.}
+% \end{figure}
+
+\subsection{Acoplamiento (`Coupler`)}
+Modelado de un objeto que combina operaciones de `Revolve` y `Groove` para crear un cuerpo con cortes radiales.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Crear Cuerpo Base (Revolve):}
+    \begin{itemize}[label=\textendash]
+        \item Inicie un nuevo documento y `Body`.
+        \item Cree un boceto en el plano XZ (vista frontal). Dibuje un \textbf{perfil 2D} que represente la mitad de la sección transversal del acoplamiento (imagine un corte longitudinal). Utilice la herramienta `Polilínea` para esto.
+        \item Restrinja el perfil con dimensiones y relaciones geométricas (ej. líneas horizontales/verticales, distancias, etc.).
+        \item Cierre el boceto.
+        \item Seleccione el boceto y aplique la operación \textbf{`Revolve`}. Gire `360°` alrededor del eje Z (o `Eje vertical del boceto`).
+    \end{itemize}
+    \item \textbf{Crear Cortes (Groove):}
+    \begin{itemize}[label=\textendash]
+        \item Asegúrese de que no haya nada seleccionado y cree un nuevo boceto en el mismo plano XZ que el perfil de `Revolve`.
+        \item Utilice la \textbf{`Vista de Sección`} (`Section View`) para ver el interior del objeto.
+        \item Dibuje un \textbf{`Rectángulo`} que cubra el área que desea remover en la parte superior e inferior del acoplamiento.
+        \item Restrinja los rectángulos con dimensiones y posiciones adecuadas.
+        \item Cierre el boceto.
+        \item Seleccione el boceto y aplique la operación \textbf{`Groove`}. Defina el \textbf{`Ángulo`} (ej. `70°`) para el corte.
+        \item Active \textbf{`Refinar`} (`Refine`) en las propiedades de la operación `Groove` para fusionar las caras coplanares resultantes.
+    \end{itemize}
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_coupler}
+%     \caption{Modelado de un acoplamiento, mostrando el perfil para Revolve y el boceto del Groove para los cortes, y la pieza final.}
+% \end{figure}
+
+\subsection{Taza (`Mug`)}
+Ejercicio para combinar múltiples operaciones en diferentes planos para crear un modelo más complejo, como una taza con asa.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Crear el Cuerpo de la Taza (Revolve):}
+    \begin{itemize}[label=\textendash]
+        \item Inicie un nuevo documento y `Body`. Cree un boceto en el plano XZ.
+        \item Dibuje el perfil de la mitad de la taza. Utilice \textbf{`Geometría de Construcción`} para el perfil central y \textbf{`Offset Geometry`} para crear el espesor de la pared (ej. `1.5 mm`).
+        \item Cierre el boceto.
+        \item Seleccione el boceto y aplique la operación \textbf{`Revolve`} a `360°` alrededor del eje vertical del boceto.
+    \end{itemize}
+    \item \textbf{Crear la Trayectoria del Asa (`Handle Path`):}
+    \begin{itemize}[label=\textendash]
+        \item Asegúrese de que nada esté seleccionado y cree un nuevo boceto en el plano XZ (el mismo plano del perfil de la taza).
+        \item Utilice \textbf{`Geometría Externa`} para importar las líneas de referencia del borde de la taza.
+        \item Dibuje la trayectoria del asa. Esto podría ser un \textbf{`Rectángulo`} con \textbf{`Fillets`} en las esquinas.
+        \item Restrinja la trayectoria con dimensiones (ej. `40 mm` de alto, `30 mm` de ancho, `6 mm` de radio para los `fillets`) y posiciones.
+        \item Cierre el boceto y nómbrelo (ej. `Handle Path`).
+    \end{itemize}
+    \item \textbf{Crear el Perfil del Asa (`Handle Profile`):}
+    \begin{itemize}[label=\textendash]
+        \item Asegúrese de que nada esté seleccionado y cree un nuevo boceto en el plano YZ (perpendicular al plano de la trayectoria).
+        \item Dibuje un \textbf{`Rectángulo Redondeado`} en el origen del boceto (ej. `12x12 mm` con `3 mm` de radio).
+        \item Cierre el boceto y nómbrelo (ej. `Handle Profile`).
+    \end{itemize}
+    \item \textbf{Adjuntar el Perfil a la Trayectoria:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione el `Handle Profile`. En la pestaña `Datos`, bajo `Map Mode`, haga clic en el botón de la derecha.
+        \item En `Referencia 1`, seleccione el vértice de inicio de la trayectoria (`Handle Path`).
+        \item En `Referencia 2`, seleccione el borde de la trayectoria.
+        \item En `Modo de Adjunto`, elija \textbf{`Normal a Borde`} (`Normal to Edge`) para alinear el normal del boceto con el borde de la trayectoria.
+    \end{itemize}
+    \item \textbf{Operación Additive Pipe para el Asa:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione el `Handle Profile` en el árbol del modelo.
+        \item Haga clic en la herramienta \textbf{`Additive Pipe`}.
+        \item En el panel `Tareas`, bajo `Trayectoria`, haga clic en `Objeto` y seleccione el boceto `Handle Path`.
+        \item En `Transición de Esquina` (`Corner Transition`), seleccione \textbf{`Esquina Redondeada`} (`Rounded Corner`).
+    \end{itemize}
+    \item \textbf{Fillets Finales:} Seleccione los bordes donde el asa se une a la taza y aplique \textbf{`Fillets`} para mezclarlos suavemente.
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_mug}
+%     \caption{Pasos para modelar una taza, mostrando el perfil de la taza, la trayectoria del asa, el perfil del asa, y el resultado del Additive Pipe con los fillets finales.}
+% \end{figure}
+
+\subsection{Soporte de Motor Moldeado (`Moulded Motor Mount`)}
+Demostración práctica del uso de `Boolean Cut` para crear un molde preciso.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Crear Cuerpo del Motor Falso (`Fake Motor Body`):}
+    \begin{itemize}[label=\textendash]
+        \item Inicie un nuevo documento y `Body` (nómbrelo `Motor Body`).
+        \item Cree un boceto en el plano XY. Dibuje la forma base del motor (ej. un rectángulo redondeado con `Fillets` en las esquinas).
+        \item Aplique un \textbf{`Pad`} para darle volumen (ej. `30 mm`).
+        \item Añada detalles al motor (ej. un segundo `Pad` para la parte trasera, un `Pad` para el eje, y `Fillets` en los bordes).
+    \end{itemize}
+    \item \textbf{Crear Cuerpo del Soporte (`Mount Body`):}
+    \begin{itemize}[label=\textendash]
+        \item Cree un nuevo \textbf{`Body`} (nómbrelo `Mount Body`).
+        \item Para asegurar que el soporte se ajuste al motor, utilice \textbf{`Subshape Binders`}. Seleccione los bordes clave del `Motor Body` y cree `Subshape Binders` en el `Mount Body`.
+        \item Cree un boceto en el plano XZ. Use los `Subshape Binders` como referencia para dibujar el perfil exterior del soporte, asegurándose de que intersecte el motor.
+        \item Aplique un `Pad` al boceto para darle volumen al soporte.
+    \end{itemize}
+    \item \textbf{Aplicar Tolerancia con Draft Clone:}
+    \begin{itemize}[label=\textendash]
+        \item Oculte el `Mount Body`.
+        \item Seleccione el `Motor Body` y, en el `Draft Workbench`, use la herramienta \textbf{`Clone`}.
+        \item Seleccione el `Draft Clone` y en la pestaña `Datos > Escala`, aumente ligeramente su tamaño (ej. `1.02` en X, Y, Z) para crear tolerancia.
+        \item Renombre el clon (ej. `Motor Body Clone`).
+    \end{itemize}
+    \item \textbf{Integrar el Clon en un Body para Booleana:}
+    \begin{itemize}[label=\textendash]
+        \item Cree un nuevo `Body` (nómbrelo `Tool Body`).
+        \item Seleccione el `Motor Body Clone` y luego el `Tool Body`. El `Draft Clone` se convertirá en la `Base Feature` del `Tool Body` y se ocultará.
+    \end{itemize}
+    \item \textbf{Operación Boolean Cut:}
+    \begin{itemize}[label=\textendash]
+        \item Active el `Mount Body`.
+        \item Asegúrese de que no haya nada seleccionado y haga clic en la herramienta \textbf{`Operación Booleana`}.
+        \item En el panel `Tareas`, haga clic en `Añadir cuerpo` y seleccione el `Tool Body` (el clon escalado del motor).
+        \item Seleccione \textbf{`Corte`} (`Cut`) como tipo de operación. Esto restará el `Tool Body` del `Mount Body`, creando un molde con la tolerancia deseada.
+    \end{itemize}
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_motor_mount}
+%     \caption{Proceso de creación de un soporte de motor moldeado, mostrando el motor falso, el soporte, el clon escalado del motor y el resultado del Boolean Cut.}
+% \end{figure}
+
+\subsection{Colador (`Strainer`)}
+Diseño de un colador utilizando el `Multi-Transform` para patrones complejos de agujeros.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Cuerpo Base (Revolve):}
+    \begin{itemize}[label=\textendash]
+        \item Inicie un nuevo documento y `Body`.
+        \item Cree un boceto en el plano XZ para una sección de cuarto del perfil del colador (ej. una polilínea simple con dimensiones).
+        \item Cierre el boceto.
+        \item Aplique la operación \textbf{`Revolve`} alrededor del eje vertical del boceto (`Eje Z`) para crear el cuerpo del colador.
+    \end{itemize}
+    \item \textbf{Agujero Inicial (Pocket):}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la cara superior del colador y cree un nuevo boceto.
+        \item Dibuje un \textbf{`Círculo`} en un lado de la cara (ej. fuera del centro). Dimensiónelo y posiciónelo.
+        \item Cierre el boceto.
+        \item Seleccione el boceto y aplique un \textbf{`Pocket`} (ej. `A través de todo`).
+    \end{itemize}
+    \item \textbf{Aplicar Multi-Transform:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la operación `Pocket` en el árbol del modelo.
+        \item Haga clic en la herramienta \textbf{`Multi-Transform`} (Part Design > Aplicar patrón > Multi-Transform).
+        \item En el panel `Tareas`, haga clic derecho en `Transformaciones` y seleccione \textbf{`Añadir patrón lineal`} (`Add Linear Pattern`).
+        \item Configure el `Patrón Lineal` (ej. `Eje Y`, `Ocurrencias` = `10`, `Offset` = `10 mm`) para crear una fila de agujeros.
+        \item Haga clic derecho nuevamente y seleccione \textbf{`Añadir patrón lineal`}. Configure este segundo patrón (ej. `Eje X`, `Ocurrencias` = `10`, `Offset` = `10 mm`) para crear una cuadrícula de agujeros.
+        \item Haga clic derecho y seleccione \textbf{`Añadir patrón polar`} (`Add Polar Pattern`). Configure este patrón (ej. `Eje Z`, `Ocurrencias` = `10`) para repetir la cuadrícula de agujeros alrededor del centro del colador.
+    \end{itemize}
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_strainer}
+%     \caption{Modelado de un colador, mostrando el cuerpo base, un agujero inicial, y el resultado de aplicar múltiples patrones (Lineal y Polar) con la herramienta Multi-Transform.}
+% \end{figure}
+
+\subsection{Envolvente de Electrónica (`Electronics Enclosure`)}
+Un proyecto para crear una carcasa que incorpora múltiples operaciones de `Loft`, `Pad`, `Pocket` y `Thickness`.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Base Lofted:}
+    \begin{itemize}[label=\textendash]
+        \item Inicie un nuevo documento y `Body`.
+        \item Cree un boceto en el plano XY para el primer perfil (ej. un rectángulo con `Fillets` en las esquinas, simétrico).
+        \item Use el `Draft Workbench` para \textbf{clonar} este boceto varias veces (ej. 3 clones).
+        \item Ajuste la \textbf{`Posición Z`} y la \textbf{`Escala`} (`Scale`) de cada clon en sus propiedades de `Placement` para crear perfiles que varíen en tamaño y estén espaciados verticalmente.
+        \item Arrastre todos los bocetos clonados al `Body` en el árbol del modelo.
+        \item Seleccione los bocetos en orden vertical y aplique un \textbf{`Additive Loft`}.
+    \end{itemize}
+    \item \textbf{Parte Superior y Conicidad:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la cara superior del `Loft` y aplique un \textbf{`Pad`} directamente sobre ella (sin necesidad de boceto).
+        \item Ajuste la `Longitud` (ej. `3 mm`) y el \textbf{`Ángulo de conicidad`} (ej. `-60°`) para que el `Pad` se estreche hacia el interior.
+    \end{itemize}
+    \item \textbf{Finger Well (Agarre):}
+    \begin{itemize}[label=\textendash]
+        \item Rote la vista para ver la parte inferior. Seleccione la cara inferior de la carcasa y cree un boceto sobre ella.
+        \item Importe el borde interior de esta cara con \textbf{`Geometría Externa`}.
+        \item Dibuje un \textbf{`Círculo`} en el centro y restrínjalo al borde importado.
+        \item Cierre el boceto y aplique un \textbf{`Pocket`} (`A través de todo`) para crear el agarre.
+    \end{itemize}
+    \item \textbf{Espesor de Pared (`Thickness`):}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la cara superior de la carcasa (donde se aplicó el `Pad` cónico) y aplique la herramienta \textbf{`Thickness`}.
+        \item Establezca el `Grosor` (ej. `1 mm`) y asegúrese de que `Hacer grosor hacia adentro` esté activado.
+    \end{itemize}
+    \item \textbf{Orificios del Enchufe (`Plug Holes`):}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la cara superior ahuecada y cree un boceto.
+        \item Dibuje \textbf{`Geometría de Construcción`} (ej. un círculo o líneas) para definir el patrón de los agujeros.
+        \item Dibuje los \textbf{`Rectángulos`} para los orificios del enchufe y restrínjalos a la `Geometría de Construcción`. Use \textbf{`Move Array Transformation`} en el `Sketcher` para duplicar y espaciar los rectángulos.
+        \item Cierre el boceto y aplique un \textbf{`Pocket`} (`A través de todo`).
+    \end{itemize}
+    \item \textbf{Orificios de Ventilación (`Ventilation Holes`):}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la cara frontal o lateral de la carcasa (si es plana) y cree un boceto.
+        \item Dibuje un \textbf{`Rectángulo`} pequeño.
+        \item Utilice \textbf{`Move Array Transformation`} en el `Sketcher` para crear múltiples copias del rectángulo y posicionarlas con `Geometría de Construcción`.
+        \item Cierre el boceto y aplique un \textbf{`Pocket`} (puede usar `Dirección personalizada` (`Custom Direction`) o `Espejo` (`Mirror`) para el otro lado).
+    \end{itemize}
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_electronics_enclosure}
+%     \caption{Modelado de una envolvente de electrónica, mostrando la base lofted, el pad cónico, los orificios del enchufe y los orificios de ventilación.}
+% \end{figure}
+
+\subsection{Caja con Bisagras Sencillas (`Easy Hinged Box`)}
+Creación de una caja con bisagras aplicando `Linear Pattern` y `Part Design Clone`.
+\begin{enumerate}[label=\arabic*)]
+    \item \textbf{Cuerpo Base de la Caja:}
+    \begin{itemize}[label=\textendash]
+        \item Inicie un nuevo documento y `Body`.
+        \item Cree un boceto en el plano XY. Dibuje un \textbf{`Rectángulo centrado`} con dimensiones (ej. `150 mm` x `75 mm`).
+        \item Cierre el boceto.
+        \item Aplique un \textbf{`Pad`} (ej. `25 mm`).
+    \end{itemize}
+    \item \textbf{Crear la Bisagra:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione una cara lateral del `Pad` y cree un boceto sobre ella.
+        \item Importe el borde superior de la cara con \textbf{`Geometría Externa`}.
+        \item Dibuje el perfil de una bisagra (una polilínea y arcos) que se conecte a este borde y cree un agujero para el pasador.
+        \item Restrinja el perfil con dimensiones (ej. `0.5 mm` de distancia, `6 mm` de alto, `3 mm` de radio, `3 mm` de diámetro para el agujero).
+        \item Cierre el boceto.
+        \item Aplique un \textbf{`Pad`} al perfil de la bisagra (ej. `12.5 mm`) en la dirección `Invertida` (`Reverse`).
+    \end{itemize}
+    \item \textbf{Patrón Lineal de Bisagras:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione el `Pad` de la bisagra.
+        \item Haga clic en la herramienta \textbf{`Patrón Lineal`} (`Linear Pattern`).
+        \item Configure el patrón (ej. `Eje X`, `Longitud` = `125 mm` (150 - 25), `Ocurrencias` = `6`) para distribuir las bisagras a lo largo del lateral de la caja.
+    \end{itemize}
+    \item \textbf{Crear Tapa con Part Design Clone:}
+    \begin{itemize}[label=\textendash]
+        \item Seleccione la operación `Patrón Lineal` en el árbol del modelo.
+        \item Haga clic en la herramienta \textbf{`Clone de Part Design`}. Esto creará un nuevo `Body` (`Lid Body`) que es un clon del patrón de bisagras.
+        \item Renombre el cuerpo original a `Container Body`.
+        \item Oculte el `Lid Body`.
+    \end{itemize}
+    \item \textbf{Ahuecar la Caja (`Container Body`):}
+    \begin{itemize}[label=\textendash]
+        \item Active el `Container Body`.
+        \item Seleccione la cara superior del cuerpo base y cree un boceto.
+        \item Dibuje un \textbf{`Rectángulo`} que defina el interior de la caja, dejando un margen (ej. `3 mm`) desde los bordes.
+        \item Cierre el boceto.
+        \item Aplique un \textbf{`Pocket`} (ej. `22 mm`) para ahuecar la caja.
+    \end{itemize}
+    \item \textbf{Ahuecar y Posicionar la Tapa (`Lid Body`):}
+    \begin{itemize}[label=\textendash]
+        \item Muestre el `Lid Body` y actívelo.
+        \item Seleccione la cara superior del `Clone` de la tapa y cree un boceto.
+        \item Dibuje un \textbf{`Rectángulo`} interior para ahuecar la tapa, similar al de la caja.
+        \item Cierre el boceto y aplique un \textbf{`Pocket`} (ej. `4 mm`).
+        \item Utilice la herramienta \textbf{`Transform`} en el `Lid Body` para rotar la tapa y posicionarla sobre la caja, asegurando que las bisagras se enlacen correctamente.
+    \end{itemize}
+\end{enumerate}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{placeholder_hinged_box}
+%     \caption{Caja con bisagras usando Patrón Lineal y Clone de Part Design, mostrando el cuerpo de la caja, las bisagras, la tapa y cómo encajan.}
+% \end{figure}
+
+\newpage
+
+\section{Consejos y Trucos}
+Optimice su experiencia con FreeCAD y evite problemas comunes con estas recomendaciones.
+
+\subsection{Organización del Modelo y Flujo de Trabajo}
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Simplificación Inicial:} Antes de modelar, elimine mentalmente o en papel todos los detalles de acabado (redondeos, chaflanes, texturas, patrones de agujeros) para identificar la forma base y las operaciones 3D fundamentales necesarias. Esto es el primer paso de un `flowchart` de diseño.
+    \item \textbf{Análisis de Siluetas y Perfiles:} Examine el objeto desde diferentes vistas (superior, frontal, lateral) en \textbf{`silueta`} (sin detalles) para identificar los perfiles 2D que definen su forma.
+    \begin{itemize}[label=\textendash]
+        \item Perfiles superior/inferior idénticos y perfil lateral rectangular sugieren una operación \textbf{`Pad`} (extrusión simple) con un solo boceto.
+        \item Perfiles superior/inferior diferentes pero perfil lateral rectangular, puede ser un `Pad` inicial con bocetos adicionales para `Features` posteriores.
+        \item Secciones transversales circulares y perfiles laterales/frontales diferentes sugieren una operación \textbf{`Revolve`}.
+        \item Secciones transversales que varían a lo largo del objeto y que siguen un camino, sugieren \textbf{`Pipe`} (barrido).
+        \item Secciones transversales que varían a lo largo del objeto y que siguen un camino simple, sugieren \textbf{`Loft`}.
+    \end{itemize}
+    \item \textbf{Descomposición del Modelo:} Divida objetos complejos en componentes más simples o \textbf{`capas`} (ej. una taza en "vaso" y "asa"; un faro en "niveles"). Si el objeto se puede desensamblar físicamente, es un \textbf{`ensamblaje`}.
+    \item \textbf{Part Design vs. Part Workbench:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Part Design:} Más estructurado, ideal para modelado sólido basado en features. Las operaciones se fusionan automáticamente para mantener un solo sólido. Flujo de trabajo lineal.
+        \item \textbf{Part Workbench:} Más flexible, permite crear sólidos, compuestos, superficies o híbridos. Las operaciones (ej. extrusiones) son objetos separados que pueden requerir operaciones `Union` explícitas para formar un solo sólido.
+    \end{itemize}
+    \item \textbf{Modelado Top-Down vs. Bottom-Up:}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Top-Down:} Construye partes nuevas referenciando geometría de partes existentes. Los cambios en la parte principal se propagan automáticamente a las dependientes.
+        \item \textbf{Bottom-Up:} Diseña partes individualmente y las ensambla después. Requiere actualizaciones manuales en otras partes si una cambia.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Optimización del Flujo de Trabajo}
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Atajos de Teclado y Ratón:} Familiarícese con los controles de navegación (pan, zoom, rotación) y atajos de teclado para acelerar el trabajo.
+    \item \textbf{Preferencias Personalizadas:} Ajuste la interfaz (tamaño de iconos, color de preselección, tema) y las opciones de navegación para su comodidad visual y eficiencia.
+    \item \textbf{Aproveche la Parametricidad:} Recuerde que FreeCAD es \textbf{paramétrico}. Las modificaciones en un boceto o una `feature` base se propagarán automáticamente a las operaciones posteriores y a los `clones` paramétricos.
+    \item \textbf{Geometría de Construcción:} Utilice \textbf{`Construction Geometry`} en sus bocetos para crear líneas de referencia o puntos que ayuden a restringir o posicionar la geometría final sin aparecer en el modelo 3D.
+    \item \textbf{Geometría Externa:} Importe bordes y vértices de sólidos existentes a sus bocetos (\textbf{`External Geometry`}) para crear nuevas `features` que estén ligadas paramétricamente a la geometría original.
+    \item \textbf{Carbon Copy:} Para duplicar bocetos y crear una copia paramétricamente vinculada. Si el boceto maestro cambia, la copia también se actualizará.
+    \item \textbf{Clones (Draft o Part Design):}
+    \begin{itemize}[label=\textendash]
+        \item \textbf{Draft Clone:} Use esta herramienta de clonación genérica para duplicar y escalar `features`, `bodies` o `sketches` de forma independiente de la estructura de `Body` de `Part Design`.
+        \item \textbf{Part Design Clone:} Cree copias paramétricas de `bodies` o `features` dentro de un `Part Design Body`. Esto es ideal para bifurcar un diseño en partes similares que luego divergen (ej. partes macho/hembra de una bisagra).
+    \end{itemize}
+    \item \textbf{Subshape Binder:} Fundamental para el modelado `top-down`, permitiendo referenciar geometría entre cuerpos o desde fuera de un cuerpo `Part Design`. Útil para crear tolerancias y para enmascarar secciones específicas del modelo al aplicar `features` adicionales.
+    \item \textbf{Datum Objects (Planos y Líneas de Referencia):}
+    \begin{itemize}[label=\textendash]
+        \item Proporcionan geometría de referencia personalizable que puede ser `offset`, rotada o angulada.
+        \item Son valiosos para espejado, definir direcciones de patrones o necesidades especiales de adjunto.
+        \item \textit{Precaución:} El uso excesivo de `Datum Objects` puede ralentizar los recálculos del modelo. A menudo, un boceto con el `attachment mode` y los `offsets` correctos puede lograr el mismo posicionamiento que un `Datum Plane` sin añadir complejidad al árbol del modelo.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Solución de Problemas y Errores Comunes}
+\begin{itemize}[label=\textbullet]
+    \item \textbf{`Wire not closed` (Almohadilla/Bolsillo):} Este error indica que el perfil 2D en su boceto no está completamente cerrado.
+    \begin{itemize}[label=\textendash]
+        \item \textit{Solución:} Edite el boceto, acerque la vista a los puntos de inicio/fin de las líneas para asegurar que estén unidos o utilice la herramienta \textbf{`Validar Boceto`} (`Sketch > Validar boceto > Resaltar vértices problemáticos`) para encontrar los huecos.
+    \end{itemize}
+    \item \textbf{Fallo de `Thickness` o `Hollowing`:}
+    \begin{itemize}[label=\textendash]
+        \item \textit{Causa:} Suele deberse a auto-intersecciones o geometría compleja/curvatura pronunciada. Si el grosor es demasiado grande, los bordes interiores pueden cruzarse.
+        \item \textit{Solución:} Reduzca el `Grosor`, ajuste la geometría subyacente del boceto (ej. aumente el radio de arcos internos), o pruebe con un `Tipo de Unión` diferente (`Arc` o `Intersection`).
+    \end{itemize}
+    \item \textbf{Fallo de Operaciones Booleanas (`Fuse`, `Cut`, `Common`):}
+    \begin{itemize}[label=\textendash]
+        \item \textit{Causa:} Puede deberse a que el `Body` activo no está en el origen (0,0,0) global, lo que hace que los cuerpos herramienta se muevan inesperadamente. También puede ocurrir si la operación genera múltiples sólidos y la propiedad `Allow Compound` del `Body` no está activada.
+        \item \textit{Solución:} Asegúrese de que el cuerpo activo esté en el origen global antes de aplicar la booleana, o bien mueva y posicione cuidadosamente el cuerpo herramienta. Si se esperan múltiples sólidos, active `Allow Compound` en las propiedades del `Body`.
+    \end{itemize}
+    \item \textbf{`Loft` fallido o con geometría `flipped` (invertida):}
+    \begin{itemize}[label=\textendash]
+        \item \textit{Causa:} El orden de dibujo o la orientación de los perfiles (bocetos) en un `Loft` son inconsistentes. Si los perfiles se cruzan, FreeCAD puede crear una superficie deformada.
+        \item \textit{Solución:} Edite los bocetos para asegurar que el orden de creación de las líneas/arcos sea consistente en todos los perfiles. Si usa círculos o slots, asegúrese de que sus vértices (especialmente después de `Split Edge`) estén alineados y en el mismo sentido para controlar la torsión.
+    \end{itemize}
+    \item \textbf{`Dependency Cycles` (Ciclos de Dependencia):}
+    \begin{itemize}[label=\textendash]
+        \item \textit{Causa:} Se produce cuando dos `Bodies` o `features` se referencian mutuamente, creando un bucle infinito de actualizaciones.
+        \item \textit{Solución:} Para las operaciones booleanas finales, cree un \textbf{`Clone`} del `Body` o `feature` que actúe como "herramienta" y use el `clone` en la operación. Esto rompe la referencia directa y evita el ciclo.
+    \end{itemize}
+    \item \textbf{`Fillets` en Patrones:}
+    \begin{itemize}[label=\textendash]
+        \item \textit{Causa:} Aplicar `fillets` a `features` que luego se patrones puede ser problemático o consumir muchos recursos.
+        \item \textit{Solución:} A menudo es más eficiente aplicar los `fillets` al final del diseño, una vez que todas las operaciones de modelado principales y los patrones están en su lugar. Alternativamente, los `fillets` se pueden incorporar directamente en el boceto de la `feature` original.
+    \end{itemize}
+\end{itemize}
+
+\end{document}

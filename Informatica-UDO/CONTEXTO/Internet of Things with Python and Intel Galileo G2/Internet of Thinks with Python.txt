@@ -1,0 +1,3886 @@
+Directory structure:
+└── packtpublishing-internet-of-things-with-python/
+    ├── README.md
+    ├── LICENSE
+    ├── Software_Hardware_List.PDF
+    ├── Chapter 03/
+    │   ├── iot_fritzing_chapter_03_02.fzz
+    │   ├── iot_fritzing_chapter_03_06.fzz
+    │   ├── iot_python_chapter_03_01.py
+    │   ├── iot_python_chapter_03_02.py
+    │   ├── iot_python_chapter_03_03.py
+    │   ├── iot_python_chapter_03_04.py
+    │   ├── iot_python_chapter_03_05.py
+    │   ├── iot_python_chapter_03_06.py
+    │   └── iot_python_chapter_03_07.py
+    ├── Chapter 04/
+    │   ├── iot_fritzing_chapter_04_02.fzz
+    │   ├── iot_fritzing_chapter_04_03.fzz
+    │   ├── iot_python_chapter_04_01.py
+    │   ├── iot_python_chapter_04_02.py
+    │   ├── iot_python_chapter_04_03.py
+    │   └── iot_python_chapter_04_04.py
+    ├── Chapter 05/
+    │   ├── iot_fritzing_chapter_05_01.fzz
+    │   ├── iot_fritzing_chapter_05_02.fzz
+    │   ├── iot_fritzing_chapter_05_03.fzz
+    │   ├── iot_fritzing_chapter_05_04.fzz
+    │   ├── iot_python_chapter_05_01.py
+    │   ├── iot_python_chapter_05_02.py
+    │   ├── iot_python_chapter_05_03.py
+    │   └── iot_python_chapter_05_04.py
+    ├── Chapter 06/
+    │   ├── iot_fritzing_chapter_06_01.fzz
+    │   ├── iot_fritzing_chapter_06_02.fzz
+    │   ├── iot_fritzing_chapter_06_03.fzz
+    │   ├── iot_python_chapter_06_01.py
+    │   ├── iot_python_chapter_06_02.py
+    │   ├── iot_python_chapter_06_03.py
+    │   ├── iot_python_chapter_06_04.py
+    │   ├── iot_python_chapter_06_05.py
+    │   └── iot_python_chapter_06_06.py
+    ├── Chapter 07/
+    │   ├── iot_fritzing_chapter_07_01.fzz
+    │   ├── iot_fritzing_chapter_07_02.fzz
+    │   ├── iot_fritzing_chapter_07_03.fzz
+    │   ├── iot_fritzing_chapter_07_05.fzz
+    │   ├── iot_python_chapter_07_01.py
+    │   ├── iot_python_chapter_07_02.py
+    │   ├── iot_python_chapter_07_03.py
+    │   ├── iot_python_chapter_07_04.py
+    │   └── iot_python_chapter_07_05.py
+    ├── Chapter 08/
+    │   ├── iot_fritzing_chapter_08_01.fzz
+    │   ├── iot_fritzing_chapter_08_02.fzz
+    │   ├── iot_fritzing_chapter_08_03.fzz
+    │   ├── iot_python_chapter_08_01.py
+    │   ├── iot_python_chapter_08_02.py
+    │   └── iot_python_chapter_08_03.py
+    ├── Chapter 09/
+    │   ├── iot_python_chapter_09_01.py
+    │   ├── iot_python_chapter_09_02.py
+    │   ├── iot_python_chapter_09_03.py
+    │   ├── iot_python_chapter_09_04.py
+    │   ├── iot_python_chapter_09_05.py
+    │   └── iot_python_chapter_09_06.py
+    └── Chapter 10/
+        └── iot_python_chapter_10_01.py
+
+================================================
+FILE: README.md
+================================================
+
+
+
+#Internet of Things with Python
+
+This is the code repository for [Internet of Things with Python](https://www.packtpub.com/hardware-and-creative/internet-things-python?utm_source=GitHub&utm_medium=Repository&utm_campaign=9781785881381
+), published by Packt. It contains all the supporting project files necessary to work through the book from start to finish.
+
+##Instructions and Navigation
+
+The code included with this book is meant for use as an aid in performing the exercises and should not be used as a replacement for the book itself.
+Used out of context, the code may result in an unusable configuration and no warranty is given.
+
+The code will look like the following:
+```
+class NumberInLeds:
+    def __init__(self):
+        self.leds = []
+        for i in range(9, 0, -1):
+            led = Led(i, 10 - i)
+            self.leds.append(led)
+
+    def print_number(self, number):
+        print("==== Turning on {0} LEDs ====".format(number))
+        for j in range(0, number):
+            self.leds[j].turn_on()
+        for k in range(number, 9):
+            self.leds[k].turn_off()
+
+
+if __name__ == "__main__":
+    print ("Working with wiring-x86 on Intel Galileo Gen 2")
+
+    number_in_leds = NumberInLeds()
+    # Count from 0 to 9
+    for i in range(0, 10):
+        number_in_leds.print_number(i)
+        time.sleep(3)
+
+```
+
+
+##Related OpenStack Products:
+
+* [Internet of Things with the Arduino Yún](https://www.packtpub.com/hardware-and-creative/internet-things-arduino-y%C3%BAn?utm_source=GitHub&utm_medium=Repository&utm_campaign=9781783288007)
+
+### Download a free PDF
+
+ <i>If you have already purchased a print or Kindle version of this book, you can get a DRM-free PDF version at no cost.<br>Simply click on the link to claim your free PDF.</i>
+<p align="center"> <a href="https://packt.link/free-ebook/9781785881381">https://packt.link/free-ebook/9781785881381 </a> </p>
+
+
+================================================
+FILE: LICENSE
+================================================
+The MIT License (MIT)
+
+Copyright (c) 2016 Packt Publishing
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
+================================================
+FILE: Software_Hardware_List.PDF
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 03/iot_fritzing_chapter_03_02.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 03/iot_fritzing_chapter_03_06.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+if __name__ == "__main__":
+    print ("Mraa library version: {0}".format(mraa.getVersion()))
+    print ("Mraa detected platform name: {0}".format(mraa.getPlatformName()))
+
+    # Configure GPIO pin #13 to be an output pin
+    onboard_led = mraa.Gpio(13)
+    onboard_led.dir(mraa.DIR_OUT)
+
+    while True:
+        # Turn on the onboard LED
+        onboard_led.write(1)
+        print("I've turned on the onboard LED.")
+        # Sleep 3 seconds
+        time.sleep(3)
+        # Turn off the onboard LED
+        onboard_led.write(0)
+        print("I've turned off the onboard LED.")
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+if __name__ == "__main__":
+    print ("Mraa library version: {0}".format(mraa.getVersion()))
+    print ("Mraa detected platform name: {0}".format(mraa.getPlatformName()))
+
+    # Configure GPIO pins #1 to 9 to be output pins
+    output = []
+    for i in range(1, 10):
+        gpio = mraa.Gpio(i)
+        gpio.dir(mraa.DIR_OUT)
+        output.append(gpio)
+
+    # Count from 1 to 9
+    for i in range(1, 10):
+        print("==== Turning on {0} LEDs ====".format(i))
+        for j in range(0, i):
+            output[j].write(1)
+            print("I've turned on the LED connected to GPIO Pin #{0}.".format(j + 1))
+        time.sleep(3)
+
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class Led:
+    def __init__(self, pin):
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_OUT)
+
+    def turn_on(self):
+        self.gpio.write(1)
+        print("I've turned on the LED connected to GPIO Pin #{0}.".format(self.gpio.getPin()))
+
+
+    def turn_off(self):
+        self.gpio.write(0)
+        print("I've turned off the LED connected to GPIO Pin #{0}.".format(self.gpio.getPin()))
+
+
+if __name__ == "__main__":
+    print ("Mraa library version: {0}".format(mraa.getVersion()))
+    print ("Mraa detected platform name: {0}".format(mraa.getPlatformName()))
+
+    # Configure GPIO pins #1 to 9 to be output pins
+    leds = []
+    for i in range(1, 10):
+        led = Led(i)
+        leds.append(led)
+
+    # Count from 1 to 9
+    for i in range(1, 10):
+        print("==== Turning on {0} LEDs ====".format(i))
+        for j in range(0, i):
+            leds[j].turn_on()
+        for k in range(i, 9):
+            leds[k].turn_off()
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_04.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class Led:
+    def __init__(self, pin):
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_OUT)
+
+    def turn_on(self):
+        self.gpio.write(1)
+        print("I've turned on the LED connected to GPIO Pin #{0}.".format(self.gpio.getPin()))
+
+
+    def turn_off(self):
+        self.gpio.write(0)
+        print("I've turned off the LED connected to GPIO Pin #{0}.".format(self.gpio.getPin()))
+
+
+if __name__ == "__main__":
+    print ("Mraa library version: {0}".format(mraa.getVersion()))
+    print ("Mraa detected platform name: {0}".format(mraa.getPlatformName()))
+
+    # Configure GPIO pins #1 to 9 to be output pins
+    leds = []
+    for i in range(1, 10):
+        led = Led(i)
+        leds.append(led)
+
+    # Count from 9 to 1
+    for i in range(9, 0, -1):
+        print("==== Turning on {0} LEDs ====".format(i))
+        for j in range(0, i):
+            leds[j].turn_on()
+        for k in range(i, 9):
+            leds[k].turn_off()
+        time.sleep(3)
+
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_05.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class Led:
+    def __init__(self, pin):
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_OUT)
+
+    def turn_on(self):
+        self.gpio.write(1)
+        print("I've turned on the LED connected to GPIO Pin #{0}.".format(self.gpio.getPin()))
+
+
+    def turn_off(self):
+        self.gpio.write(0)
+        print("I've turned off the LED connected to GPIO Pin #{0}.".format(self.gpio.getPin()))
+
+
+class NumberInLeds:
+    def __init__(self):
+        self.leds = []
+        for i in range(1, 10):
+            led = Led(i)
+            self.leds.append(led)
+
+    def print_number(self, number):
+        print("==== Turning on {0} LEDs ====".format(number))
+        for j in range(0, number):
+            self.leds[j].turn_on()
+        for k in range(number, 9):
+            self.leds[k].turn_off()
+
+if __name__ == "__main__":
+    print ("Mraa library version: {0}".format(mraa.getVersion()))
+    print ("Mraa detected platform name: {0}".format(mraa.getPlatformName()))
+
+    number_in_leds = NumberInLeds()
+    # Count from 0 to 9
+    for i in range(0, 10):
+        number_in_leds.print_number(i)
+        time.sleep(3)
+
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_06.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class Led:
+    def __init__(self, pin, position):
+        self.position = position
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_OUT)
+
+    def turn_on(self):
+        self.gpio.write(1)
+        print("I've turned on the LED connected to GPIO Pin #{0}, in position {1}.".format(self.gpio.getPin(), self.position))
+
+
+    def turn_off(self):
+        self.gpio.write(0)
+        print("I've turned off the LED connected to GPIO Pin #{0}, in position {1}.".format(self.gpio.getPin(), self.position))
+
+
+class NumberInLeds:
+    def __init__(self):
+        self.leds = []
+        for i in range(9, 0, -1):
+            led = Led(i, 10 - i)
+            self.leds.append(led)
+
+    def print_number(self, number):
+        print("==== Turning on {0} LEDs ====".format(number))
+        for j in range(0, number):
+            self.leds[j].turn_on()
+        for k in range(number, 9):
+            self.leds[k].turn_off()
+
+if __name__ == "__main__":
+    print ("Mraa library version: {0}".format(mraa.getVersion()))
+    print ("Mraa detected platform name: {0}".format(mraa.getPlatformName()))
+
+    number_in_leds = NumberInLeds()
+    # Count from 0 to 9
+    for i in range(0, 10):
+        number_in_leds.print_number(i)
+        time.sleep(3)
+
+
+
+================================================
+FILE: Chapter 03/iot_python_chapter_03_07.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+from wiringx86 import GPIOGalileoGen2 as GPIO
+import time
+
+
+class Board:
+    gpio = GPIO(debug=False)
+
+
+class Led:
+    def __init__(self, pin, position):
+        self.pin = pin
+        self.position = position
+        self.gpio = Board.gpio
+        self.gpio.pinMode(pin, self.gpio.OUTPUT)
+
+    def turn_on(self):
+        self.gpio.digitalWrite(self.pin, self.gpio.HIGH)
+        print("I've turned on the LED connected to GPIO Pin #{0}, in position {1}.".format(self.pin, self.position))
+
+    def turn_off(self):
+        self.gpio.digitalWrite(self.pin, self.gpio.LOW)
+        print("I've turned off the LED connected to GPIO Pin #{0}, in position {1}.".format(self.pin, self.position))
+
+
+class NumberInLeds:
+    def __init__(self):
+        self.leds = []
+        for i in range(9, 0, -1):
+            led = Led(i, 10 - i)
+            self.leds.append(led)
+
+    def print_number(self, number):
+        print("==== Turning on {0} LEDs ====".format(number))
+        for j in range(0, number):
+            self.leds[j].turn_on()
+        for k in range(number, 9):
+            self.leds[k].turn_off()
+
+
+if __name__ == "__main__":
+    print ("Working with wiring-x86 on Intel Galileo Gen 2")
+
+    number_in_leds = NumberInLeds()
+    # Count from 0 to 9
+    for i in range(0, 10):
+        number_in_leds.print_number(i)
+        time.sleep(3)
+
+
+
+================================================
+FILE: Chapter 04/iot_fritzing_chapter_04_02.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 04/iot_fritzing_chapter_04_03.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 04/iot_python_chapter_04_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+from datetime import date
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+
+
+class Led:
+    def __init__(self, pin, position):
+        self.position = position
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_OUT)
+
+    def turn_on(self):
+        self.gpio.write(1)
+        print("I've turned on the LED connected to GPIO Pin #{0}, in position {1}.".format(self.gpio.getPin(), self.position))
+
+
+    def turn_off(self):
+        self.gpio.write(0)
+        print("I've turned off the LED connected to GPIO Pin #{0}, in position {1}.".format(self.gpio.getPin(), self.position))
+
+
+class NumberInLeds:
+    def __init__(self):
+        self.leds = []
+        for i in range(9, 0, -1):
+            led = Led(i, 10 - i)
+            self.leds.append(led)
+
+    def print_number(self, number):
+        print("==== Turning on {0} LEDs ====".format(number))
+        for j in range(0, number):
+            self.leds[j].turn_on()
+        for k in range(number, 9):
+            self.leds[k].turn_off()
+
+
+class BoardInteraction:
+    number_in_leds = NumberInLeds()
+    current_number = 0
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutNumberInLedsHandler(tornado.web.RequestHandler):
+    def put(self, number):
+        int_number = int(number)
+        BoardInteraction.number_in_leds.print_number(int_number)
+        BoardInteraction.current_number = int_number
+        response = {'number': int_number}
+        self.write(response)
+
+
+class GetCurrentNumberHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'number': BoardInteraction.current_number}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putnumberinleds/([0-9])", PutNumberInLedsHandler),
+    (r"/getcurrentnumber", GetCurrentNumberHandler),
+    (r"/version", VersionHandler)])
+
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    BoardInteraction.number_in_leds.print_number(0)
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+
+================================================
+FILE: Chapter 04/iot_python_chapter_04_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+from datetime import date
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+
+
+# Pin ~6 to connect the red LED
+# Pin ~5 to connect the green LED
+# Pin ~3 to connect the blue LED.
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class BoardInteraction:
+    # The Red LED is connected to pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutRedBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.red_led.set_brightness(int_value)
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class PutGreenBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.green_led.set_brightness(int_value)
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class PutBlueBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.blue_led.set_brightness(int_value)
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+class PutRGBBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, red, green, blue):
+        int_red = int(red)
+        int_green = int(green)
+        int_blue = int(blue)
+        BoardInteraction.red_led.set_brightness(int_red)
+        BoardInteraction.green_led.set_brightness(int_green)
+        BoardInteraction.blue_led.set_brightness(int_blue)
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class GetRedBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class GetGreenBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class GetBlueBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putredbrightness/([0-9]+)", PutRedBrightnessHandler),
+    (r"/putgreenbrightness/([0-9]+)", PutGreenBrightnessHandler),
+    (r"/putbluebrightness/([0-9]+)", PutBlueBrightnessHandler),
+    (r"/putrgbbrightness/r([0-9]+)g([0-9]+)b([0-9]+)", PutRGBBrightnessHandler),
+    (r"/getredbrightness", GetRedBrightnessHandler),
+    (r"/getgreenbrightness", GetGreenBrightnessHandler),
+    (r"/getbluebrightness", GetBlueBrightnessHandler),
+    (r"/version", VersionHandler)])
+
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+
+================================================
+FILE: Chapter 04/iot_python_chapter_04_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+from datetime import date
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+
+
+# Pin ~6 to connect the red LED
+# Pin ~5 to connect the green LED
+# Pin ~3 to connect the blue LED.
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class BoardInteraction:
+    # The Red LED is connected to pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutRedBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.red_led.set_brightness(int_value)
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class PutGreenBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.green_led.set_brightness(int_value)
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class PutBlueBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.blue_led.set_brightness(int_value)
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+class PutRGBBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, red, green, blue):
+        int_red = int(red)
+        int_green = int(green)
+        int_blue = int(blue)
+        BoardInteraction.red_led.set_brightness(int_red)
+        BoardInteraction.green_led.set_brightness(int_green)
+        BoardInteraction.blue_led.set_brightness(int_blue)
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class GetRedBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class GetGreenBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class GetBlueBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putredbrightness/([0-9]+)", PutRedBrightnessHandler),
+    (r"/putgreenbrightness/([0-9]+)", PutGreenBrightnessHandler),
+    (r"/putbluebrightness/([0-9]+)", PutBlueBrightnessHandler),
+    (r"/putrgbbrightness/r([0-9]+)g([0-9]+)b([0-9]+)",
+     PutRGBBrightnessHandler),
+    (r"/getredbrightness", GetRedBrightnessHandler),
+    (r"/getgreenbrightness", GetGreenBrightnessHandler),
+    (r"/getbluebrightness", GetBlueBrightnessHandler),
+    (r"/version", VersionHandler)])
+
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+
+================================================
+FILE: Chapter 04/iot_python_chapter_04_04.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+from wiringx86 import GPIOGalileoGen2 as GPIO
+from datetime import date
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+
+
+# Pin ~6 to connect the red LED
+# Pin ~5 to connect the green LED
+# Pin ~3 to connect the blue LED.
+
+class Board:
+    gpio = GPIO(debug=False)
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.gpio = Board.gpio
+        self.gpio.pinMode(pin, self.gpio.PWM)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        self.gpio.analogWrite(self.pin, brightness_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class BoardInteraction:
+    # The Red LED is connected to pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutRedBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.red_led.set_brightness(int_value)
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class PutGreenBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.green_led.set_brightness(int_value)
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class PutBlueBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.blue_led.set_brightness(int_value)
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+class PutRGBBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, red, green, blue):
+        int_red = int(red)
+        int_green = int(green)
+        int_blue = int(blue)
+        BoardInteraction.red_led.set_brightness(int_red)
+        BoardInteraction.green_led.set_brightness(int_green)
+        BoardInteraction.blue_led.set_brightness(int_blue)
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class GetRedBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class GetGreenBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class GetBlueBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putredbrightness/([0-9]+)", PutRedBrightnessHandler),
+    (r"/putgreenbrightness/([0-9]+)", PutGreenBrightnessHandler),
+    (r"/putbluebrightness/([0-9]+)", PutBlueBrightnessHandler),
+    (r"/putrgbbrightness/r([0-9]+)g([0-9]+)b([0-9]+)",
+     PutRGBBrightnessHandler),
+    (r"/getredbrightness", GetRedBrightnessHandler),
+    (r"/getgreenbrightness", GetGreenBrightnessHandler),
+    (r"/getbluebrightness", GetBlueBrightnessHandler),
+    (r"/version", VersionHandler)])
+
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+
+================================================
+FILE: Chapter 05/iot_fritzing_chapter_05_01.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 05/iot_fritzing_chapter_05_02.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 05/iot_fritzing_chapter_05_03.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 05/iot_fritzing_chapter_05_04.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 05/iot_python_chapter_05_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+from datetime import date
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+import logging
+
+
+class PushButton:
+    def __init__(self, pin, pull_up=True):
+        self.pin = pin
+        self.pull_up = pull_up
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_IN)
+
+    @property
+    def is_pressed(self):
+        push_button_status = self.gpio.read()
+        if self.pull_up:
+            # Pull-up resistor connected
+            return push_button_status == 0
+        else:
+            # Pull-down resistor connected
+            return push_button_status == 1
+
+    @property
+    def is_released(self):
+        return not self.is_pressed
+
+
+if __name__ == "__main__":
+    s1_push_button = PushButton(1)
+    s2_push_button = PushButton(0)
+    while True:
+        # Check whether the S1 pushbutton is pressed
+        if s1_push_button.is_pressed:
+            print("You are pressing S1.")
+        # Check whether the S2 pushbutton is pressed
+        if s2_push_button.is_pressed:
+            print("You are pressing S2.")
+        # Sleep 500 milliseconds (0.5 seconds)
+        time.sleep(0.5)
+
+
+
+================================================
+FILE: Chapter 05/iot_python_chapter_05_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+from datetime import date
+import mraa
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+import logging
+
+# Pin ~6 to connect the red LED
+# Pin ~5 to connect the green LED
+# Pin ~3 to connect the blue LED.
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class PushButton:
+    def __init__(self, pin, pull_up=True):
+        self.pin = pin
+        self.pull_up = pull_up
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_IN)
+
+    @property
+    def is_pressed(self):
+        push_button_status = self.gpio.read()
+        if self.pull_up:
+            # Pull-up resistor connected
+            return push_button_status == 0
+        else:
+            # Pull-down resistor connected
+            return push_button_status == 1
+
+    @property
+    def is_released(self):
+        return not self.is_pressed
+
+
+class BoardInteraction:
+    # The Red LED is connected to pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+    # The push button to reset colors
+    reset_push_button = PushButton(1)
+    # The push button to set colors to their maximum brightness
+    max_brightness_push_button = PushButton(0)
+
+    @classmethod
+    def set_min_brightness(cls):
+        cls.red_led.set_brightness(0)
+        cls.green_led.set_brightness(0)
+        cls.blue_led.set_brightness(0)
+
+    @classmethod
+    def set_max_brightness(cls):
+        cls.red_led.set_brightness(255)
+        cls.green_led.set_brightness(255)
+        cls.blue_led.set_brightness(255)
+
+    @classmethod
+    def check_push_buttons_callback(cls):
+        # Check whether the reset push button is pressed
+        if cls.reset_push_button.is_pressed:
+            print("You are pressing the reset pushbutton.")
+            cls.set_min_brightness()
+
+        # Check whether the maximum brightness push button is pressed
+        if cls.max_brightness_push_button.is_pressed:
+            print("You are pressing the maximum brightness pushbutton.")
+            cls.set_max_brightness()
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutRedBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.red_led.set_brightness(int_value)
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class PutGreenBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.green_led.set_brightness(int_value)
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class PutBlueBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.blue_led.set_brightness(int_value)
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+class PutMinBrightnessHandler(tornado.web.RequestHandler):
+    def put(self):
+        BoardInteraction.set_min_brightness()
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class PutMaxBrightnessHandler(tornado.web.RequestHandler):
+    def put(self):
+        BoardInteraction.set_max_brightness()
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+class PutRGBBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, red, green, blue):
+        int_red = int(red)
+        int_green = int(green)
+        int_blue = int(blue)
+        BoardInteraction.red_led.set_brightness(int_red)
+        BoardInteraction.green_led.set_brightness(int_green)
+        BoardInteraction.blue_led.set_brightness(int_blue)
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class GetRedBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class GetGreenBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class GetBlueBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putredbrightness/([0-9]+)", PutRedBrightnessHandler),
+    (r"/putgreenbrightness/([0-9]+)", PutGreenBrightnessHandler),
+    (r"/putbluebrightness/([0-9]+)", PutBlueBrightnessHandler),
+    (r"/putrgbbrightness/r([0-9]+)g([0-9]+)b([0-9]+)",
+     PutRGBBrightnessHandler),
+    (r"/putminbrightness", PutMinBrightnessHandler),
+    (r"/putmaxbrightness", PutMaxBrightnessHandler),
+    (r"/getredbrightness", GetRedBrightnessHandler),
+    (r"/getgreenbrightness", GetGreenBrightnessHandler),
+    (r"/getbluebrightness", GetBlueBrightnessHandler),
+    (r"/version", VersionHandler)])
+
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    application.listen(8888)
+    ioloop = tornado.ioloop.IOLoop.instance()
+    periodic_callback = tornado.ioloop.PeriodicCallback(BoardInteraction.check_push_buttons_callback, 500, ioloop)
+    periodic_callback.start()
+    ioloop.start()
+
+
+
+================================================
+FILE: Chapter 05/iot_python_chapter_05_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+from datetime import date
+from wiringx86 import GPIOGalileoGen2 as GPIO
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+import logging
+
+# Pin ~6 to connect the red LED
+# Pin ~5 to connect the green LED
+# Pin ~3 to connect the blue LED.
+
+class Board:
+    gpio = GPIO(debug=False)
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.gpio = Board.gpio
+        self.gpio.pinMode(pin, self.gpio.PWM)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        self.gpio.analogWrite(self.pin, brightness_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class PushButton:
+    def __init__(self, pin, pull_up=True):
+        self.pin = pin
+        self.pull_up = pull_up
+        self.gpio = Board.gpio
+        pin_mode = self.gpio.INPUT_PULLUP if pull_up else self.gpio.INPUT_PULLDOWN
+        self.gpio.pinMode(pin, pin_mode)
+
+    @property
+    def is_pressed(self):
+        push_button_status = self.gpio.digitalRead(self.pin)
+        if self.pull_up:
+            # Pull-up resistor connected
+            return push_button_status == 0
+        else:
+            # Pull-down resistor connected
+            return push_button_status == 1
+
+    @property
+    def is_released(self):
+        return not self.is_pressed
+
+
+class BoardInteraction:
+    # The Red LED is connected to pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+    # The push button to reset colors
+    reset_push_button = PushButton(1)
+    # The push button to set colors to their maximum brightness
+    max_brightness_push_button = PushButton(0)
+
+    @classmethod
+    def set_min_brightness(cls):
+        cls.red_led.set_brightness(0)
+        cls.green_led.set_brightness(0)
+        cls.blue_led.set_brightness(0)
+
+    @classmethod
+    def set_max_brightness(cls):
+        cls.red_led.set_brightness(255)
+        cls.green_led.set_brightness(255)
+        cls.blue_led.set_brightness(255)
+
+    @classmethod
+    def check_push_buttons_callback(cls):
+        # Check whether the reset push button is pressed
+        if cls.reset_push_button.is_pressed:
+            print("You are pressing the reset pushbutton.")
+            cls.set_min_brightness()
+
+        # Check whether the maximum brightness push button is pressed
+        if cls.max_brightness_push_button.is_pressed:
+            print("You are pressing the maximum brightness pushbutton.")
+            cls.set_max_brightness()
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutRedBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.red_led.set_brightness(int_value)
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class PutGreenBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.green_led.set_brightness(int_value)
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class PutBlueBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.blue_led.set_brightness(int_value)
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+class PutMinBrightnessHandler(tornado.web.RequestHandler):
+    def put(self):
+        BoardInteraction.set_min_brightness()
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class PutMaxBrightnessHandler(tornado.web.RequestHandler):
+    def put(self):
+        BoardInteraction.set_max_brightness()
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+class PutRGBBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, red, green, blue):
+        int_red = int(red)
+        int_green = int(green)
+        int_blue = int(blue)
+        BoardInteraction.red_led.set_brightness(int_red)
+        BoardInteraction.green_led.set_brightness(int_green)
+        BoardInteraction.blue_led.set_brightness(int_blue)
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class GetRedBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class GetGreenBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class GetBlueBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putredbrightness/([0-9]+)", PutRedBrightnessHandler),
+    (r"/putgreenbrightness/([0-9]+)", PutGreenBrightnessHandler),
+    (r"/putbluebrightness/([0-9]+)", PutBlueBrightnessHandler),
+    (r"/putrgbbrightness/r([0-9]+)g([0-9]+)b([0-9]+)",
+     PutRGBBrightnessHandler),
+    (r"/putminbrightness", PutMinBrightnessHandler),
+    (r"/putmaxbrightness", PutMaxBrightnessHandler),
+    (r"/getredbrightness", GetRedBrightnessHandler),
+    (r"/getgreenbrightness", GetGreenBrightnessHandler),
+    (r"/getbluebrightness", GetBlueBrightnessHandler),
+    (r"/version", VersionHandler)])
+
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    application.listen(8888)
+    ioloop = tornado.ioloop.IOLoop.instance()
+    periodic_callback = tornado.ioloop.PeriodicCallback(BoardInteraction.check_push_buttons_callback, 500, ioloop)
+    periodic_callback.start()
+    ioloop.start()
+
+
+
+================================================
+FILE: Chapter 05/iot_python_chapter_05_04.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+from datetime import date
+import mraa
+import tornado.escape
+import tornado.ioloop
+import tornado.web
+import logging
+
+# Pin ~6 to connect the red LED
+# Pin ~5 to connect the green LED
+# Pin ~3 to connect the blue LED.
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class PushButtonWithInterrupt:
+    def __init__(self, pin, pyfunc, args, pull_up=True):
+        self.pin = pin
+        self.pull_up = pull_up
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_IN)
+        mode = mraa.EDGE_FALLING if pull_up else mraa.EDGE_RISING
+        result = self.gpio.isr(mode, pyfunc, args)
+        if result != mraa.SUCCESS:
+            raise Exception("I could not configure ISR on pin {0}".format(pin))
+
+    def __del__(self):
+        self.gpio.isrExit()
+
+
+class PushButton:
+    def __init__(self, pin, pull_up=True):
+        self.pin = pin
+        self.pull_up = pull_up
+        self.gpio = mraa.Gpio(pin)
+        self.gpio.dir(mraa.DIR_IN)
+
+    @property
+    def is_pressed(self):
+        push_button_status = self.gpio.read()
+        if self.pull_up:
+            # Pull-up resistor connected
+            return push_button_status == 0
+        else:
+            # Pull-down resistor connected
+            return push_button_status == 1
+
+    @property
+    def is_released(self):
+        return not self.is_pressed
+
+
+class BoardInteraction:
+    # The Red LED is connected to pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+    # The push button to reset colors
+    reset_push_button = PushButtonWithInterrupt(11, set_min_brightness_callback, set_min_brightness_callback)
+    # The push button to set colors to their maximum brightness
+    max_brightness_push_button = PushButtonWithInterrupt(10, set_max_brightness_callback, set_max_brightness_callback)
+
+    @classmethod
+    def set_min_brightness(cls):
+        cls.red_led.set_brightness(0)
+        cls.green_led.set_brightness(0)
+        cls.blue_led.set_brightness(0)
+
+    @classmethod
+    def set_max_brightness(cls):
+        cls.red_led.set_brightness(255)
+        cls.green_led.set_brightness(255)
+        cls.blue_led.set_brightness(255)
+
+    @classmethod
+    def check_push_buttons_callback(cls):
+        # Check whether the reset push button is pressed
+        if cls.reset_push_button.is_pressed:
+            print("You are pressing the reset pushbutton.")
+            cls.set_min_brightness()
+
+        # Check whether the maximum brightness push button is pressed
+        if cls.max_brightness_push_button.is_pressed:
+            print("You are pressing the maximum brightness pushbutton.")
+            cls.set_max_brightness()
+
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'version': '1.0',
+                    'last_build': date.today().isoformat()}
+        self.write(response)
+
+
+class PutRedBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.red_led.set_brightness(int_value)
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class PutGreenBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.green_led.set_brightness(int_value)
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class PutBlueBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, value):
+        int_value = int(value)
+        BoardInteraction.blue_led.set_brightness(int_value)
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+class PutMinBrightnessHandler(tornado.web.RequestHandler):
+    def put(self):
+        BoardInteraction.set_min_brightness()
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class PutMaxBrightnessHandler(tornado.web.RequestHandler):
+    def put(self):
+        BoardInteraction.set_max_brightness()
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+class PutRGBBrightnessHandler(tornado.web.RequestHandler):
+    def put(self, red, green, blue):
+        int_red = int(red)
+        int_green = int(green)
+        int_blue = int(blue)
+        BoardInteraction.red_led.set_brightness(int_red)
+        BoardInteraction.green_led.set_brightness(int_green)
+        BoardInteraction.blue_led.set_brightness(int_blue)
+        response = dict(
+            red=BoardInteraction.red_led.brightness_value,
+            green=BoardInteraction.green_led.brightness_value,
+            blue=BoardInteraction.blue_led.brightness_value)
+        self.write(response)
+
+
+class GetRedBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'red': BoardInteraction.red_led.brightness_value}
+        self.write(response)
+
+
+class GetGreenBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'green': BoardInteraction.green_led.brightness_value}
+        self.write(response)
+
+
+class GetBlueBrightnessHandler(tornado.web.RequestHandler):
+    def get(self):
+        response = {'blue': BoardInteraction.blue_led.brightness_value}
+        self.write(response)
+
+
+application = tornado.web.Application([
+    (r"/putredbrightness/([0-9]+)", PutRedBrightnessHandler),
+    (r"/putgreenbrightness/([0-9]+)", PutGreenBrightnessHandler),
+    (r"/putbluebrightness/([0-9]+)", PutBlueBrightnessHandler),
+    (r"/putrgbbrightness/r([0-9]+)g([0-9]+)b([0-9]+)",
+     PutRGBBrightnessHandler),
+    (r"/putminbrightness", PutMinBrightnessHandler),
+    (r"/putmaxbrightness", PutMaxBrightnessHandler),
+    (r"/getredbrightness", GetRedBrightnessHandler),
+    (r"/getgreenbrightness", GetGreenBrightnessHandler),
+    (r"/getbluebrightness", GetBlueBrightnessHandler),
+    (r"/version", VersionHandler)])
+
+
+def set_max_brightness_callback(args):
+    print("You have pressed the maximum brightness pushbutton.")
+    BoardInteraction.set_max_brightness()
+
+
+def set_min_brightness_callback(args):
+    print("You have pressed the reset pushbutton.")
+    BoardInteraction.set_min_brightness()
+
+if __name__ == "__main__":
+    print("Listening at port 8888")
+    application.listen(8888)
+    ioloop = tornado.ioloop.IOLoop.instance()
+    ioloop.start()
+
+
+
+================================================
+FILE: Chapter 06/iot_fritzing_chapter_06_01.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 06/iot_fritzing_chapter_06_02.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 06/iot_fritzing_chapter_06_03.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 06/iot_python_chapter_06_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class VoltageInput:
+    def __init__(self, analog_pin):
+        self.analog_pin = analog_pin
+        self.aio = mraa.Aio(analog_pin)
+        # Configure ADC resolution to 12 bits (0 to 4095)
+        self.aio.setBit(12)
+
+    @property
+    def voltage(self):
+        raw_value = self.aio.read()
+        return raw_value / 4095.0 * 5.0
+
+
+if __name__ == "__main__":
+    v0 = VoltageInput(0)
+    while True:
+        print("Voltage at pin A0: {0}".format(v0.voltage))
+        # Sleep 2 seconds
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 06/iot_python_chapter_06_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class VoltageInput:
+    def __init__(self, analog_pin):
+        self.analog_pin = analog_pin
+        self.aio = mraa.Aio(analog_pin)
+        # Configure ADC resolution to 12 bits (0 to 4095)
+        self.aio.setBit(12)
+
+    @property
+    def voltage(self):
+        raw_value = self.aio.read()
+        return raw_value / 4095.0 * 5.0
+
+
+class DarknessSensor:
+    # Light level descriptions
+    light_extremely_dark = "extremely dark"
+    light_very_dark = "very dark"
+    light_dark = "just dark"
+    light_no_need_for_a_flashlight = \
+        "there is no need for a flashlight"
+    # Maximum voltages that determine the light level
+    extremely_dark_max_voltage = 2.0
+    very_dark_max_voltage = 3.0
+    dark_max_voltage = 4.0
+
+    def __init__(self, analog_pin):
+        self.voltage_input = VoltageInput(analog_pin)
+        self.voltage = 0.0
+        self.ambient_light = self.__class__.light_extremely_dark
+        self.measure_light()
+
+    def measure_light(self):
+        self.voltage = self.voltage_input.voltage
+        if self.voltage < \
+                self.__class__.extremely_dark_max_voltage:
+            self.ambient_light = self.__class__.light_extremely_dark
+        elif self.voltage < \
+                self.__class__.very_dark_max_voltage:
+            self.ambient_light = self.__class__.light_very_dark
+        elif self.voltage < \
+                self.__class__.dark_max_voltage:
+            self.ambient_light = self.__class__.light_dark
+        else:
+            self.ambient_light = self.__class__.light_no_need_for_a_flashlight
+
+
+if __name__ == "__main__":
+    darkness_sensor = DarknessSensor(0)
+    last_ambient_light = ""
+    while True:
+        darkness_sensor.measure_light()
+        new_ambient_light = darkness_sensor.ambient_light
+        if new_ambient_light != last_ambient_light:
+            # The ambient light value changed
+            last_ambient_light = new_ambient_light
+            print("Darkness level: {0}".format(new_ambient_light))
+        # Sleep 2 seconds
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 06/iot_python_chapter_06_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class VoltageInput:
+    def __init__(self, analog_pin):
+        self.analog_pin = analog_pin
+        self.aio = mraa.Aio(analog_pin)
+        # Configure ADC resolution to 12 bits (0 to 4095)
+        self.aio.setBit(12)
+
+    @property
+    def voltage(self):
+        raw_value = self.aio.read()
+        return raw_value / 4095.0 * 5.0
+
+
+class DarknessSensor:
+    # Light level descriptions
+    light_extremely_dark = "extremely dark"
+    light_very_dark = "very dark"
+    light_dark = "just dark"
+    light_no_need_for_a_flashlight = \
+        "there is no need for a flashlight"
+    # Maximum voltages that determine the light level
+    extremely_dark_max_voltage = 2.0
+    very_dark_max_voltage = 3.0
+    dark_max_voltage = 4.0
+
+    def __init__(self, analog_pin):
+        self.voltage_input = VoltageInput(analog_pin)
+        self.voltage = 0.0
+        self.ambient_light = self.__class__.light_extremely_dark
+        self.measure_light()
+
+    def measure_light(self):
+        self.voltage = self.voltage_input.voltage
+        if self.voltage < \
+                self.__class__.extremely_dark_max_voltage:
+            self.ambient_light = self.__class__.light_extremely_dark
+        elif self.voltage < \
+                self.__class__.very_dark_max_voltage:
+            self.ambient_light = self.__class__.light_very_dark
+        elif self.voltage < \
+                self.__class__.dark_max_voltage:
+            self.ambient_light = self.__class__.light_dark
+        else:
+            self.ambient_light = self.__class__.light_no_need_for_a_flashlight
+
+
+class BoardInteraction:
+    # The photoresistor included in the voltage divider
+    # is connected to analog PIN A0
+    darkness_sensor = DarknessSensor(0)
+    # The Red LED is connected to GPIO pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to GPIO Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to GPIO Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+    @classmethod
+    def set_rgb_led_brightness(cls, brightness_level):
+        cls.red_led.set_brightness(brightness_level)
+        cls.green_led.set_brightness(brightness_level)
+        cls.blue_led.set_brightness(brightness_level)
+
+    @classmethod
+    def update_leds_brightness(cls):
+        if cls.darkness_sensor.ambient_light == DarknessSensor.light_extremely_dark:
+            cls.set_rgb_led_brightness(255)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_very_dark:
+            cls.set_rgb_led_brightness(128)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_dark:
+            cls.set_rgb_led_brightness(64)
+        else:
+            cls.set_rgb_led_brightness(0)
+
+
+if __name__ == "__main__":
+    last_ambient_light = ""
+    while True:
+        BoardInteraction.darkness_sensor.measure_light()
+        new_ambient_light = BoardInteraction.darkness_sensor.ambient_light
+        if new_ambient_light != last_ambient_light:
+            # The ambient light value changed
+            last_ambient_light = new_ambient_light
+            print("Darkness level: {0}".format(new_ambient_light))
+            BoardInteraction.update_leds_brightness()
+        # Sleep 2 seconds
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 06/iot_python_chapter_06_04.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+from wiringx86 import GPIOGalileoGen2 as GPIO
+import time
+
+
+class Board:
+    gpio = GPIO(debug=False)
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.gpio = Board.gpio
+        self.gpio.pinMode(pin, self.gpio.PWM)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        self.gpio.analogWrite(self.pin, brightness_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class VoltageInput:
+    initial_analog_pin_number = 14
+
+    def __init__(self, analog_pin):
+        self.analog_pin = analog_pin
+        self.gpio = Board.gpio
+        self.gpio.pinMode(
+            analog_pin + self.__class__.initial_analog_pin_number,
+            self.gpio.ANALOG_INPUT)
+
+    @property
+    def voltage(self):
+        raw_value = self.gpio.analogRead(
+            self.analog_pin +
+            self.__class__.initial_analog_pin_number)
+        return raw_value / 1023.0 * 5.0
+
+
+class DarknessSensor:
+    # Light level descriptions
+    light_extremely_dark = "extremely dark"
+    light_very_dark = "very dark"
+    light_dark = "just dark"
+    light_no_need_for_a_flashlight = \
+        "there is no need for a flashlight"
+    # Maximum voltages that determine the light level
+    extremely_dark_max_voltage = 2.0
+    very_dark_max_voltage = 3.0
+    dark_max_voltage = 4.0
+
+    def __init__(self, analog_pin):
+        self.voltage_input = VoltageInput(analog_pin)
+        self.voltage = 0.0
+        self.ambient_light = self.__class__.light_extremely_dark
+        self.measure_light()
+
+    def measure_light(self):
+        self.voltage = self.voltage_input.voltage
+        if self.voltage < \
+                self.__class__.extremely_dark_max_voltage:
+            self.ambient_light = self.__class__.light_extremely_dark
+        elif self.voltage < \
+                self.__class__.very_dark_max_voltage:
+            self.ambient_light = self.__class__.light_very_dark
+        elif self.voltage < \
+                self.__class__.dark_max_voltage:
+            self.ambient_light = self.__class__.light_dark
+        else:
+            self.ambient_light = self.__class__.light_no_need_for_a_flashlight
+
+
+class BoardInteraction:
+    # The photoresistor included in the voltage divider
+    # is connected to analog PIN A0
+    darkness_sensor = DarknessSensor(0)
+    # The Red LED is connected to GPIO pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to GPIO Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to GPIO Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+    @classmethod
+    def set_rgb_led_brightness(cls, brightness_level):
+        cls.red_led.set_brightness(brightness_level)
+        cls.green_led.set_brightness(brightness_level)
+        cls.blue_led.set_brightness(brightness_level)
+
+    @classmethod
+    def update_leds_brightness(cls):
+        if cls.darkness_sensor.ambient_light == DarknessSensor.light_extremely_dark:
+            cls.set_rgb_led_brightness(255)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_very_dark:
+            cls.set_rgb_led_brightness(128)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_dark:
+            cls.set_rgb_led_brightness(64)
+        else:
+            cls.set_rgb_led_brightness(0)
+
+
+if __name__ == "__main__":
+    last_ambient_light = ""
+    while True:
+        BoardInteraction.darkness_sensor.measure_light()
+        new_ambient_light = BoardInteraction.darkness_sensor.ambient_light
+        if new_ambient_light != last_ambient_light:
+            # The ambient light value changed
+            last_ambient_light = new_ambient_light
+            print("Darkness level: {0}".format(new_ambient_light))
+            BoardInteraction.update_leds_brightness()
+        # Sleep 2 seconds
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 06/iot_python_chapter_06_05.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+import logging
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class VoltageInput:
+    def __init__(self, analog_pin):
+        self.analog_pin = analog_pin
+        self.aio = mraa.Aio(analog_pin)
+        # Configure ADC resolution to 12 bits (0 to 4095)
+        self.aio.setBit(12)
+
+    @property
+    def voltage(self):
+        raw_value = self.aio.read()
+        return raw_value / 4095.0 * 5.0
+
+
+class DarknessSensor:
+    # Light level descriptions
+    light_extremely_dark = "extremely dark"
+    light_very_dark = "very dark"
+    light_dark = "just dark"
+    light_no_need_for_a_flashlight = \
+        "there is no need for a flashlight"
+    # Maximum voltages that determine the light level
+    extremely_dark_max_voltage = 2.0
+    very_dark_max_voltage = 3.0
+    dark_max_voltage = 4.0
+
+    def __init__(self, analog_pin):
+        self.voltage_input = VoltageInput(analog_pin)
+        self.voltage = 0.0
+        self.ambient_light = self.__class__.light_extremely_dark
+        self.measure_light()
+
+    def measure_light(self):
+        self.voltage = self.voltage_input.voltage
+        if self.voltage < \
+                self.__class__.extremely_dark_max_voltage:
+            self.ambient_light = self.__class__.light_extremely_dark
+        elif self.voltage < \
+                self.__class__.very_dark_max_voltage:
+            self.ambient_light = self.__class__.light_very_dark
+        elif self.voltage < \
+                self.__class__.dark_max_voltage:
+            self.ambient_light = self.__class__.light_dark
+        else:
+            self.ambient_light = self.__class__.light_no_need_for_a_flashlight
+
+
+class BoardInteraction:
+    # The photoresistor included in the voltage divider
+    # is connected to analog PIN A0
+    darkness_sensor = DarknessSensor(0)
+    # The Red LED is connected to GPIO pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to GPIO Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to GPIO Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+    @classmethod
+    def set_rgb_led_brightness(cls, brightness_level):
+        cls.red_led.set_brightness(brightness_level)
+        cls.green_led.set_brightness(brightness_level)
+        cls.blue_led.set_brightness(brightness_level)
+
+    @classmethod
+    def update_leds_brightness(cls):
+        if cls.darkness_sensor.ambient_light == DarknessSensor.light_extremely_dark:
+            cls.set_rgb_led_brightness(255)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_very_dark:
+            cls.set_rgb_led_brightness(128)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_dark:
+            cls.set_rgb_led_brightness(64)
+        else:
+            cls.set_rgb_led_brightness(0)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        filename="iot_python_chapter_06_05.log",
+        level=logging.INFO,
+        format="%(asctime)s %(message)s",
+        datefmt="%m/%d/%Y %I:%M:%S %p")
+    logging.info("Application started")
+    last_ambient_light = ""
+    last_voltage = 0.0
+    while True:
+        BoardInteraction.darkness_sensor.measure_light()
+        new_ambient_light = BoardInteraction.darkness_sensor.ambient_light
+        if new_ambient_light != last_ambient_light:
+            # The ambient light value changed
+            logging.info(
+                "Ambient light value changed from {0} to {1}".format(
+                    last_voltage, BoardInteraction.darkness_sensor.voltage))
+            last_ambient_light = new_ambient_light
+            last_voltage = BoardInteraction.darkness_sensor.voltage
+            print("Darkness level: {0}".format(new_ambient_light))
+            BoardInteraction.update_leds_brightness()
+        # Sleep 2 seconds
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 06/iot_python_chapter_06_06.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+import logging
+
+
+class AnalogLed:
+    def __init__(self, pin, name):
+        self.pin = pin
+        self.name = name
+        self.pwm = mraa.Pwm(pin)
+        self.pwm.period_us(700)
+        self.pwm.enable(True)
+        self.brightness_value = 0
+        self.set_brightness(0)
+
+    def set_brightness(self, value):
+        brightness_value = value
+        if brightness_value > 255:
+            brightness_value = 255
+        elif brightness_value < 0:
+            brightness_value = 0
+        led_value = brightness_value / 255.0
+        self.pwm.write(led_value)
+        self.brightness_value = brightness_value
+        print("{0} LED connected to PWM Pin #{1} set to brightness {2}.".format(self.name, self.pin, brightness_value))
+
+
+class VoltageInput:
+    def __init__(self, analog_pin):
+        self.analog_pin = analog_pin
+        self.aio = mraa.Aio(analog_pin)
+        # Configure ADC resolution to 12 bits (0 to 4095)
+        self.aio.setBit(12)
+
+    @property
+    def voltage(self):
+        raw_value = self.aio.read()
+        return raw_value / 4095.0 * 5.0
+
+
+class DarknessSensor:
+    # Light level descriptions
+    light_extremely_dark = "extremely dark"
+    light_very_dark = "very dark"
+    light_dark = "just dark"
+    light_no_need_for_a_flashlight = \
+        "there is no need for a flashlight"
+    # Maximum voltages that determine the light level
+    extremely_dark_max_voltage = 2.0
+    very_dark_max_voltage = 3.0
+    dark_max_voltage = 4.0
+
+    def __init__(self, analog_pin):
+        self.voltage_input = VoltageInput(analog_pin)
+        self.voltage = 0.0
+        self.ambient_light = self.__class__.light_extremely_dark
+        self.measure_light()
+
+    def measure_light(self):
+        self.voltage = self.voltage_input.voltage
+        if self.voltage < \
+                self.__class__.extremely_dark_max_voltage:
+            self.ambient_light = self.__class__.light_extremely_dark
+        elif self.voltage < \
+                self.__class__.very_dark_max_voltage:
+            self.ambient_light = self.__class__.light_very_dark
+        elif self.voltage < \
+                self.__class__.dark_max_voltage:
+            self.ambient_light = self.__class__.light_dark
+        else:
+            self.ambient_light = self.__class__.light_no_need_for_a_flashlight
+
+
+class BoardInteraction:
+    # The photoresistor included in the voltage divider
+    # is connected to analog PIN A0
+    darkness_sensor = DarknessSensor(0)
+    # The Red LED is connected to GPIO pin ~6
+    red_led = AnalogLed(6, 'Red')
+    # The Green LED is connected to GPIO Pin ~5
+    green_led = AnalogLed(5, 'Green')
+    # The Blue LED is connected to GPIO Pin ~3
+    blue_led = AnalogLed(3, 'Blue')
+
+    @classmethod
+    def set_rgb_led_brightness(cls, brightness_level):
+        cls.red_led.set_brightness(brightness_level)
+        cls.green_led.set_brightness(brightness_level)
+        cls.blue_led.set_brightness(brightness_level)
+
+    @classmethod
+    def update_leds_brightness(cls):
+        if cls.darkness_sensor.ambient_light == DarknessSensor.light_extremely_dark:
+            cls.set_rgb_led_brightness(255)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_very_dark:
+            cls.set_rgb_led_brightness(128)
+        elif cls.darkness_sensor.ambient_light == DarknessSensor.light_dark:
+            cls.set_rgb_led_brightness(64)
+        else:
+            cls.set_rgb_led_brightness(0)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        filename="/media/usb/log/iot_python_chapter_06_06.log",
+        level=logging.INFO,
+        format="%(asctime)s %(message)s",
+        datefmt="%m/%d/%Y %I:%M:%S %p")
+    logging.info("Application started")
+    last_ambient_light = ""
+    last_voltage = 0.0
+    while True:
+        BoardInteraction.darkness_sensor.measure_light()
+        new_ambient_light = BoardInteraction.darkness_sensor.ambient_light
+        if new_ambient_light != last_ambient_light:
+            # The ambient light value changed
+            logging.info(
+                "Ambient light value changed from {0} to {1}".format(
+                    last_voltage, BoardInteraction.darkness_sensor.voltage))
+            last_ambient_light = new_ambient_light
+            last_voltage = BoardInteraction.darkness_sensor.voltage
+            print("Darkness level: {0}".format(new_ambient_light))
+            BoardInteraction.update_leds_brightness()
+        # Sleep 2 seconds
+        time.sleep(2)
+
+
+
+================================================
+FILE: Chapter 07/iot_fritzing_chapter_07_01.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 07/iot_fritzing_chapter_07_02.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 07/iot_fritzing_chapter_07_03.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 07/iot_fritzing_chapter_07_05.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 07/iot_python_chapter_07_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_adxl335 as upmAdxl335
+import time
+
+
+class Accelerometer:
+    def __init__(self, pinX, pinY, pinZ):
+        self.accelerometer = upmAdxl335.ADXL335(
+            pinX, pinY, pinZ)
+        self.x_acceleration_fp = upmAdxl335.new_floatPointer()
+        self.y_acceleration_fp = upmAdxl335.new_floatPointer()
+        self.z_acceleration_fp = upmAdxl335.new_floatPointer()
+        self.x_acceleration = 0.0
+        self.y_acceleration = 0.0
+        self.z_acceleration = 0.0
+
+    def calibrate(self):
+        self.accelerometer.calibrate()
+
+    def measure_acceleration(self):
+        # Retrieve the acceleration values for the three axis
+        self.accelerometer.acceleration(
+            self.x_acceleration_fp,
+            self.y_acceleration_fp,
+            self.z_acceleration_fp)
+        self.x_acceleration = upmAdxl335.floatPointer_value(
+            self.x_acceleration_fp)
+        self.y_acceleration = upmAdxl335.floatPointer_value(
+            self.y_acceleration_fp)
+        self.z_acceleration = upmAdxl335.floatPointer_value(
+            self.z_acceleration_fp)
+
+
+if __name__ == "__main__":
+    # The accelerometer is connected to analog pins A0, A1 and A2
+    # A0 -> x
+    # A1 -> y
+    # A2 -> z
+    accelerometer = Accelerometer(0, 1, 2)
+    # Calibrate the accelerometer
+    accelerometer.calibrate()
+
+    while True:
+        accelerometer.measure_acceleration()
+        print("Acceleration for x: {0}g".format(accelerometer.x_acceleration))
+        print("Acceleration for y: {0}g".format(accelerometer.y_acceleration))
+        print("Acceleration for z: {0}g".format(accelerometer.z_acceleration))
+        # Sleep 0.5 seconds (500 milliseconds)
+        time.sleep(0.5)
+
+
+
+================================================
+FILE: Chapter 07/iot_python_chapter_07_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_adxl345 as upmAdxl345
+import time
+
+
+class Accelerometer:
+    def __init__(self, bus):
+        self.accelerometer = upmAdxl345.Adxl345(bus)
+        self.x_acceleration = 0.0
+        self.y_acceleration = 0.0
+        self.z_acceleration = 0.0
+
+    def measure_acceleration(self):
+        # Update the acceleration values for the three axis
+        self.accelerometer.update()
+        # Retrieve the acceleration values for the three axis
+        acceleration_array = \
+            self.accelerometer.getAcceleration()
+        self.x_acceleration = acceleration_array[0]
+        self.y_acceleration = acceleration_array[1]
+        self.z_acceleration = acceleration_array[2]
+
+
+if __name__ == "__main__":
+    accelerometer = Accelerometer(0)
+    while True:
+        accelerometer.measure_acceleration()
+        print("Acceleration for x: {:5.2f}g".
+              format(accelerometer.x_acceleration))
+        print("Acceleration for y: {:5.2f}g".
+              format(accelerometer.y_acceleration))
+        print("Acceleration for z: {:5.2f}g".
+              format(accelerometer.z_acceleration))
+        # Sleep 0.5 seconds (500 milliseconds)
+        time.sleep(0.5)
+
+
+
+================================================
+FILE: Chapter 07/iot_python_chapter_07_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import mraa
+import time
+
+
+class Adxl345:
+    # Read buffer length
+    READ_BUFFER_LENGTH = 6
+    # I2C address for the ADXL345 accelerometer
+    ADXL345_I2C_ADDR = 0x53
+    ADXL345_ID = 0x00
+    # Control registers
+    ADXL345_OFSX = 0x1E
+    ADXL345_OFSY = 0x1F
+    ADXL345_OFSZ = 0x20
+    ADXL345_TAP_THRESH = 0x1D
+    ADXL345_TAP_DUR = 0x21
+    ADXL345_TAP_LATENCY = 0x22
+    ADXL345_ACT_THRESH = 0x24
+    ADXL345_INACT_THRESH = 0x25
+    ADXL345_INACT_TIME = 0x26
+    ADXL345_INACT_ACT_CTL = 0x27
+    ADXL345_FALL_THRESH = 0x28
+    ADXL345_FALL_TIME = 0x29
+    ADXL345_TAP_AXES = 0x2A
+    ADXL345_ACT_TAP_STATUS = 0x2B
+    # Interrupt registers
+    ADXL345_INT_ENABLE = 0x2E
+    ADXL345_INT_MAP = 0x2F
+    ADXL345_INT_SOURCE = 0x30
+    # Data registers (read only)
+    ADXL345_XOUT_L = 0x32
+    ADXL345_XOUT_H = 0x33
+    ADXL345_YOUT_L = 0x34
+    ADXL345_YOUT_H = 0x35
+    ADXL345_ZOUT_L = 0x36
+    ADXL345_ZOUT_H = 0x37
+    DATA_REG_SIZE = 6
+    # Data and power management
+    ADXL345_BW_RATE = 0x2C
+    ADXL345_POWER_CTL = 0x2D
+    ADXL345_DATA_FORMAT = 0x31
+    ADXL345_FIFO_CTL = 0x38
+    ADXL345_FIFO_STATUS = 0x39
+    # Useful values
+    ADXL345_POWER_ON = 0x08
+    ADXL345_AUTO_SLP = 0x30
+    ADXL345_STANDBY = 0x00
+    # Scales and resolution
+    ADXL345_FULL_RES = 0x08
+    ADXL345_10BIT = 0x00
+    ADXL345_2G = 0x00
+    ADXL345_4G = 0x01
+    ADXL345_8G = 0x02
+    ADXL345_16G = 0x03
+
+    def __init__(self, bus):
+        # Init bus and reset chip
+        self.i2c = mraa.I2c(bus)
+        # Set the slave to talk to
+        if self.i2c.address(self.__class__.ADXL345_I2C_ADDR) != mraa.SUCCESS:
+            raise Exception("i2c.address() failed")
+        message = bytearray(
+            [self.__class__.ADXL345_POWER_CTL,
+             self.__class__.ADXL345_POWER_ON])
+        if self.i2c.write(message) != mraa.SUCCESS:
+            raise Exception("i2c.write() control register failed")
+        if self.i2c.address(self.__class__.ADXL345_I2C_ADDR) != mraa.SUCCESS:
+            raise Exception("i2c.address() failed")
+        message = bytearray(
+            [self.__class__.ADXL345_DATA_FORMAT,
+             self.__class__.ADXL345_16G | self.__class__.ADXL345_FULL_RES])
+        if self.i2c.write(message) != mraa.SUCCESS:
+            raise Exception("i2c.write() mode register failed")
+        # 2.5V sensitivity is 256 LSB/g = 0.00390625 g/bit
+        # 3.3V x and y sensitivity is 265 LSB/g = 0.003773584 g/bit, z is the same
+        self.x_offset = 0.003773584
+        self.y_offset = 0.003773584
+        self.z_offset = 0.00390625
+        self.x_acceleration = 0.0
+        self.y_acceleration = 0.0
+        self.z_acceleration = 0.0
+        self.update()
+
+    def update(self):
+        # Set the slave to talk to
+        self.i2c.address(self.__class__.ADXL345_I2C_ADDR)
+        self.i2c.writeByte(self.__class__.ADXL345_XOUT_L)
+        self.i2c.address(self.__class__.ADXL345_I2C_ADDR)
+        xyz_raw_acceleration = self.i2c.read(self.__class__.DATA_REG_SIZE)
+        x_raw_acceleration = (xyz_raw_acceleration[1] << 8) | xyz_raw_acceleration[0]
+        y_raw_acceleration = (xyz_raw_acceleration[3] << 8) | xyz_raw_acceleration[2]
+        z_raw_acceleration = (xyz_raw_acceleration[5] << 8) | xyz_raw_acceleration[4]
+        self.x_acceleration = x_raw_acceleration * self.x_offset
+        self.y_acceleration = y_raw_acceleration * self.y_offset
+        self.z_acceleration = z_raw_acceleration * self.z_offset
+
+
+class Accelerometer:
+    def __init__(self, bus):
+        self.accelerometer = Adxl345(bus)
+        self.x_acceleration = 0.0
+        self.y_acceleration = 0.0
+        self.z_acceleration = 0.0
+
+    def measure_acceleration(self):
+        # Update the acceleration values for the three axis
+        self.accelerometer.update()
+        self.x_acceleration = self.accelerometer.x_acceleration
+        self.y_acceleration = self.accelerometer.y_acceleration
+        self.z_acceleration = self.accelerometer.z_acceleration
+
+
+if __name__ == "__main__":
+    accelerometer = Accelerometer(0)
+    while True:
+        accelerometer.measure_acceleration()
+        print("Acceleration for x: {:5.2f}g".
+              format(accelerometer.x_acceleration))
+        print("Acceleration for y: {:5.2f}g".
+              format(accelerometer.y_acceleration))
+        print("Acceleration for z: {:5.2f}g".
+              format(accelerometer.z_acceleration))
+        # Sleep 0.5 seconds (500 milliseconds)
+        time.sleep(0.5)
+
+
+
+================================================
+FILE: Chapter 07/iot_python_chapter_07_04.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_grove as upmGrove
+import time
+
+
+class TemperatureSensor:
+    def __init__(self, analog_pin):
+        self.temperature_sensor = upmGrove.GroveTemp(analog_pin)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+
+    def measure_temperature(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.temperature_sensor.value()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+
+
+if __name__ == "__main__":
+    # The temperature sensor is connected to analog pin A0
+    temperature_sensor = TemperatureSensor(0)
+
+    while True:
+        temperature_sensor.measure_temperature()
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_sensor.temperature_fahrenheit))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 07/iot_python_chapter_07_05.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import time
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 08/iot_fritzing_chapter_08_01.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 08/iot_fritzing_chapter_08_02.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 08/iot_fritzing_chapter_08_03.fzz
+================================================
+[Binary file]
+
+
+================================================
+FILE: Chapter 08/iot_python_chapter_08_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import time
+
+
+class Lcd:
+    # The I2C address for the LCD display
+    lcd_i2c_address = 0x3E
+    # The I2C address for the RBG backlight
+    rgb_i2c_address = 0x62
+
+    def __init__(self, bus, red, green, blue):
+        self.lcd = upmLcd.Jhd1313m1(
+            bus,
+            self.__class__.lcd_i2c_address,
+            self.__class__.rgb_i2c_address)
+        self.lcd.clear()
+        self.set_background_color(red, green, blue)
+
+    def set_background_color(self, red, green, blue):
+        self.lcd.setColor(red, green, blue)
+
+    def print_line_1(self, message):
+        self.lcd.setCursor(0, 0)
+        self.lcd.write(message)
+
+    def print_line_2(self, message):
+        self.lcd.setCursor(1, 0)
+        self.lcd.write(message)
+
+
+class TemperatureAndHumidityLcd(Lcd):
+    def print_temperature(self, temperature_fahrenheit):
+        self.print_line_1("Temp.    {:5.2f}F".format(temperature_fahrenheit))
+
+    def print_humidity(self, humidity):
+        self.print_line_2("Humidity   {0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    lcd = TemperatureAndHumidityLcd(0, 0, 0, 128)
+
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        lcd.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit)
+        lcd.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 08/iot_python_chapter_08_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import time
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus, red, green, blue):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.oled.clear()
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 08/iot_python_chapter_08_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import pyupm_servo as upmServo
+import time
+
+
+class TemperatureServo:
+    def __init__(self, pin):
+        self.servo = upmServo.ES08A(pin)
+        self.servo.setAngle(0)
+
+    def print_temperature(self, temperature_fahrenheit):
+        angle = temperature_fahrenheit
+        if angle < 0:
+            angle = 0
+        elif angle > 180:
+            angle = 180
+        self.servo.setAngle(angle)
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus, red, green, blue):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.oled.clear()
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+    temperature_servo = TemperatureServo(3)
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        temperature_servo.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 09/iot_python_chapter_09_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import pyupm_servo as upmServo
+import dweepy
+import time
+
+
+class TemperatureServo:
+    def __init__(self, pin):
+        self.servo = upmServo.ES08A(pin)
+        self.servo.setAngle(0)
+
+    def print_temperature(self, temperature_fahrenheit):
+        angle = temperature_fahrenheit
+        if angle < 0:
+            angle = 0
+        elif angle > 180:
+            angle = 180
+        self.servo.setAngle(angle)
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.oled.clear()
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+    temperature_servo = TemperatureServo(3)
+    # Don't forget to replace the thing_name value
+    # with your own thing name
+    thing_name = "iot_python_chapter_09_01_gaston_hillar"
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        temperature_servo.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit)
+        # Push data to dweet.io
+        dweet = {"temperature_celsius": "{:5.2f}".format(temperature_and_humidity_sensor.temperature_celsius),
+                 "temperature_fahrenheit": "{:5.2f}".format(temperature_and_humidity_sensor.temperature_fahrenheit),
+                 "humidity_level_percentage": "{:5.2f}".format(temperature_and_humidity_sensor.humidity)}
+        dweepy.dweet_for(thing_name, dweet)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 09/iot_python_chapter_09_02.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import pyupm_servo as upmServo
+import time
+from pubnub import Pubnub
+
+
+class TemperatureServo:
+    def __init__(self, pin):
+        self.servo = upmServo.ES08A(pin)
+        self.servo.setAngle(0)
+
+    def print_temperature(self, temperature_fahrenheit):
+        angle = temperature_fahrenheit
+        if angle < 0:
+            angle = 0
+        elif angle > 180:
+            angle = 180
+        self.servo.setAngle(angle)
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+class MessageChannel:
+    command_key = "command"
+    successfully_processed_command_key = "successfully_processed_command"
+
+    def __init__(self, channel, temperature_servo, oled):
+        self.temperature_servo = temperature_servo
+        self.oled = oled
+        self.channel = channel
+        # Do not forget to replace the string with your publish key
+        publish_key = "pub-c-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        # Subscribe key is the one that usually starts with the "sub-c" prefix
+        # Do not forget to replace the string with your subscribe key
+        subscribe_key = "sub-c-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        self.pubnub = Pubnub(publish_key=publish_key, subscribe_key=subscribe_key)
+        self.pubnub.subscribe(channels=self.channel,
+                              callback=self.callback,
+                              error=self.callback,
+                              connect=self.connect,
+                              reconnect=self.reconnect,
+                              disconnect=self.disconnect)
+
+    def callback_response_message(self, message, channel):
+        print("I've received the following response from PubNub cloud: {0}".format(message))
+
+    def error_response_message(self, message):
+        print("There was an error when working with the PubNub cloud: {0}".format(message))
+
+    def publish_response_message(self, message):
+        response_message = {
+            self.__class__.successfully_processed_command_key:
+                message[self.__class__.command_key]}
+        self.pubnub.publish(
+            channel=self.channel,
+            message=response_message,
+            callback=self.callback_response_message,
+            error=self.error_response_message)
+
+    def callback(self, message, channel):
+        if channel == self.channel:
+            print("I've received the following message: {0}".format(message))
+            if self.__class__.command_key in message:
+                if message[self.__class__.command_key] == "print_temperature_fahrenheit":
+                    self.temperature_servo.print_temperature(message["temperature_fahrenheit"])
+                    self.publish_response_message(message)
+                elif message[self.__class__.command_key] == "print_information_message":
+                    self.oled.print_line(11, message["text"])
+                    self.publish_response_message(message)
+
+    def error(self, message):
+        print("Error: " + str(message))
+
+    def connect(self, message):
+        print("Connected to the {0} channel".
+              format(self.channel))
+        print(self.pubnub.publish(
+            channel=self.channel,
+            message="Listening to messages in the Intel Galileo Gen 2 board"))
+
+    def reconnect(self, message):
+        print("Reconnected to the {0} channel".
+              format(self.channel))
+
+    def disconnect(self, message):
+        print("Disconnected from the {0} channel")
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+    temperature_servo = TemperatureServo(3)
+    message_channel = MessageChannel("temperature", temperature_servo, oled)
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 09/iot_python_chapter_09_03.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import pyupm_servo as upmServo
+import time
+from pubnub import Pubnub
+
+
+class TemperatureServo:
+    def __init__(self, pin):
+        self.servo = upmServo.ES08A(pin)
+        self.servo.setAngle(0)
+
+    def print_temperature(self, temperature_fahrenheit):
+        angle = temperature_fahrenheit
+        if angle < 0:
+            angle = 0
+        elif angle > 180:
+            angle = 180
+        self.servo.setAngle(angle)
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+class MessageChannel:
+    command_key = "command"
+    successfully_processed_command_key = "successfully_processed_command"
+
+    def __init__(self, channel, temperature_servo, oled):
+        self.temperature_servo = temperature_servo
+        self.oled = oled
+        self.channel = channel
+        # Do not forget to replace the string with your publish key
+        publish_key = "pub-c-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        # Subscribe key is the one that usually starts with the "sub-c" prefix
+        # Do not forget to replace the string with your subscribe key
+        subscribe_key = "sub-c-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        self.pubnub = Pubnub(publish_key=publish_key, subscribe_key=subscribe_key)
+        self.pubnub.subscribe(channels=self.channel,
+                              callback=self.callback,
+                              error=self.callback,
+                              connect=self.connect,
+                              reconnect=self.reconnect,
+                              disconnect=self.disconnect)
+
+    def callback_response_message(self, message):
+        print("I've received the following response from PubNub cloud: {0}".format(message))
+
+    def error_response_message(self, message):
+        print("There was an error when working with the PubNub cloud: {0}".format(message))
+
+    def publish_response_message(self, message):
+        response_message = {
+            self.__class__.successfully_processed_command_key:
+                message[self.__class__.command_key]}
+        self.pubnub.publish(
+            channel=self.channel,
+            message=response_message,
+            callback=self.callback_response_message,
+            error=self.error_response_message)
+
+    def callback(self, message, channel):
+        if channel == self.channel:
+            print("I've received the following message: {0}".format(message))
+            if self.__class__.command_key in message:
+                if message[self.__class__.command_key] == "print_temperature_fahrenheit":
+                    self.temperature_servo.print_temperature(message["temperature_fahrenheit"])
+                    self.publish_response_message(message)
+                elif message[self.__class__.command_key] == "print_information_message":
+                    self.oled.print_line(11, message["text"])
+                    self.publish_response_message(message)
+
+    def error(self, message):
+        print("Error: " + str(message))
+
+    def connect(self, message):
+        print("Connected to the {0} channel".
+              format(self.channel))
+        print(self.pubnub.publish(
+            channel=self.channel,
+            message="Listening to messages in the Intel Galileo Gen 2 board"))
+
+    def reconnect(self, message):
+        print("Reconnected to the {0} channel".
+              format(self.channel))
+
+    def disconnect(self, message):
+        print("Disconnected from the {0} channel".
+              format(self.channel))
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+    temperature_servo = TemperatureServo(3)
+    message_channel = MessageChannel("temperature", temperature_servo, oled)
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds)
+        time.sleep(10)
+
+
+
+================================================
+FILE: Chapter 09/iot_python_chapter_09_04.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import time
+from pubnub import Pubnub
+
+
+class Client:
+    command_key = "command"
+
+    def __init__(self, channel):
+        self.channel = channel
+        # Publish key is the one that usually starts with the "pub-c-" prefix
+        publish_key = "pub-c-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        # Subscribe key is the one that usually starts with the "sub-c" prefix
+        # Do not forget to replace the string with your subscribe key
+        subscribe_key = "sub-c-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        self.pubnub = Pubnub(publish_key=publish_key, subscribe_key=subscribe_key)
+        self.pubnub.subscribe(channels=self.channel,
+                              callback=self.callback,
+                              error=self.callback,
+                              connect=self.connect,
+                              reconnect=self.reconnect,
+                              disconnect=self.disconnect)
+
+    def callback_command_message(self, message):
+        print("I've received the following response from PubNub cloud: {0}".format(message))
+
+    def error_command_message(self, message):
+        print("There was an error when working with the PubNub cloud: {0}".format(message))
+
+    def publish_command(self, command_name, key, value):
+        command_message = {
+            self.__class__.command_key: command_name,
+            key: value}
+        self.pubnub.publish(
+            channel=self.channel,
+            message=command_message,
+            callback=self.callback_command_message,
+            error=self.error_command_message)
+
+    def callback(self, message, channel):
+        if channel == self.channel:
+            print("I've received the following message: {0}".format(message))
+
+    def error(self, message):
+        print("Error: " + str(message))
+
+    def connect(self, message):
+        print("Connected to the {0} channel".
+              format(self.channel))
+        print(self.pubnub.publish(
+            channel=self.channel,
+            message="Listening to messages in the PubNub Python Client"))
+
+    def reconnect(self, message):
+        print("Reconnected to the {0} channel".
+              format(self.channel))
+
+    def disconnect(self, message):
+        print("Disconnected from the {0} channel".
+              format(self.channel))
+
+
+if __name__ == "__main__":
+    client = Client("temperature")
+    client.publish_command(
+        "print_temperature_fahrenheit",
+        "temperature_fahrenheit",
+        45)
+    client.publish_command(
+        "print_information_message",
+        "text",
+        "Python IoT"
+    )
+    # Sleep 60 seconds (60000 milliseconds)
+    time.sleep(60)
+
+
+
+================================================
+FILE: Chapter 09/iot_python_chapter_09_05.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import pyupm_servo as upmServo
+import time
+import paho.mqtt.client as mqtt
+import json
+
+
+class TemperatureServo:
+    def __init__(self, pin):
+        self.servo = upmServo.ES08A(pin)
+        self.servo.setAngle(0)
+
+    def print_temperature(self, temperature_fahrenheit):
+        angle = temperature_fahrenheit
+        if angle < 0:
+            angle = 0
+        elif angle > 180:
+            angle = 180
+        self.servo.setAngle(angle)
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus, red, green, blue):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.oled.clear()
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+class MessageTopic:
+    command_key = "command"
+    successfully_processed_command_key = "successfully_processed_command"
+    # Replace with your own topic name
+    topic = "iot-python-gaston-hillar/temperature"
+    active_instance = None
+
+    def __init__(self, temperature_servo, oled):
+        self.temperature_servo = temperature_servo
+        self.oled = oled
+        self.client = mqtt.Client()
+        self.client.on_connect = MessageTopic.on_connect
+        self.client.on_message = MessageTopic.on_message
+        self.client.connect(host="iot.eclipse.org",
+                            port=1883,
+                            keepalive=60)
+        MessageTopic.active_instance = self
+
+    def loop(self):
+        self.client.loop()
+
+    @staticmethod
+    def on_connect(client, userdata, flags, rc):
+        print("Connected to the {0} topic".
+              format(MessageTopic.topic))
+        subscribe_result = client.subscribe(MessageTopic.topic)
+        publish_result_1 = client.publish(
+            topic=MessageTopic.topic,
+            payload="Listening to messages in the Intel Galileo Gen 2 board")
+
+    @staticmethod
+    def on_message(client, userdata, msg):
+        if msg.topic == MessageTopic.topic:
+            print("I've received the following message: {0}".format(str(msg.payload)))
+            try:
+                message_dictionary = json.loads(msg.payload)
+                if MessageTopic.command_key in message_dictionary:
+                    if message_dictionary[MessageTopic.command_key] == "print_temperature_fahrenheit":
+                        MessageTopic.active_instance.temperature_servo.print_temperature(
+                            message_dictionary["temperature_fahrenheit"])
+                        MessageTopic.active_instance.publish_response_message(
+                            message_dictionary)
+                    elif message_dictionary[MessageTopic.command_key] == "print_information_message":
+                        MessageTopic.active_instance.oled.print_line(
+                            11, message_dictionary["text"])
+                        MessageTopic.active_instance.publish_response_message(message_dictionary)
+            except ValueError:
+                # msg is not a dictionary
+                # No JSON object could be decoded
+                pass
+
+    def publish_response_message(self, message):
+        response_message = json.dumps({
+            self.__class__.successfully_processed_command_key:
+                message[self.__class__.command_key]})
+        result = self.client.publish(topic=self.__class__.topic,
+                                payload=response_message)
+        return result
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+    temperature_servo = TemperatureServo(3)
+    message_topic = MessageTopic(temperature_servo, oled)
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        # Sleep 10 seconds (10000 milliseconds) but process messages every 1 second
+        for i in range(0, 10):
+            message_topic.loop()
+            time.sleep(1)
+
+
+
+================================================
+FILE: Chapter 09/iot_python_chapter_09_06.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import time
+import paho.mqtt.client as mqtt
+import json
+
+
+command_key = "command"
+topic = "iot-python-gaston-hillar/temperature"
+
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected to the {0} topic".
+          format(topic))
+    subscribe_result = client.subscribe(topic)
+    publish_result_1 = client.publish(
+        topic=topic,
+        payload="Listening to messages in the Paho Python Client")
+    publish_result_2 = publish_command(
+        client,
+        topic,
+        "print_temperature_fahrenheit",
+        "temperature_fahrenheit",
+        45)
+    publish_result_3 = publish_command(
+        client,
+        topic,
+        "print_information_message",
+        "text",
+        "Python IoT")
+
+
+def on_message(client, userdata, msg):
+    if msg.topic == topic:
+        print("I've received the following message: {0}".format(str(msg.payload)))
+
+
+def publish_command(client, topic, command_name, key, value):
+    command_message = json.dumps({
+        command_key: command_name,
+        key: value})
+    result = client.publish(topic=topic,
+                            payload=command_message)
+    return result
+
+
+if __name__ == "__main__":
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(host="iot.eclipse.org",
+                   port=1883,
+                   keepalive=60)
+    client.loop_forever()
+
+
+
+================================================
+FILE: Chapter 10/iot_python_chapter_10_01.py
+================================================
+__author__ = 'Gaston C. Hillar'
+
+
+import pyupm_th02 as upmTh02
+import pyupm_i2clcd as upmLcd
+import pyupm_servo as upmServo
+import time
+import json
+import sys
+import requests
+import uuid
+
+
+class TemperatureServo:
+    def __init__(self, pin):
+        self.servo = upmServo.ES08A(pin)
+        self.servo.setAngle(0)
+
+    def print_temperature(self, temperature_fahrenheit):
+        angle = temperature_fahrenheit
+        if angle < 0:
+            angle = 0
+        elif angle > 180:
+            angle = 180
+        self.servo.setAngle(angle)
+
+
+class Oled:
+    # The I2C address for the OLED display
+    oled_i2c_address = 0x3C
+
+    def __init__(self, bus, red, green, blue):
+        self.oled = upmLcd.SSD1327(
+            bus,
+            self.__class__.oled_i2c_address)
+        self.oled.clear()
+
+    def print_line(self, row, message):
+        self.oled.setCursor(row, 0)
+        self.oled.setGrayLevel(12)
+        self.oled.write(message)
+
+
+class TemperatureAndHumidityOled(Oled):
+    def print_temperature(self, temperature_fahrenheit, temperature_celsius):
+        self.oled.clear()
+        self.print_line(0, "Temperature")
+        self.print_line(2, "Fahrenheit")
+        self.print_line(3, "{:5.2f}".format(temperature_fahrenheit))
+        self.print_line(5, "Celsius")
+        self.print_line(6, "{:5.2f}".format(temperature_celsius))
+
+    def print_humidity(self, humidity):
+        self.print_line(8, "Humidity")
+        self.print_line(9, "Level")
+        self.print_line(10, "{0}%".format(humidity))
+
+
+class TemperatureAndHumiditySensor:
+    def __init__(self, bus):
+        self.th02_sensor = upmTh02.TH02(bus)
+        self.temperature_celsius = 0.0
+        self.temperature_fahrenheit = 0.0
+        self.humidity = 0.0
+
+    def measure_temperature_and_humidity(self):
+        # Retrieve the temperature expressed in Celsius degrees
+        temperature_celsius = self.th02_sensor.getTemperature()
+        self.temperature_celsius = temperature_celsius
+        self.temperature_fahrenheit = \
+            (temperature_celsius * 9.0 / 5.0) + 32.0
+        # Retrieve the humidity
+        self.humidity = self.th02_sensor.getHumidity()
+
+
+class IntelIotAnalytics:
+    base_url = "https://dashboard.us.enableiot.com/v1/api"
+    # You can retrieve the following information from the My Account page
+    account_name = "Temperature and humidity"
+    account_id = "22612154-0f71-4f64-a68e-e116771115d5"
+    # You can retrieve the device token with the following command:
+    # cat /usr/lib/node_modules/iotkit-agent/data/device.json
+    device_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJjOTNmMTJhMy05MWZlLTQ3MWYtODM4OS02OGM1NDYxNDIxMDUiLCJpc3MiOiJodHRwOi8vZW5hYmxlaW90LmNvbSIsInN1YiI6ImthbnNhcy10ZW1wZXJhdHVyZS1odW1pZGl0eS0wMSIsImV4cCI6IjIwMjYtMDQtMDZUMTk6MDA6MTkuNzA0WiJ9.PH5yQas2FiQvUSR9V2pa3n3kIYZvmSe_xXY7QkFjlXUVUcyy9Sk_eVF4AL6qpZlBC9vjtd0L-VMZiULC9YXxAVl9s5Cl8ZqpQs36E1ssv_1H9CBFXKiiPArplzaWXVzvIRBVVzwfQrGrMoD_l4DcHlH2zgn5UGxhZ3RMPUvqgeneG3P-hSbPScPQL1pW85VT2IHT3seWyW1c637I_MDpHbJJCbkytPVpJpwKBxrCiKlGhvsh5pl4eLUXYUPlQAzB9QzC_ohujG23b-ApfHZugYD7zJa-05u0lkt93EEnuCk39o5SmPmIiuBup-k_mLn_VMde5fUvbxDt_SMI0XY3_Q"
+    device_id = "kansas-temperature-humidity-01"
+    component_id_temperature_fahrenheit = "0f3b3aae-ce40-4fb4-a939-e7c705915f0c"
+    component_id_temperature_celsius = "c37cb57d-002c-4a66-866e-ce66bc3b2340"
+    component_id_humidity_level_percentage = "71aba984-c485-4ced-bf19-c0f32649bcee"
+
+    def publish_observation(self,
+                            temperature_fahrenheit,
+                            temperature_celsius,
+                            humidity_level):
+        url = "{0}/data/{1}".\
+            format(self.__class__.base_url, self.__class__.device_id)
+        now = int(time.time()) * 1000
+        body = {
+            "on": now,
+            "accountId": self.__class__.account_id,
+            "data": []
+        }
+        temperature_celsius_data = {
+            "componentId": self.__class__.component_id_temperature_celsius,
+            "on": now,
+            "value": str(temperature_celsius)
+        }
+        temperature_fahrenheit_data = {
+            "componentId": self.__class__.component_id_temperature_fahrenheit,
+            "on": now,
+            "value": str(temperature_fahrenheit)
+        }
+        humidity_level_percentage_data = {
+            "componentId": self.__class__.component_id_humidity_level_percentage,
+            "on": now,
+            "value": str(humidity_level)
+        }
+        body["data"].append(temperature_celsius_data)
+        body["data"].append(temperature_fahrenheit_data)
+        body["data"].append(humidity_level_percentage_data)
+        data = json.dumps(body)
+        headers = {
+            'Authorization': 'Bearer ' + self.__class__.device_token,
+            'content-type': 'application/json'
+        }
+        response = requests.post(url, data=data, headers=headers, proxies={}, verify=True)
+        if response.status_code != 201:
+            print "The request failed. Status code: {0}. Response text: {1}.".\
+                format(response.status_code, response.text)
+
+
+if __name__ == "__main__":
+    temperature_and_humidity_sensor = \
+        TemperatureAndHumiditySensor(0)
+    oled = TemperatureAndHumidityOled(0)
+    intel_iot_analytics = IntelIotAnalytics()
+    while True:
+        temperature_and_humidity_sensor.\
+            measure_temperature_and_humidity()
+        oled.print_temperature(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius)
+        oled.print_humidity(
+            temperature_and_humidity_sensor.humidity)
+        print("Ambient temperature in degrees Celsius: {0}".
+              format(temperature_and_humidity_sensor.temperature_celsius))
+        print("Ambient temperature in degrees Fahrenheit: {0}".
+              format(temperature_and_humidity_sensor.temperature_fahrenheit))
+        print("Ambient humidity: {0}".
+              format(temperature_and_humidity_sensor.humidity))
+        intel_iot_analytics.publish_observation(
+            temperature_and_humidity_sensor.temperature_fahrenheit,
+            temperature_and_humidity_sensor.temperature_celsius,
+            temperature_and_humidity_sensor.humidity
+        )
+        # Sleep 5 seconds (5000 milliseconds)
+        time.sleep(5)
+
+

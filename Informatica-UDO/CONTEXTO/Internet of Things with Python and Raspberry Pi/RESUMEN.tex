@@ -1,0 +1,448 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{microtype} % Mejora la justificación y el espaciado
+\usepackage{cite}      % Para gestionar las citas bibliográficas
+\usepackage{verbatim}
+
+% --- Document Setup ---
+\geometry{a4paper, margin=1in}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\title{INTERNET DE LAS COSAS (IoT) CON PYTHON Y RASPBERRY PI}
+\author{Prof. César Rodríguez}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{INTRODUCCIóN}
+% 1.INTRODUCCIóN.
+En las últimas décadas, el desarrollo tecnológico ha impulsado transformaciones profundas en la forma en que las personas 
+interactúan con su entorno. Uno de los avances más significativos en este proceso es el Internet de las Cosas 
+(IoT, por sus siglas en inglés), concepto que hace referencia a la interconexión de dispositivos físicos a través de redes 
+digitales con el fin de recopilar, procesar y compartir información en tiempo real. Esta tendencia ha abierto un amplio 
+abanico de oportunidades en diversos sectores como la salud, la industria, la educación, el transporte y la gestión de recursos, 
+generando cambios en la eficiencia de los procesos y en la calidad de vida de la sociedad.
+
+El IoT se fundamenta en la integración de sensores, actuadores, sistemas de comunicación y plataformas de análisis de datos, 
+permitiendo que objetos cotidianos se conviertan en elementos inteligentes capaces de interactuar entre sí y con los usuarios. 
+Su implementación ofrece beneficios como la automatización de tareas, optimización en la toma de decisiones y reducción de 
+costos operativos, además de posibilitar soluciones innovadoras para problemáticas actuales como la sostenibilidad ambiental, 
+la movilidad urbana o la atención médica remota.
+
+No obstante, el crecimiento del IoT también plantea retos importantes relacionados con la seguridad de la información, la 
+interoperabilidad de los dispositivos y la gestión de grandes volúmenes de datos. Estos desafíos hacen necesario el desarrollo 
+de propuestas que garanticen no solo la viabilidad técnica de los sistemas, sino también su confiabilidad y aceptación social.
+
+En este contexto, el presente proyecto de tesis (\textbf{IoT con Python y Raspberry Pi}) busca orientar en el estudio y 
+aplicación del Internet de las Cosas, analizando sus fundamentos teóricos, sus potenciales aplicaciones y las limitaciones que 
+enfrenta en su implementación. De esta manera, se pretende aportar conocimiento que contribuya al diseño de soluciones tecnológicas 
+innovadoras y sostenibles, alineadas con las demandas actuales de la sociedad y con las perspectivas de un futuro cada vez más 
+digitalizado.
+
+En un contexto más amplio de este proyecto, en esta introducción se destacan los siguientes aspectos claves:
+\begin{itemize}
+    \item Naturaleza y Enfoque del Proyecto:
+    \begin{itemize}
+        \item El proyecto puede tomarse como una guía práctica y completa dirigida tanto a usuarios \textbf{principiantes} o \textbf{intermedios}
+              interesados en el Internet de las Cosas (IoT).
+        \item Busca un \textbf{equilibrio completo} entre el \textbf{desarrollo de dispositivos en Raspberry Pi} y el \textbf{desarrollo de servidores 
+              locales y remotos utilizando Python}.
+    \end{itemize}
+
+    \item Objetivo Principal y Producto Final:
+    \begin{itemize}                                                                                                                        
+        \item El objetivo central es construir una \textbf{plataforma en la nube en la que múltiples usuarios pueden iniciar sesión de forma 
+              segura y controlar y monitorear sus dispositivos autorizados en tiempo real}.
+        \item El producto final será un \textbf{\texttt{'dashboard'}} que muestre gráficos visuales con datos de sensores y actuadores en tiempo real, 
+              con una \textbf{infraestructura a nivel de la nube}, que permitirá una solución IoT completa desde el dispositivo hasta la nube.
+    \end{itemize}
+
+    \item Tecnologías Claves:
+    \begin{itemize}
+        \item Las \textbf{tecnologías principales} en las que se trabajará son \textbf{Python, Raspberry Pi, Flask, AWS y PubNub}.
+    \end{itemize}
+\end{itemize}
+
+\section{Estructura del Proyecto por Etapas}
+    \begin{itemize}
+        \item \textbf{Etapa 1: Introducción a IoT}: Se enfoca en \textbf{entender qué es el Internet de las Cosas y sus principales componentes}, como 
+              dispositivos inteligentes, sensores y actuadores. También se tendrá como objetivo entender \textbf{cuatro importantes modelos de 
+              comunicación del Internet de las Cosas}.
+        \item \textbf{Etapa 2: Primer Proyecto IoT}: Se \textbf{ejecutarán labores prácticas} desarrollando un proyecto IoT simple con sensores
+              mostrando datos en una aplicación web, utilizando la técnica \textbf{AJAX} para la comunicación. Aquí se construirá un 
+              \textbf{dispositivo IoT de defensa contra robos} que detecta movimiento, activa una alarma y envía alertas, permitiendo también la desactivación
+              de la alarma.
+        \item \textbf{Etapa 3: Seguridad y Protocolos de Comunicación}: Después de analizar ventajas y desventajas del proyecto de la Sección 2, se 
+              estudiará en profundidad los \textbf{protocolos de comunicación en tiempo real y ligeros} para IoT, como \textbf{MQTT, WebSockets}, y se hará
+              una \textbf{demostración práctica con PubNub}. También se cubrirá \textbf{seguridad en Internet y criptografía}, incluyendo SSL/TLS y 
+              protocolos HTTP.
+        \item \textbf{Etapa 4: Reconstrucción del Proyecto con PubNub y AWS}: Se \textbf{reconstruirá el proyecto anterior utilizando PubNub como el 
+              principal protocolo de comunicación} en lugar de \textbf{AJAX}. Además, se aprenderá a \textbf{desplegar el servidor IoT en la nube de AWS}.
+        \item \textbf{Etapa 5: Implementación de Seguridad}: Se centrará en el desarrollo de las terminologías de seguridad estudiadas en la Sección 3. 
+              Esto incluye la adquisición de un \textbf{nombre de dominio personalizado y su aseguramiento con certificados SSL/TLS}, 
+              así como la implementación de una \textbf{funcionalidad de inicio de sesión de usuario segura} y el almacenamiento de detalles de usuario 
+              en una base de datos integrada. Se gestionarán las \textbf{reglas de seguridad de entrada para HTTPS en el servidor remoto de AWS}.
+        \item \textbf{Etapa 6: Conexión Segura de Usuarios y Dispositivos}: Se implementará una forma segura para que usuarios y dispositivos IoT se 
+              conecten al servidor. Se utilizará la \textbf{funcionalidad de administrador de acceso de PubNub} para que los usuarios administradores 
+              puedan \textbf{otorgar acceso de lectura y escritura en tiempo real} a usuarios no administradores y dispositivos.
+        \item \textbf{Etapa 7: Proyecto Final: Sistema de Monitoreo Remoto}: Se añadirán más sensores y actuadores para construir un 
+              \textbf{sistema de monitoreo salud/batería}, familiarizándose con convertidores digitales, interfaz periférica serial y más.
+    \end{itemize}
+
+\section{Resultados del Proyecto}
+    \begin{itemize}
+        \item Al finalizar el proyecto, se \textbf{entenderá lo que se necesita para construir una solución IoT propia e integral}, desde la 
+        simplicidad a nivel de dispositivo hasta la complejidad de la infraestructura a nivel de la nube. Podrán expandir el proyecto añadiendo más 
+        dispositivos y funcionalidades según surjan necesidades.
+    \end{itemize}
+
+En esencia, en este proyecto se estudian desde los fundamentos teóricos y el desarrollo local de dispositivos, hasta 
+la implementación de una plataforma IoT segura, escalable y en la nube (servidor remoto), capacitandonos para abordar problemas del mundo real con un
+conjunto robusto de \textbf{tecnologías} y \textbf{conocimientos}.
+
+\newpage
+\section{GUIA PRáCTICA}
+% 1.1.GUIA PRACTICA.
+Se pretende con este proyecto (\textbf{IoT con Python y Raspberry Pi}) construir una \textbf{guía práctica y completa} 
+para usuarios principiantes e intermedios en el campo del Internet de las Cosas (IoT), con 
+el objetivo de que se \textbf{entiendan y resuelvan problemas del mundo real de IoT}.
+
+En un contexto más amplio de esta \textbf{introducción}, esta guía práctica se manifiesta a través de varias secciones 
+y proyectos claves:
+
+\begin{itemize}
+    \item \textbf{Desarrollo de proyectos IoT}:
+    \begin{itemize}
+        \item La etapa 2 se centra en la \textbf{puesta en práctica} con el \textbf{desarrollo de un proyecto simple de IoT 
+        utilizando sensores que muestran datos en una aplicación web}, empleando la técnica AJAX para la comunicación cliente-servidor.
+        \item Un ejemplo detallado de este enfoque es el \textbf{proyecto de detector de movimiento antirrobo}, donde se conecta 
+        un sensor PIR y un zumbador a una Raspberry Pi, y se escribe código Python para detectar movimiento y controlar el zumbador, 
+        además de configurar un servidor web HTTP básico.
+        \item La etapa 4 reconstruye el proyecto anterior para utilizar PubNub como protocolo de comunicación principal y enseña 
+        \textbf{cómo desplegar un servidor IoT en la nube de AWS}.
+        \item La etapa 7 culmina con un \textbf{último proyecto llamado sistema de monitoreo salud/batería}. En este proyecto, se 
+        añadiran los sensores y actuadores necesarios para monitoria tales variable, y los participantes se familiarizan con 
+        convertidores digitales, interfaz periférica serial y más. El producto final es un \textbf{tablero de control 
+        que muestra gráficos visuales con datos de sensores y actuadores en tiempo real}.
+    \end{itemize}
+
+    \item \textbf{Desarrollo de servidor y seguridad}:
+    \begin{itemize}
+        \item El proyecto proporciona un equilibrio entre el \textbf{desarrollo de dispositivos en Raspberry Pi y el desarrollo de 
+        servidores locales y remotos usando Python}.
+        \item La etapa 5 se enfoca en el \textbf{desarrollo de conceptos de seguridad}, incluyendo la \textbf{obtención y protección 
+        de un dominio personalizado con certificados SSL/TLS de Let's Encrypt}. Esto implica instalar software de terceros como 
+        \textbf{Certbot} y configurar reglas de seguridad de entrada para HTTPS.
+        \item También se implementará una \textbf{funcionalidad segura de inicio de sesión de usuario} y el almacenamiento de detalles de 
+        usuario en una base de datos integrada.
+        \item La etapa 6 implementa una \textbf{forma segura para que los usuarios y dispositivos IoT se conecten al servidor IoT}. 
+        También utilizara la funcionalidad de \textbf{administrador de acceso de PubNub} para que los usuarios administradores puedan 
+        \textbf{otorgar acceso de lectura y escritura en tiempo real a usuarios no administradores y dispositivos}. Esto se visualizara en 
+        un \textbf{tablero de control para administradores} que listara los usuarios en línea y ofrecera botones para conceder permisos.
+    \end{itemize}
+\end{itemize}
+
+\section{PLATAFORMA IoT EN LA NUBE}
+% 1.2.PLATAFORMA IoT EN LA NUBE.
+Se describe la \textbf{Plataforma IoT en la Nube} como un componente esencial para construir una \textbf{solución integral de IoT}, 
+que abarca desde la simplicidad a nivel de dispositivo hasta la complejidad de la infraestructura a nivel de nube. En el contexto del 
+\textbf{intrucción del proyecto}, se aprenderá a desarrollar una \textbf{plataforma en la nube segura (secure cloud platform)} donde 
+múltiples usuarios pueden iniciar sesión, controlar y monitorear sus dispositivos autorizados en tiempo real. 
+El proyecto se equilibra entre el \textbf{desarrollo de dispositivos en Raspberry Pi y el desarrollo de servidores locales y remotos 
+utilizando Python}. 
+La Plataforma IoT en la Nube se construira y se utilizará a lo largo de varias etapas:
+\begin{itemize}
+    \item \textbf{Despliegue en la nube de AWS}:
+    \begin{itemize}
+        \item La etapa 4 se centra en la \textbf{reconstrucción del proyecto} inicial para utilizar PubNub como protocolo de 
+        comunicación principal y se enseñara \textbf{cómo desplegar un servidor IoT en la nube de AWS (deploy IoT server into AWS cloud)}.
+        \item La configuración de seguridad para este servidor en la nube es crucial. Por ejemplo, al asegurar un dominio 
+        personalizado con certificados SSL/TLS, se destaca la necesidad de \textbf{asignar reglas de seguridad de entrada para HTTPS 
+        en el servidor remoto de AWS} para permitir la conexión en el puerto 443.
+    \end{itemize}
+
+    \item \textbf{Protocolos de comunicación y seguridad en la nube}:
+    \begin{itemize}
+        \item Las etapas 3 y 4 abordan en profundidad los \textbf{protocolos de comunicación en tiempo real y ligeros} como MQTT 
+        y WebSockets, y su implementación con \textbf{PubNub}. PubNub es descrito como un servicio de entrega sobre WebSockets, lo 
+        que sugiere su rol como una capa de comunicación gestionada en la nube para IoT.
+        \item La etapa 5 se dedica al \textbf{desarrollo de conceptos de seguridad} en la plataforma en la nube, incluyendo:
+        \begin{itemize}
+            \item La obtención y \textbf{protección de un dominio personalizado con certificados SSL/TLS de Let's Encrypt}. Esto 
+            implica la instalación de software de terceros como Certbot y la configuración de las reglas de seguridad de entrada 
+            para HTTPS en el servidor remoto.
+            \item La implementación de una \textbf{funcionalidad segura de inicio de sesión de usuario} y el almacenamiento de los 
+            detalles del usuario en una base de datos integrada.
+        \end{itemize}
+        \item La etapa 6 implementa una \textbf{forma segura para que los usuarios y dispositivos IoT se conecten al servidor IoT}. 
+        También utiliza la funcionalidad de \textbf{administrador de acceso de PubNub (PubNub access manager functionality)} para 
+        que los usuarios administradores puedan otorgar acceso de lectura y escritura en tiempo real a usuarios no administradores 
+        y dispositivos. Esto se visualizara en un \textbf{tablero de control para administradores} que lista a los usuarios en línea 
+        y permitira conceder permisos.
+    \end{itemize}
+\end{itemize}
+El objetivo final es que, al finalizar el proyecto, los participantes sepan \textbf{lo que se necesita para construir su propia 
+solución IoT integral}, abarcando desde la simplicidad a nivel de dispositivo hasta la complejidad de la infraestructura 
+a nivel de nube.
+
+\section{ENFOQUE BASADO EN LA RESOLUCIÓN DE PROBLEMAS}
+% 1.3.ENFOQUE BASADO EN LA RESOLUCIÓN DE PROBLEMAS.
+Se indica que en el proyecto  'IoT con Python y Raspberry Pi ' se adopta un \textbf{enfoque basado en la resolución de problemas}, 
+particularmente centrándose en \textbf{problemas de IoT del mundo real}. Este enfoque se enmarca en una \textbf{guía práctica 
+completa} destinada tanto a principiantes como a usuarios intermedios. En el contexto más amplio del \textbf{Resumen del Curso}, 
+este enfoque se desarrolla de la siguiente manera:
+
+\begin{itemize}
+    \item \textbf{Comprensión y aplicación}: El proyecto sigue un \textbf{enfoque basado en la reconstrucción completa}. Esto significa 
+    que ayuda a los usuarios del sistema a \textbf{entender el por qué antes del cómo y qué}. Esta metodología sugiere que se busca 
+    una comprensión profunda de los desafíos antes de abordar su implementación técnica.
+
+    \item \textbf{Proyectos prácticos para problemas del mundo real}:
+    \begin{itemize}
+        \item La etapa 2 del proyecto se enfoca en \textbf{ensuciarse las manos} con el desarrollo de un \textbf{proyecto simple de IoT 
+        utilizando sensores que muestran datos en una aplicación web}.
+        \item Un ejemplo concreto de esto es el \textbf{proyecto de detector de movimiento antirrobo}, que busca crear un 
+        dispositivo de defensa contra robos que detecta movimiento, activa una alarma y envía alertas, además de permitir la desactivación 
+        de la alarma por parte del usuario.
+        \item La etapa 7 presenta un \textbf{último proyecto llamado sistema de monitoreo}. En este proyecto, se añaden más sensores y 
+        actuadores acordes con lo que se quiera monitonear para \textbf{construir algo significativo para un caso de uso del mundo real}. 
+        El producto final es un tablero de control que muestra gráficos visuales con datos de sensores y actuadores en tiempo real.
+    \end{itemize}
+
+    \item \textbf{Desarrollo de soluciones integrales}: El proyecto busca un equilibrio entre el desarrollo de dispositivos en Raspberry Pi 
+    y el desarrollo de servidores locales y remotos usando Python. El objetivo final de este enfoque basado en la resolución de problemas es 
+    que, al finalizar el proyecto, los participantes sepan \textbf{lo que se necesita para construir su propia solución IoT integral}, 
+    abarcando desde la simplicidad a nivel de dispositivo hasta la complejidad de la infraestructura a nivel de nube. Esto incluye el 
+    desarrollo de una plataforma en la nube segura donde múltiples usuarios pueden iniciar sesión, controlar y monitorear sus dispositivos 
+    autorizados en tiempo real.
+\end{itemize}
+En resumen, el 'Enfoque Basado en Resolución de Problemas' es central en el proyecto, guiando a losdesarrolladores del sistema a través 
+de la comprensión de los desafíos de IoT y proporcionándoles las herramientas y la experiencia práctica para construir soluciones funcionales 
+y seguras para escenarios del mundo real.
+
+\section{TECNOLOGIAS CLAVES}
+% 1.4.TECNOLOGIAS CLAVES.
+\subsection{PYTHON}
+\textbf{Python} \cite{python} es una de las \textbf{tecnologías principales} en el proyecto  'Internet de las 
+Cosas con Python y Raspberry Pi'. Su rol es fundamental y se equilibra entre el desarrollo a nivel de dispositivo y el desarrollo de 
+servidores. En el contexto más amplio de las \textbf{Tecnologías Clave} del proyecto, Python se utiliza para:
+
+\begin{itemize}
+    \item \textbf{Programación de Dispositivos IoT con Raspberry Pi}:
+    \begin{itemize}
+        \item Los desarrolladores aprenderán a escribir \textbf{código Python básico} para detectar señales de sensores (como el sensor 
+        PIR para movimiento) y controlar actuadores (como el zumbador). Este código permite la detección de movimiento y la activación 
+        de alarmas.
+        \item También se utilizara Python para implementar la lógica de comunicación bidireccional, permitiendo a los usuarios interactuar 
+        con el dispositivo, como desactivar una alarma.
+    \end{itemize}
+
+    \item \textbf{Desarrollo de Servidores Locales y Remotos}:
+    \begin{itemize}
+        \item Python se empleara para crear un \textbf{servidor web HTTP básico con Flask} en la Raspberry Pi, que se ejecutara en la 
+        red Wi-Fi local.
+        \item El proyecto mantiene un \textbf{equilibrio completo entre el desarrollo de dispositivos en Raspberry Pi y el desarrollo 
+        de servidores locales y remotos usando Python}. Esto incluye el despliegue de un servidor IoT en la nube de AWS.
+    \end{itemize}
+
+    \item \textbf{Funcionalidades del Servidor IoT (con Flask)}:
+    \begin{itemize}
+        \item Dentro de la aplicación Flask, Python se utilizara para añadir funcionalidades esenciales como la provisión de detalles 
+        adicionales como el ID de usuario y la lista de usuarios en línea a la página web.
+        \item Se implementara lógica en Python para \textbf{poblar variables con registros de usuarios en línea}, incluyendo nombres, 
+        IDs de usuario y estados de acceso de lectura y escritura.
+        \item Python es fundamental para \textbf{crear \textit{endpoints}} en la aplicación Flask para recibir solicitudes, como las 
+        de concesión de permisos.
+        \item También se usara para manejar la \textbf{lógica de permisos de usuario}, almacenando permisos de lectura y escritura en la 
+        base de datos y llamando al servidor de PubNub para conceder acceso específico a los usuarios.
+        \item Se asegura que los paneles de control de acceso solo sean visibles para los usuarios administradores, utilizando la ID 
+        de usuario para añadir sentencias condicionales en el código HTML a través de las plantillas Jinja, gestionadas por Python en 
+        el servidor.
+    \end{itemize}
+\end{itemize}
+En resumen, Python es una tecnología central que une tanto la programación del hardware (Raspberry Pi) como la creación de la 
+infraestructura de software (servidores, lógica de negocio, seguridad y gestión de usuarios) que forman la solución integral 
+de IoT del proyecto.
+
+\subsection{RASPBERRY PI}
+Se establece claramente que \textbf{Raspberry Pi} \cite{raspberrypi} es una de las \textbf{tecnologías principales} 
+abordadas en el proyecto  'Internet de las Cosas con Python y Raspberry Pi '. Su papel es fundamental para el \textbf{desarrollo 
+de dispositivos IoT} y para albergar servidores locales. En el contexto más amplio de las \textbf{Tecnologías Clave}, la Raspberry Pi 
+se utilizara para:
+\begin{itemize}
+    \item \textbf{Plataforma de Hardware para Dispositivos IoT}:
+    \begin{itemize}
+        \item El proyecto mantiene un \textbf{equilibrio completo entre el desarrollo de dispositivos en Raspberry Pi y el desarrollo 
+        de servidores locales y remotos usando Python}. Esto subraya su importancia como la plataforma física sobre la que se construyen 
+        las soluciones IoT.
+        \item En la etapa 2, los desarrolladores del proyecto 'se ensuciarán las manos' con un \textbf{proyecto simple de IoT} utilizando 
+        sensores y mostrando datos en una aplicación web, con la Raspberry Pi como el cerebro del dispositivo.
+    \end{itemize}
+
+    \item \textbf{Implementación de Proyectos Prácticos}:
+    \begin{itemize}
+        \item Para el \textbf{proyecto de detector de movimiento antirrobo}, la Raspberry Pi es el dispositivo central. Se conecta con el 
+        \textbf{sensor PIR (Passive Infrared)} para detectar movimiento y un \textbf{zumbador (buzzer)} como actuador para activar una alarma.
+        \item Los desarrolladores escribirán código Python para detectar señales y controlar el zumbador, así como para añadir funcionalidad 
+        de comunicación bidireccional, permitiendo a los usuarios desactivar la alarma.
+        \item En la etapa 7, la Raspberry Pi continuará siendo la plataforma para el \textbf{sistema de monitoreo atmosférico}, 
+        un proyecto que implica la adición de más sensores y actuadores para construir algo significativo para un caso de uso del mundo real.
+    \end{itemize}
+
+    \item \textbf{Alojamiento de Servidores Locales}:
+    \begin{itemize}
+        \item La Raspberry Pi se utilizara para ejecutar un \textbf{servidor web HTTP básico con Flask} en la red Wi-Fi local. Esto 
+        permitira que los usuarios, conectados a la misma red, accedan a una página web desde sus navegadores y reciban actualizaciones 
+        en vivo del sensor.
+        \item También se añadira un botón en la página web para que los usuarios puedan controlar los actuadores, como desactivar el zumbador.
+    \end{itemize}
+
+    \item \textbf{Configuración y Preparación del Entorno}:
+    \begin{itemize}
+        \item Para empezar, se sugiere a los desarrolladores configurar sus Raspberry Pi siguiendo las instrucciones oficiales, lo que 
+        incluye el uso de una tarjeta SD de al menos 8GB para el sistema operativo.
+        \item Se menciona la opción de utilizar un monitor HDMI o realizar una \textbf{conexión de escritorio remoto} a la Raspberry Pi.
+        \item Para la Raspberry Pi 3, se enfatiza la necesidad de \textbf{habilitar SSH} a través de la terminal usando \verb|sudo raspi_config|.
+    \end{itemize}
+\end{itemize}
+En resumen, la Raspberry Pi es la \textbf{piedra angular del hardware} en este proyecto, permitiendo a los estudiantes interactuar 
+directamente con el mundo físico a través de sensores y actuadores, y también sirve como una plataforma de bajo costo para desarrollar 
+y probar servidores IoT a nivel local, antes de pasar a despliegues en la nube.
+
+\subsection{FLASK}
+Se indica que \textbf{Flask} \cite{flask} es una de las \textbf{tecnologías principales} utilizadas en el proyecto 
+'Internet de las Cosas con Python y Raspberry Pi'. Su rol es crucial para el \textbf{desarrollo de servidores IoT}, tanto a nivel local 
+como remoto. 
+En un contexto más amplio de las \textbf{Tecnologías Clave} del proyecto, Flask se empleara para:
+
+\begin{itemize}
+    \item \textbf{Desarrollo de Servidores Web HTTP Locales}:
+    \begin{itemize}
+        \item Los desarrolladores aprenderán a escribir un \textbf{servidor web HTTP básico en Python Flask en Raspberry Pi}. Este servidor 
+        se ejecutará en la red Wi-Fi local, permitiendo que los usuarios de la misma red accedan a una página web y reciban actualizaciones 
+        en vivo de los sensores.
+        \item También se añadira un botón en la página web para que los usuarios puedan controlar los actuadores, como desactivar un zumbador, 
+        comunicándose con el servidor Flask.
+    \end{itemize}
+    
+    \item \textbf{Desarrollo de Servidores Remotos y en la Nube}:
+    \begin{itemize}
+        \item El proyecto mantiene un \textbf{equilibrio completo entre el desarrollo de dispositivos en Raspberry Pi y el desarrollo de 
+        servidores locales y remotos usando Python}, donde Flask juega un papel clave en la parte del servidor. Esto incluye el despliegue 
+        de servidores IoT en la nube de AWS.
+    \end{itemize}
+
+    \item \textbf{Implementación de la Lógica del Servidor IoT}:
+    \begin{itemize}
+        \item \textbf{Provisión de Detalles al Cliente}: Flask se utilizara para pasar detalles adicionales como el ID de usuario y la 
+        lista de usuarios en línea a la página web del cliente.
+        \item \textbf{Población de Datos de Usuarios en Línea}: Se implementa lógica en Flask (usando Python) para crear un mapa 
+        \verb|online_user_records| que contenga el nombre del usuario, el ID de usuario y los estados de permisos de lectura y escritura 
+        (representados como 'checked' o 'unchecked' para el HTML). Este mapa es luego enviado a las plantillas Jinja en \verb|index.html| 
+        para poblar dinámicamente la lista de usuarios en línea.
+        \item \textbf{Gestión de Permisos de Usuario}:
+        \begin{itemize}
+            \item Flask recibira solicitudes de 'concesión' de permisos (grant) desde el código JavaScript del cliente a través de 
+            \textit{endpoints} específicos.
+            \item La aplicación Flask verifica si la solicitud proviene de un usuario administrador antes de procesar la solicitud.
+            \item Se utilizara Flask para \textbf{almacenar los permisos de lectura y escritura del usuario en la base de datos y luego 
+            llamar al servidor de PubNub para conceder acceso de lectura y escritura específico a este usuario}.
+        \end{itemize}
+        \item \textbf{Control de Visibilidad del Panel de Acceso}: La aplicación Flask, al enviar el ID de usuario al cliente, permite 
+        que las plantillas Jinja utilicen sentencias condicionales (\verb|if|) para que el panel de control de acceso solo sea visible 
+        para los usuarios administradores.
+    \end{itemize}
+\end{itemize}
+En síntesis, Flask es una \textbf{pieza fundamental en la arquitectura del servidor IoT} presentada en el proyecto, facilitando la 
+comunicación entre los dispositivos, los usuarios y la infraestructura de la nube. Permite la creación de la interfaz web, la gestión de 
+datos de usuarios, la implementación de la lógica de permisos y la interacción bidireccional, contribuyendo a la construcción de una 
+\textbf{solución IoT segura y escalable}.
+
+\subsection{AWS}
+\textbf{AWS (Amazon Web Services)} \cite{AWS} es reconocida como una de las \textbf{tecnologías principales} que se abordarán en el 
+proyecto 'Internet de las Cosas con Python y Raspberry Pi'. Su rol es fundamental en el contexto más amplio de las Tecnologías Clave 
+del proyecto, particularmente en el \textbf{desarrollo y despliegue de la infraestructura IoT en la nube}. En este contexto, AWS 
+se utilizara para:
+\begin{itemize}
+    \item \textbf{Plataforma de Despliegue en la Nube}:
+    \begin{itemize}
+        \item El proyecto enseña a \textbf{desplegar el servidor IoT en la nube de AWS}. Esto complementa el 
+        desarrollo de dispositivos en Raspberry Pi y servidores locales, logrando un \textbf{ 'equilibrio completo '} entre ambos.
+        \item El objetivo es construir una \textbf{plataforma en la nube \textit{serverless}} en la que múltiples usuarios 
+        puedan iniciar sesión de forma segura y controlar y monitorear sus dispositivos autorizados en tiempo real.
+        \item El producto final del proyecto incluirá una \textbf{infraestructura a nivel de la nube}.
+    \end{itemize}
+
+    \item \textbf{Alojamiento del Servidor Remoto}:
+    \begin{itemize}
+        \item AWS es la plataforma donde reside el \textbf{servidor remoto} para la aplicación IoT. Se menciona específicamente 
+        una \textbf{instancia EC2}, lo que implica el uso de servicios de cómputo virtual de AWS para alojar el servidor.
+    \end{itemize}
+
+    \item \textbf{Configuración de Seguridad en la Nube}:
+    \begin{itemize}
+        \item Para asegurar el servidor alojado, se gestionanran las \textbf{reglas de seguridad de entrada (inbound security rules)} 
+        en AWS. Específicamente, se deben \textbf{asignar reglas de seguridad de entrada para HTTPS} en la configuración de la instancia 
+        EC2 para permitir el tráfico seguro a través del puerto 443. Esto es crucial para la implementación de SSL/TLS con certificados 
+        Let's Encrypt.
+    \end{itemize}
+\end{itemize}
+En resumen, AWS es la \textbf{columna vertebral de la infraestructura en la nube} para la solución IoT del proyecto, permitiendo el 
+despliegue de servidores remotos escalables y seguros, y facilitando la gestión de la conectividad y la seguridad a nivel de la nube 
+para los dispositivos y usuarios.
+
+\subsection{PUBNUB}
+\textbf{PubNub} \cite{pubnub} es explícitamente una de las \textbf{tecnologías principales} que se abordarán en el 
+proyecto  'Internet de las Cosas con Python y Raspberry Pi '. Su papel es fundamental en el contexto más amplio de las Tecnologías 
+Clave, especialmente en la \textbf{gestión de la comunicación en tiempo real y la seguridad de acceso} en entornos IoT. En el contexto 
+de las Tecnologías Clave, PubNub se utiliza para:
+\begin{itemize}
+    \item \textbf{Protocolo de Comunicación en Tiempo Real y Ligero}:
+    \begin{itemize}
+        \item En el proyecto se estudiará en profundidad los protocolos de comunicación en tiempo real y ligeros para Internet de las Cosas, 
+        incluyendo MQTT, WebSockets y, finalmente, realizará una \textbf{demostración práctica con PubNub}.
+        \item Es seleccionado como el \textbf{principal protocolo de comunicación} para un proyecto reconstruido en la etapa 4, reemplazando 
+        a la técnica de \textit{long polling} con AJAX. Esto subraya su importancia para una comunicación eficiente y reactiva en la 
+        aplicación IoT.
+    \end{itemize}
+
+    \item \textbf{Gestión de Acceso y Permisos de Usuario}:
+    \begin{itemize}
+        \item PubNub se utilizara para implementar una funcionalidad clave: el \textbf{administrador de acceso de PubNub}. Esta característica 
+        permitira a los usuarios administradores \textbf{otorgar acceso de lectura y escritura en tiempo real} a todos los usuarios no 
+        administradores y a los dispositivos.
+        \item La lógica de la aplicación Flask interactúa directamente con PubNub. Después de almacenar los permisos de lectura y escritura en 
+        la base de datos, la aplicación \textbf{llama al servidor de PubNub para conceder acceso de lectura y escritura específico a este 
+        usuario}.
+        \item La concesión de permisos de lectura y escritura a través de PubNub es el segundo paso de un proceso, siendo el primero la 
+        generación de una clave de autorización para el usuario específico y su almacenamiento en la base de datos.
+    \end{itemize}
+
+    \item \textbf{Seguridad y Control en el Ecosistema IoT}:
+    \begin{itemize}
+        \item Al permitir el otorgamiento de permisos de acceso en tiempo real, PubNub contribuye significativamente a un 
+        \textbf{ecosistema IoT fuerte, seguro, en tiempo real y escalable}. Esto es vital para asegurar que solo los usuarios y 
+        dispositivos autorizados puedan controlar y monitorear otros dispositivos.
+    \end{itemize}
+\end{itemize}
+En síntesis, PubNub es una \textbf{tecnología crucial} que no solo facilita la comunicación en tiempo real de baja latencia en el 
+sistema IoT, sino que también es instrumental en la implementación de un \textbf{modelo de seguridad robusto} mediante la gestión dinámica 
+de permisos de acceso, lo que es esencial para construir una \textbf{plataforma IoT multiusuario y segura}.
+
+\newpage
+\bibliographystyle{ieeetr}
+\bibliography{bibliografia}
+\end{document}
+

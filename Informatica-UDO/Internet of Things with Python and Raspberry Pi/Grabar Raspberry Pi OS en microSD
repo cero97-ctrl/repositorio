@@ -1,0 +1,40 @@
+Para grabar Raspberry Pi OS en una microSD, puedes seguir estos pasos utilizando **Raspberry Pi Imager**, que es la herramienta más recomendada para este proceso. Aquí tienes una guía detallada:
+
+### Pasos para Grabar Raspberry Pi OS en una microSD
+
+1. **Descargar Raspberry Pi Imager**:
+   - Ve al sitio oficial de Raspberry Pi y descarga el [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
+
+2. **Instalar Raspberry Pi Imager**:
+   - Sigue las instrucciones de instalación para tu sistema operativo (Windows, macOS o Linux).
+
+3. **Insertar la microSD**:
+   - Conecta la microSD a tu computadora usando un lector de tarjetas.
+
+4. **Abrir Raspberry Pi Imager**:
+   - Inicia la aplicación Raspberry Pi Imager.
+
+5. **Seleccionar el Sistema Operativo**:
+   - Haz clic en **"CHOOSE OS"**.
+   - Selecciona **"Raspberry Pi OS"** de la lista. Puedes elegir entre varias versiones, como la versión completa o la versión Lite (sin entorno gráfico).
+
+6. **Seleccionar la microSD**:
+   - Haz clic en **"CHOOSE STORAGE"** y selecciona la microSD que has insertado.
+
+7. **Grabar la Imagen**:
+   - Haz clic en **"WRITE"** para comenzar a grabar la imagen en la microSD.
+   - Es posible que se te pida confirmar que deseas borrar todos los datos en la microSD. Asegúrate de que has seleccionado la unidad correcta y confirma.
+
+8. **Esperar a que se Complete el Proceso**:
+   - La herramienta comenzará a escribir la imagen y luego verificará que se haya grabado correctamente. Este proceso puede tardar varios minutos.
+
+9. **Retirar la microSD**:
+   - Una vez que el proceso haya finalizado, retira la microSD de forma segura de tu computadora.
+
+10. **Insertar en Raspberry Pi**:
+    - Inserta la microSD en tu Raspberry Pi y enciéndelo. Sigue las instrucciones en pantalla para configurar el sistema operativo.
+
+### Recursos Adicionales
+- Puedes ver un video tutorial sobre este proceso en [YouTube](https://www.youtube.com/watch?v=sq5S1MM2Pmo) que te guiará visualmente a través de los pasos.
+
+Siguiendo estos pasos, deberías poder instalar Raspberry Pi OS en tu microSD sin problemas. Si tienes alguna pregunta adicional, no dudes en preguntar.

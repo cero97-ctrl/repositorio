@@ -1,0 +1,97 @@
+Conexiones de Componentes en Intel Galileo Gen 2.
+
+La placa Intel Galileo Gen 2 es el ordenador embebido principal utilizado en el proyecto "Internet of Things with Python" [i]. A lo largo del libro, se conectan diversos componentes a sus pines específicos para interactuar con el mundo físico.
+A continuación, se detallan los componentes y sus conexiones a la placa Intel Galileo Gen 2:
+• LEDs integrados en la placa:
+    ◦ LED "L": Conectado al pin digital I/O 13
+.
+• LEDs externos y resistores (control de salida digital):
+    ◦ 9 LEDs individuales con 9 resistores de 270Ω: Inicialmente conectados a los pines digitales I/O 1 a 9
+. Posteriormente, para optimizar el cableado, se modificó para que el LED 1 estuviera en el pin 9, el LED 2 en el pin 8, y así sucesivamente hasta el LED 9 en el pin 1. Cada LED se conecta a un pin GPIO a través de un resistor de 270Ω, y su cátodo a tierra (GND)
+.
+• LEDs de un solo color (Rojo, Verde, Azul) con resistores (control PWM):
+    ◦ LED Rojo: Conectado al pin PWM ~6 (salida digital I/O 6 con capacidad PWM)
+.
+    ◦ LED Verde: Conectado al pin PWM ~5 (salida digital I/O 5 con capacidad PWM)
+.
+    ◦ LED Azul: Conectado al pin PWM ~3 (salida digital I/O 3 con capacidad PWM)
+.
+    ◦ Cada LED se conecta a un pin PWM a través de un resistor de 270Ω, y su cátodo a tierra (GND)
+.
+• LED RGB de cátodo común con resistores (control PWM):
+    ◦ Ánodo del LED Rojo: Conectado al pin PWM ~6
+.
+    ◦ Ánodo del LED Verde: Conectado al pin PWM ~5
+.
+    ◦ Ánodo del LED Azul: Conectado al pin PWM ~3
+.
+    ◦ El cátodo común se conecta a tierra (GND). Cada ánodo se conecta a un pin PWM a través de un resistor de 270Ω
+.
+• Pulsadores (Pushbuttons) con resistores pull-up (entradas digitales):
+    ◦ Pulsador S1 (para apagar colores): Inicialmente conectado al pin digital I/O 1 (TX)
+. Posteriormente, para soporte de interrupciones, se movió al pin PWM ~11
+.
+    ◦ Pulsador S2 (para brillo máximo): Inicialmente conectado al pin digital I/O 0 (RX)
+. Posteriormente, para soporte de interrupciones, se movió al pin PWM ~10
+.
+    ◦ Cada pulsador se conecta a un pin GPIO mediante un resistor pull-up de 120Ω hacia el pin IOREF (5V por defecto) y también a tierra (GND)
+.
+• Fuente de voltaje (paquete de baterías) con resistor (entrada analógica):
+    ◦ El terminal positivo se conecta al pin analógico A0 a través de un resistor de 2200Ω
+. El terminal negativo se conecta a tierra (GND)
+.
+• Fotoresistor (LDR) con resistor en divisor de voltaje (entrada analógica):
+    ◦ El divisor de voltaje, que incluye el fotoresistor y un resistor de 10,000Ω, se conecta al pin analógico A0
+. El fotoresistor se conecta al pin IOREF (5V por defecto) y el resistor de 10kΩ a tierra (GND)
+.
+• Acelerómetro analógico de 3 ejes (ADXL335):
+    ◦ Salida eje X: Conectada al pin analógico A0
+.
+    ◦ Salida eje Y: Conectada al pin analógico A1
+.
+    ◦ Salida eje Z: Conectada al pin analógico A2
+.
+    ◦ VCC del acelerómetro al pin 3V3 de la Galileo, y GND del acelerómetro al pin GND de la Galileo
+.
+• Acelerómetro digital de 3 ejes (ADXL345): Utiliza el bus I2C.
+    ◦ Pin SDA del acelerómetro: Conectado al pin SDA de la Galileo (interno al A4)
+.
+    ◦ Pin SCL del acelerómetro: Conectado al pin SCL de la Galileo (interno al A5)
+.
+    ◦ VCC del acelerómetro al pin 5V (para Grove) o 3V3 (para SparkFun) de la Galileo, y GND del acelerómetro al pin GND de la Galileo
+.
+• Sensor de temperatura analógico (Grove Temperature Sensor):
+    ◦ Pin de señal (SIG): Conectado al pin analógico A0
+.
+    ◦ VCC del sensor al pin 3V3 de la Galileo, y GND del sensor al pin GND de la Galileo
+.
+• Sensor digital de temperatura y humedad (Grove TH02): Utiliza el bus I2C.
+    ◦ Pin SDA del sensor: Conectado al pin SDA de la Galileo
+.
+    ◦ Pin SCL del sensor: Conectado al pin SCL de la Galileo
+.
+    ◦ VCC del sensor al pin 3V3 de la Galileo, y GND del sensor al pin GND de la Galileo
+.
+• Display LCD con retroiluminación RGB (Grove LCD RGB Backlight): Utiliza el bus I2C (a menudo compartido con el sensor de temperatura y humedad).
+    ◦ Pin SDA del LCD: Conectado al pin SDA de la Galileo
+.
+    ◦ Pin SCL del LCD: Conectado al pin SCL de la Galileo
+.
+    ◦ VCC del LCD al pin 5V de la Galileo, y GND del LCD al pin GND de la Galileo
+.
+• Display OLED de matriz de puntos (Grove OLED Display 0.96"): Utiliza el bus I2C (a menudo compartido con el sensor de temperatura y humedad).
+    ◦ Pin SDA del OLED: Conectado al pin SDA de la Galileo
+.
+    ◦ Pin SCL del OLED: Conectado al pin SCL de la Galileo
+.
+    ◦ VCC del OLED al pin 5V de la Galileo, y GND del OLED al pin GND de la Galileo
+.
+• Servomotor estándar (Grove Servo o EMAX 9g ES08A):
+    ◦ Pin de alimentación (+): Conectado al pin 5V de la Galileo
+.
+    ◦ Pin de pulso (señal): Conectado al pin PWM ~3 (salida digital I/O 3 con capacidad PWM)
+.
+    ◦ Pin de tierra (-): Conectado al pin GND de la Galileo
+.
+Es importante notar que el bus I2C utiliza los pines SDA y SCL. Estos pines en la Intel Galileo Gen 2 están internamente conectados a los pines analógicos A4 y A5 respectivamente, aunque su ubicación física para los "shields" Arduino sea diferente
+. El pin IOREF controla el voltaje máximo para los pines I/O (5V por defecto), lo que afecta a algunos de los componentes conectados.
