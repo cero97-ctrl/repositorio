@@ -14,72 +14,163 @@
 
 \maketitle
 
-El debate sobre el contenido del "Curso IoT con ESP32: Conectividad y Plataformas" revela una aproximación exhaustiva al Internet de las Cosas (IoT) utilizando el microcontrolador ESP32, cubriendo tanto la infraestructura de comunicación como las herramientas en la nube para el manejo de datos.
+El proyecto "IoT con ESP32 y Arduino" se pretende mostrar una 
+aproximación exhaustiva al Internet de las Cosas (IoT) utilizando el 
+microcontrolador ESP32, cubriendo tanto la infraestructura de 
+comunicación como las herramientas en la nube para el manejo de datos de 
+forma remota.
 
-A continuación, se presenta un análisis de los puntos clave del curso, basado en la conectividad y las plataformas:
+A continuación, se presenta un análisis de los puntos claves del proyecto, 
+basado en la conectividad y las plataformas:
 
 \section*{I. El Microcontrolador y sus Capacidades de Conectividad}
 
-El curso se centra en el \textbf{ESP32} debido a su bajo costo y versatilidad, destacando sus características superiores en comparación con el ESP8266, como su procesador de doble núcleo (hasta 240 MHz) y la inclusión de Bluetooth (una ventaja que el ESP8266 nativo no tiene).
+El proyecto se centra en el \textbf{ESP32} debido a su bajo costo y 
+versatilidad, destacando sus características superiores en comparación 
+con el ESP8266, como su procesador de doble núcleo (hasta 240 MHz) y la 
+inclusión de Bluetooth (una ventaja que el ESP8266 nativo no tiene).
 
 \subsection*{Métodos de Conectividad Explorados:}
 
 \begin{enumerate}
-    \item \textbf{Wi-Fi y Redes:} El ESP32 es compatible con los estándares WiFi de 2.4 GHz (802.11b/g/n). El módulo puede configurarse en \textbf{Modo Estación (cliente)}, conectándose a un router doméstico, o en \textbf{Modo Punto de Acceso (AP)}, creando su propia red. También se puede operar en modo mixto o híbrido (APSTA).
+    \item \textbf{Wi-Fi y Redes:} El ESP32 es compatible con los 
+    estándares WiFi de 2.4 GHz (802.11b/g/n). El módulo puede 
+    configurarse en \textbf{Modo Estación (cliente)}, conectándose a un 
+    router doméstico, o en \textbf{Modo Punto de Acceso (AP)}, creando 
+    su propia red. También se puede operar en modo mixto o híbrido 
+    (APSTA).
 
-    \item \textbf{Gestión Dinámica de Redes:} Para evitar la tediosa necesidad de editar y regrabar el código cada vez que se cambia de red, el curso utiliza la biblioteca \textbf{WiFi Manager}. Esta permite al ESP32 buscar una red preestablecida o, si falla, activar el modo AP para que el usuario ingrese manualmente las credenciales de Wi-Fi a través de una página de configuración HTML, guardando los datos en la EEPROM.
+    \item \textbf{Gestión Dinámica de Redes:} Para evitar la tediosa 
+    necesidad de editar y regrabar el código cada vez que se cambia 
+    de red, el proyecto utilizara la biblioteca \textbf{WiFi Manager}. 
+    Esta permitira al ESP32 buscar una red preestablecida o, si falla, 
+    activar el modo AP para que el usuario ingrese manualmente las 
+    credenciales de Wi-Fi a través de una página de configuración HTML, 
+    guardando los datos en la EEPROM.
 
-    \item \textbf{Comunicación Serial y Bluetooth:} El curso incluye el manejo de comunicación serial (TX/RX), SPI, e \textbf{I2C}. También se cubre el \textbf{control remoto vía Bluetooth} utilizando una aplicación diseñada en App Inventor para encender y apagar LEDs desde un dispositivo móvil.
+    \item \textbf{Comunicación Serial y Bluetooth:} El proyecto incluira 
+    el manejo de comunicación serial (TX/RX), SPI, e \textbf{I2C}. 
+    También se cubrira el \textbf{control remoto vía Bluetooth} 
+    utilizando una aplicación diseñada en \textbf{App Inventor} para 
+    encender y apagar LEDs desde un dispositivo móvil.
 
-    \item \textbf{Protocolos IoT:} Se mencionan diversos protocolos esenciales para IoT, como \textbf{TCP/IP, UDP, y MQTT}.
+    \item \textbf{Protocolos IoT:} Se utilizaran diversos protocolos 
+    esenciales para IoT, como \textbf{TCP/IP, UDP, y MQTT}.
 
-    \item \textbf{Actualización Inalámbrica (OTA):} El curso aborda la \textbf{actualización de firmware vía Wi-Fi (OTA)} sin necesidad de cables, utilizando la biblioteca \texttt{Elegant OTA} junto con \texttt{Async Web Server}. Esto permite actualizar el código del ESP32 de forma remota, aunque necesita autenticación (usuario/clave) en la red local para la seguridad.
+    \item \textbf{Actualización Inalámbrica (OTA):} El proyecto abordara 
+    la \textbf{actualización de firmware vía Wi-Fi (OTA)} sin necesidad 
+    de cables, utilizando la biblioteca \texttt{Elegant OTA} junto con 
+    \texttt{Async Web Server}. Esto permitira actualizar el código del 
+    ESP32 de forma remota, aunque necesita autenticación (usuario/clave) 
+    en la red local para la seguridad.
 \end{enumerate}
 
 \subsection*{Consideración Crítica del Hardware:}
 
-Una discusión crucial en la conectividad es el nivel lógico. El ESP32 solo funciona a \textbf{3.3V}. Se advierte explícitamente que conectar periféricos (como LCDs, sensores o módulos) de 5V directamente al ESP32 puede dañarlo permanentemente. Para mitigar esto, se recomienda el uso de \textbf{convertidores de nivel lógico} (como el módulo TXS0108E).
+Un detalle importante a tener en cuenta en la conectividad es el nivel 
+lógico. El ESP32 solo funciona a \textbf{3.3V}. Se advierte 
+explícitamente que conectar periféricos (como LCDs, sensores o módulos) 
+de 5V directamente al ESP32 puede dañarlo permanentemente. Para mitigar 
+esto, se recomienda el uso de \textbf{convertidores de nivel lógico} 
+(como el módulo TXS0108E).
 
 \section*{II. Plataformas y Servicios IoT (La Nube)}
 
-El curso distingue entre el uso de un \textbf{servidor web local} (Web Server HTTP) y el uso de \textbf{plataformas IoT en la nube} (servicios remotos).
+El proyecto distingue entre el uso de un \textbf{servidor web local} 
+(Web Server HTTP) y el uso de \textbf{plataformas IoT en la nube} 
+(servicios remotos).
 
 \subsection*{1. Plataformas IoT Genéricas}
-Se presenta una variedad de plataformas que ya ofrecen una estructura lista para visualizar datos:
+Se presentara una variedad de plataformas que ya ofrecen una estructura 
+lista para visualizar datos:
 \begin{itemize}
-    \item \textbf{Ejemplos:} \textbf{ThingSpeak}, \textbf{Ubidots}, \textbf{Adafruit}, \textbf{TagoIO}, \textbf{AWS IoT}, y \textbf{Azure IoT}.
-    \item \textbf{Características:} Estas plataformas generan una API y una autenticación para que el ESP32 se conecte. Ofrecen recursos gráficos como botones, relojes y gráficas para la visualización.
-    \item \textbf{Limitaciones:} Se señala que las versiones gratuitas de estos servicios suelen ser limitadas, por ejemplo, restringiendo la cantidad de datos que se pueden subir al día o eliminando la base de datos después de cierto tiempo.
+    \item \textbf{Ejemplos:} \textbf{ThingSpeak}, \textbf{Ubidots}, 
+    \textbf{Adafruit}, \textbf{TagoIO}, \textbf{AWS IoT}, y 
+    \textbf{Azure IoT}.
+    \item \textbf{Características:} Estas plataformas generan una API y 
+    una autenticación para que el ESP32 se conecte. Ofrecen 
+    reproyectos gráficos como botones, relojes y gráficas para la 
+    visualización.
+    \item \textbf{Limitaciones:} Se señala que las versiones gratuitas 
+    de estos servicios suelen ser limitadas, por ejemplo, restringiendo 
+    la cantidad de datos que se pueden subir al día o eliminando la base 
+    de datos después de cierto tiempo.
 \end{itemize}
 
 \subsection*{2. Google Firebase (Foco Principal del Curso)}
-Firebase, de Google, es la plataforma principal utilizada para el almacenamiento y sincronización de datos, siendo reconocida por ser \textbf{multiplataforma} y por facilitar el desarrollo de aplicaciones (iOS, Android, web).
+Firebase, de Google, sera la plataforma principal utilizada para el 
+almacenamiento y sincronización de datos, siendo reconocida por ser 
+\textbf{multiplataforma} y por facilitar el desarrollo de aplicaciones 
+(iOS, Android, web).
 \begin{itemize}
-    \item \textbf{Realtime Database:} Es el componente principal utilizado para almacenar datos en la nube. Los datos se almacenan en formato \textbf{JSON} (JavaScript Object Notation).
-    \item \textbf{Sincronización:} Firebase utiliza la \textbf{sincronización de datos}; cada vez que los datos cambian, los dispositivos conectados reciben la actualización en milisegundos, ofreciendo experiencias colaborativas y envolventes.
-    \item \textbf{Configuración y Autenticación:} La conexión del ESP32 a Firebase requiere dos elementos clave: la \textbf{API Key} y la \textbf{URL de la base de datos}. El curso aborda la evolución de la autenticación:
+    \item \textbf{Realtime Database:} Es el componente principal 
+    utilizado para almacenar datos en la nube. Los datos se almacenaran 
+    en formato \textbf{JSON} (JavaScript Object Notation).
+    \item \textbf{Sincronización:} Firebase utiliza la 
+    \textbf{sincronización de datos}; cada vez que los datos cambian, 
+    los dispositivos conectados recibiran la actualización en 
+    milisegundos, ofreciendo experiencias colaborativas y envolventes.
+    \item \textbf{Configuración y Autenticación:} La conexión del ESP32 
+    a Firebase requierira de dos elementos claves: la \textbf{API Key} y 
+    la \textbf{URL de la base de datos}. El proyecto aborda la evolución 
+    de la autenticación:
         \begin{itemize}
-            \item Inicialmente, se usa el \textbf{modo de prueba o anónimo} para demostración.
-            \item Posteriormente, se implementa una autenticación más robusta por \textbf{correo electrónico y contraseña}, junto con reglas específicas que autorizan la lectura y escritura para el usuario autenticado (UID).
+            \item Inicialmente, se usara el 
+            \textbf{modo de prueba o anónimo} para demostración.
+            \item Posteriormente, se implementara una autenticación más 
+            robusta por \textbf{correo electrónico y contraseña}, junto 
+            con reglas específicas que autorizaran la lectura y 
+            escritura para el usuario autenticado (UID).
         \end{itemize}
 \end{itemize}
 
 \subsection*{3. Desarrollo de Aplicaciones y Visualización Web}
-El curso va más allá del uso de interfaces preestablecidas y enseña a crear soluciones personalizadas:
+El proyecto va más allá del uso de interfaces preestablecidas y enseñara 
+a crear soluciones personalizadas:
 \begin{itemize}
-    \item \textbf{App Inventor:} Se utiliza para \textbf{diseñar aplicaciones móviles} (Android/iOS) que se conectan a Firebase para permitir el control a distancia (ejemplo: encendido/apagado de LEDs). Se aclara que App Inventor tiende a enviar datos como cadenas de caracteres (\textbf{String}) en lugar de números, lo que requiere una adaptación en el código de Arduino para convertir el \textit{String} recibido a \textit{Integer}.
-    \item \textbf{Sitio Web Personalizado (Firebase Hosting):} Para crear una interfaz de monitoreo y control a nivel profesional, el curso utiliza \textbf{Visual Code Studio}, \textbf{Node.js}, y \textbf{Firebase Hosting}. Esto permite diseñar una página web personalizada con HTML, CSS, y JavaScript, haciendo posible la visualización de datos de sensores (como el Conversor Analógico Digital, ADC) en tiempo real, accesible mediante un link y autenticación por correo/clave.
+    \item \textbf{App Inventor:} Se utilizara para 
+    \textbf{diseñar aplicaciones móviles} (Android/iOS) que se conectaran 
+    a Firebase para permitir el control a distancia 
+    (ejemplo: encendido/apagado de LEDs). Se aclara que App Inventor 
+    tiende a enviar datos como cadenas de caracteres (\textbf{String}) 
+    en lugar de números, lo que requiere una adaptación en el código de 
+    Arduino para convertir el \textit{String} recibido a 
+    \textit{Integer}.
+    \item \textbf{Sitio Web Personalizado (Firebase Hosting):} Para crear 
+    una interfaz de monitoreo y control a nivel profesional, el 
+    proyecto utilizara \textbf{Visual Code Studio}, \textbf{Node.js}, y 
+    \textbf{Firebase Hosting}. Esto permite diseñar una página web 
+    personalizada con HTML, CSS, y JavaScript, haciendo posible la 
+    visualización de datos de sensores (como el Conversor Analógico 
+    Digital, ADC) en tiempo real, accesible mediante un link y 
+    autenticación por correo/clave.
 \end{itemize}
 
 \section*{III. Adquisición de Datos (ADC)}
 
-Un componente fundamental de la conectividad en el curso es el uso del Conversor Analógico Digital (ADC) del ESP32 para adquirir señales de sensores (ejemplo: potenciómetros).
+Un componente fundamental de la conectividad en el proyecto es el uso 
+del Conversor Analógico Digital (ADC) del ESP32 para adquirir señales 
+de sensores (ejemplo: potenciómetros).
 \begin{itemize}
-    \item \textbf{Características:} El ESP32 posee \textbf{dos ADCs} (ADC1 y ADC2), siendo el \textbf{ADC1} el más recomendado ya que el ADC2 suele presentar inconvenientes cuando se utiliza el modo Wi-Fi. La resolución máxima es de \textbf{12 bits}, lo que se traduce en un rango de lectura de 0 a 4095 bits, correspondiente a 0 a 3.3V.
-    \item \textbf{Modificación de Resolución:} Es posible modificar la resolución del ADC (por ejemplo, a 10 bits como en Arduino convencional) mediante la instrucción \texttt{analogReadResolution}, aunque la recomendación es aprovechar la máxima capacidad de 12 bits.
-    \item \textbf{Uso Práctico:} El valor leído del ADC se convierte a voltaje (de 0 a 3.3V) y luego se almacena en la base de datos de la plataforma elegida (Firebase o ThingSpeak).
+    \item \textbf{Características:} El ESP32 incluira \textbf{dos ADCs} 
+    (ADC1 y ADC2), siendo el \textbf{ADC1} el más recomendado ya que el 
+    ADC2 suele presentar inconvenientes cuando se utiliza el modo Wi-Fi. 
+    La resolución máxima es de \textbf{12 bits}, lo que se traduce 
+    en un rango de lectura de 0 a 4095 bits, correspondiente a 0 a 3.3V.
+    \item \textbf{Modificación de Resolución:} Es posible modificar la 
+    resolución del ADC (por ejemplo, a 10 bits como en Arduino 
+    convencional) mediante la instrucción \texttt{analogReadResolution}, 
+    aunque la recomendación es aprovechar la máxima capacidad de 12 bits.
+    \item \textbf{Uso Práctico:} El valor leído del ADC se convierte a 
+    voltaje (de 0 a 3.3V) y luego se almacena en la base de datos de 
+    la plataforma elegida (Firebase o ThingSpeak).
 \end{itemize}
 
-En conclusión, el curso proporciona una \textbf{ruta completa} para el desarrollo de proyectos IoT, iniciando con la programación básica del ESP32, pasando por la gestión inteligente de la conectividad Wi-Fi, y culminando con el uso avanzado de plataformas en la nube (especialmente Firebase) para el monitoreo y control a través de aplicaciones móviles y sitios web personalizados.
+En conclusión, el proyecto proporcionara una \textbf{ruta completa} para 
+el desarrollo de proyectos IoT, iniciando con la programación 
+básica del ESP32, pasando por la gestión inteligente de la conectividad 
+Wi-Fi, y culminando con el uso avanzado de plataformas en la nube 
+(especialmente Firebase) para el monitoreo y control a través de 
+aplicaciones móviles y sitios web personalizados.
 
 \end{document}

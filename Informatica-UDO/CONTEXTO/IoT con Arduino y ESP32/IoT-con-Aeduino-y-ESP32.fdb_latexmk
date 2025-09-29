@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1759148131.20731 "/home/cero/MEGA/VSCODE/Informatica-UDO/CONTEXTO/IoT con Arduino y ESP32/IoT-con-Aeduino-y-ESP32.tex" "IoT-con-Aeduino-y-ESP32.pdf" "IoT-con-Aeduino-y-ESP32" 1759148132.76104 0
+["pdflatex"] 1759153813.36631 "/home/cero/MEGA/VSCODE/Informatica-UDO/CONTEXTO/IoT con Arduino y ESP32/IoT-con-Aeduino-y-ESP32.tex" "IoT-con-Aeduino-y-ESP32.pdf" "IoT-con-Aeduino-y-ESP32" 1759153814.76227 0
   "/etc/texmf/web2c/texmf.cnf" 1754246095.34578 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/cero/MEGA/VSCODE/Informatica-UDO/CONTEXTO/IoT con Arduino y ESP32/IoT-con-Aeduino-y-ESP32.tex" 1759148130.65653 8016 b9ddbbc6f9e8bf8a2e35db3b5fdce559 ""
+  "/home/cero/MEGA/VSCODE/Informatica-UDO/CONTEXTO/IoT con Arduino y ESP32/IoT-con-Aeduino-y-ESP32.tex" 1759153812.91802 8487 d86da5f665301207cb240ee9d07b6187 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -73,9 +73,9 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754246131.98867 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754246351 8211763 bcebfc983d877799c23bfb0bbf784be3 ""
-  "IoT-con-Aeduino-y-ESP32.aux" 1759148132.60013 162 fa61bf9ecf9314f94d51aa32222a725c "pdflatex"
-  "IoT-con-Aeduino-y-ESP32.out" 1759148132.34718 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "IoT-con-Aeduino-y-ESP32.tex" 1759148130.65653 8016 b9ddbbc6f9e8bf8a2e35db3b5fdce559 ""
+  "IoT-con-Aeduino-y-ESP32.aux" 1759153814.6011 162 fa61bf9ecf9314f94d51aa32222a725c "pdflatex"
+  "IoT-con-Aeduino-y-ESP32.out" 1759153814.30709 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "IoT-con-Aeduino-y-ESP32.tex" 1759153812.91802 8487 d86da5f665301207cb240ee9d07b6187 ""
   (generated)
   "IoT-con-Aeduino-y-ESP32.aux"
   "IoT-con-Aeduino-y-ESP32.log"
