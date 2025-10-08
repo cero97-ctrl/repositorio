@@ -1,6 +1,5 @@
 #!/bin/bash
 mensaje=${1:-"Actualización"}
-branch=$(git rev-parse --abbrev-ref HEAD)
 git add .
 git commit -m "$mensaje"
-git push origin "$branch"
+git push origin main
