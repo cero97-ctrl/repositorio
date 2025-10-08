@@ -2,13 +2,14 @@ import pandas as pd
 import requests
 import ta
 import time
+import os  # Importa el módulo os para leer variables de entorno
 
 # === CONFIGURACIÓN ===
 symbol = 'BTCUSDT'
 interval = '1h'
 limit = 200
-telegram_token = 'TU_TOKEN_AQUI'
-chat_id = 'TU_CHAT_ID_AQUI'
+telegram_token = os.getenv('TELEGRAM_TOKEN', 'TU_TOKEN_AQUI')  # Lee el token desde el entorno
+chat_id = os.getenv('TELEGRAM_CHAT_ID', 'TU_CHAT_ID_AQUI')     # Lee el chat_id desde el entorno
 
 # === FUNCIONES ===
 def get_klines(symbol, interval, limit):
@@ -77,4 +78,3 @@ if __name__ == "__main__":
     # while True:
     #     run_bot()
     #     time.sleep(3600)  # Espera 1 hora
-
