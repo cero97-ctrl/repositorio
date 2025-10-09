@@ -28,7 +28,7 @@ def get_klines(symbol, interval, limit):
     return df
 
 # === FUNCIONES DE INDICADORES ===
-def calculate_indicators(df):
+def calculate_indicators(df, volume_sma_period):
     logging.info("Calculando indicadores técnicos...")
     df['EMA_50'] = ta.trend.ema_indicator(df['close'], window=50)
     df['EMA_200'] = ta.trend.ema_indicator(df['close'], window=200)
@@ -36,7 +36,9 @@ def calculate_indicators(df):
     macd_indicator = ta.trend.MACD(df['close'])
     df['MACD'] = macd_indicator.macd()
     df['MACD_signal'] = macd_indicator.macd_signal()
-    logging.info("Indicadores calculados: EMAs, RSI, MACD.")
+    sma_vol_indicator = ta.trend.SMAIndicator(close=df['volume'], window=volume_sma_period)
+    df['volume_sma'] = sma_vol_indicator.sma_indicator()
+    logging.info("Indicadores calculados: EMAs, RSI, MACD, Volume SMA.")
     return df
 
 # === FUNCIONES DE VELAS ALCISTAS ===
@@ -68,7 +70,7 @@ def is_bearish_engulfing(prev_open, prev_close, curr_open, curr_close):
 
 # === EVALUACIÓN DE SEÑALES ===
 # SUGERENCIA: Modificamos la función para que devuelva una lista de señales, no solo la primera que encuentre.
-def evaluate_trade(df, rsi_low, rsi_high, rsi_doji_low, rsi_doji_high, hammer_multiplier, shooting_star_multiplier):
+def evaluate_trade(df, rsi_low, rsi_high, rsi_doji_low, rsi_doji_high, hammer_multiplier, shooting_star_multiplier, volume_multiplier):
     logging.info("Evaluando señales de trading...")
     latest = df.iloc[-1]
     previous = df.iloc[-2]
@@ -76,17 +78,17 @@ def evaluate_trade(df, rsi_low, rsi_high, rsi_doji_low, rsi_doji_high, hammer_mu
 
     # Condiciones técnicas
     long_conditions = [
-        latest['EMA_50'] > latest['EMA_200'],  # Tendencia alcista
-        latest['RSI'] < rsi_low,                # RSI bajo, posible sobreventa
+        latest['EMA_50'] > latest['EMA_200'],                                           # Tendencia alcista
+        latest['RSI'] < rsi_low,                                                        # RSI bajo, posible sobreventa
         latest['MACD'] > latest['MACD_signal'] and previous['MACD'] < previous['MACD_signal'], # Cruce alcista de MACD
-        latest['volume'] > previous['volume']   # Aumento de volumen
+        latest['volume'] > latest['volume_sma'] * volume_multiplier                     # Volumen anómalo
     ]
 
     short_conditions = [
-        latest['EMA_50'] < latest['EMA_200'],  # Tendencia bajista
-        latest['RSI'] > rsi_high,               # RSI alto, posible sobrecompra
+        latest['EMA_50'] < latest['EMA_200'],                                           # Tendencia bajista
+        latest['RSI'] > rsi_high,                                                       # RSI alto, posible sobrecompra
         latest['MACD'] < latest['MACD_signal'] and previous['MACD'] > previous['MACD_signal'], # Cruce bajista de MACD
-        latest['volume'] > previous['volume']   # Aumento de volumen
+        latest['volume'] > latest['volume_sma'] * volume_multiplier                     # Volumen anómalo
     ]
 
     # Patrones de velas
@@ -137,10 +139,11 @@ def execute_single_run(args, telegram_token, chat_id):
         if df.empty:
             logging.warning("No se recibieron datos de Binance. Abortando.")
             return
-        df = calculate_indicators(df)
+        
+        df = calculate_indicators(df, args.volume_sma_period)
         signal = evaluate_trade(
             df, args.rsi_low, args.rsi_high, args.rsi_doji_low, 
-            args.rsi_doji_high, args.hammer_multiplier, args.shooting_star_multiplier
+            args.rsi_doji_high, args.hammer_multiplier, args.shooting_star_multiplier, args.volume_multiplier
         )
         
         message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n{signal}"
@@ -176,6 +179,8 @@ if __name__ == "__main__":
     parser.add_argument("--rsi-doji-high", type=int, default=70, help="Umbral de sobrecompra para Doji.")
     parser.add_argument("--hammer-multiplier", type=float, default=2.0, help="Multiplicador de cuerpo para patrón Martillo.")
     parser.add_argument("--shooting-star-multiplier", type=float, default=2.0, help="Multiplicador de cuerpo para Estrella Fugaz.")
+    parser.add_argument("--volume-sma-period", type=int, default=20, help="Periodo para la media móvil del volumen.")
+    parser.add_argument("--volume-multiplier", type=float, default=1.5, help="Multiplicador para la confirmación de volumen anómalo.")
     args = parser.parse_args()
 
     # --- Configuración de Logging ---
