@@ -5,6 +5,7 @@ import time
 import logging
 import os
 import sys
+import json
 import argparse # Importa argparse
 
 # === CONFIGURACIÓN ===
@@ -68,13 +69,66 @@ def is_shooting_star(open, close, high, low, body_multiplier=2.0):
 def is_bearish_engulfing(prev_open, prev_close, curr_open, curr_close):
     return prev_close > prev_open and curr_close < curr_open and curr_open > prev_close and curr_close < prev_open
 
+# === GESTIÓN DE ESTADO ===
+STATE_FILE = "state.json"
+
+def save_state(state):
+    """Guarda el estado de la señal pendiente en un archivo JSON."""
+    logging.info(f"Guardando estado pendiente: {state}")
+    with open(STATE_FILE, 'w') as f:
+        json.dump(state, f)
+
+def load_state():
+    """Carga el estado de la señal pendiente si existe."""
+    if os.path.exists(STATE_FILE):
+        logging.info("Archivo de estado encontrado. Cargando estado pendiente.")
+        with open(STATE_FILE, 'r') as f:
+            return json.load(f)
+    return None
+
+def clear_state():
+    """Elimina el archivo de estado."""
+    if os.path.exists(STATE_FILE):
+        logging.info("Limpiando estado pendiente.")
+        os.remove(STATE_FILE)
+
+# === EVALUACIÓN DE CONFIRMACIÓN ===
+def check_confirmation(df, state):
+    """Evalúa la vela de confirmación después de una señal de patrón."""
+    logging.info(f"Evaluando vela de confirmación para el estado: {state}")
+    latest = df.iloc[-1]
+    pattern = state.get("pattern")
+    message = ""
+
+    if pattern in ["hammer", "bullish_engulfing", "doji_oversold"]:
+        # Esperamos una confirmación alcista
+        if latest['close'] > latest['open']:
+            message = f"✅ CONFIRMACIÓN FAVORABLE para '{pattern}': La vela de confirmación fue ALCISTA."
+        else:
+            message = f"❌ CONFIRMACIÓN DESFAVORABLE para '{pattern}': La vela de confirmación fue BAJISTA. ¡Considerar salida!"
+
+    elif pattern in ["shooting_star", "bearish_engulfing", "doji_overbought"]:
+        # Esperamos una confirmación bajista
+        if latest['close'] < latest['open']:
+            message = f"✅ CONFIRMACIÓN FAVORABLE para '{pattern}': La vela de confirmación fue BAJISTA."
+        else:
+            message = f"❌ CONFIRMACIÓN DESFAVORABLE para '{pattern}': La vela de confirmación fue ALCISTA. ¡Considerar salida!"
+    
+    # Limpiamos el estado después de la confirmación
+    clear_state()
+
+    if message:
+        return message
+    return "No se pudo determinar la confirmación."
+
 # === EVALUACIÓN DE SEÑALES ===
 # SUGERENCIA: Modificamos la función para que devuelva una lista de señales, no solo la primera que encuentre.
 def evaluate_trade(df, rsi_low, rsi_high, rsi_doji_low, rsi_doji_high, hammer_multiplier, shooting_star_multiplier, volume_multiplier):
     logging.info("Evaluando señales de trading...")
     latest = df.iloc[-1]
     previous = df.iloc[-2]
-    signals = []
+    signals = [] # Para mensajes de alerta
+    pending_state = None # Para guardar el estado si se encuentra un patrón
 
     # Condiciones técnicas
     long_conditions = [
@@ -98,18 +152,41 @@ def evaluate_trade(df, rsi_low, rsi_high, rsi_doji_low, rsi_doji_high, hammer_mu
         signals.append("📉 Señal técnica de entrada en CORTO (venta)")
 
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], hammer_multiplier):
-        signals.append("🕯️ Vela tipo MARTILLO detectada: posible reversión alcista")
+        signal_text = "🕯️ Vela tipo MARTILLO detectada: posible reversión alcista"
+        signals.append(signal_text)
+        pending_state = {"pattern": "hammer", "price": latest['close']}
+
     if is_bullish_engulfing(previous['open'], previous['close'], latest['open'], latest['close']):
-        signals.append("🕯️ Vela ENVOLVENTE ALCISTA detectada: posible entrada en largo")
+        signal_text = "🕯️ Vela ENVOLVENTE ALCISTA detectada: posible entrada en largo"
+        signals.append(signal_text)
+        pending_state = {"pattern": "bullish_engulfing", "price": latest['close']}
+
     if is_doji(latest['open'], latest['close'], latest['high'], latest['low']) and latest['RSI'] < rsi_doji_low:
-        signals.append("🕯️ DOJI en zona de sobreventa: posible rebote")
+        signal_text = "🕯️ DOJI en zona de sobreventa: posible rebote"
+        signals.append(signal_text)
+        pending_state = {"pattern": "doji_oversold", "price": latest['close']}
 
     if is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], shooting_star_multiplier):
-        signals.append("🕯️ Vela tipo ESTRELLA FUGAZ detectada: posible reversión bajista")
+        signal_text = "🕯️ Vela tipo ESTRELLA FUGAZ detectada: posible reversión bajista"
+        signals.append(signal_text)
+        pending_state = {"pattern": "shooting_star", "price": latest['close']}
+
     if is_bearish_engulfing(previous['open'], previous['close'], latest['open'], latest['close']):
-        signals.append("🕯️ Vela ENVOLVENTE BAJISTA detectada: posible entrada en corto")
+        signal_text = "🕯️ Vela ENVOLVENTE BAJISTA detectada: posible entrada en corto"
+        signals.append(signal_text)
+        pending_state = {"pattern": "bearish_engulfing", "price": latest['close']}
+
     if is_doji(latest['open'], latest['close'], latest['high'], latest['low']) and latest['RSI'] > rsi_doji_high:
-        signals.append("🕯️ DOJI en zona de sobrecompra: posible caída inminente")
+        signal_text = "🕯️ DOJI en zona de sobrecompra: posible caída inminente"
+        signals.append(signal_text)
+        pending_state = {"pattern": "doji_overbought", "price": latest['close']}
+
+    # Si se encontró un patrón de vela, guardamos el estado
+    if pending_state:
+        # Añadimos información de la señal al estado
+        pending_state["signal_time"] = pd.to_datetime(latest['timestamp'], unit='ms').isoformat()
+        save_state(pending_state)
+        signals.append("⏳ Esperando vela de confirmación en el próximo ciclo...")
 
     if not signals:
         return "⏳ No hay señal clara de entrada en este momento"
@@ -134,17 +211,27 @@ def send_telegram_message(message, telegram_token, chat_id): # Ahora recibe toke
 # Renombramos la función para que sea más clara, ya que el bucle está en el __main__
 def execute_single_run(args, telegram_token, chat_id):
     logging.info(f"Iniciando análisis para {args.symbol} en temporalidad {args.interval}...")
+    
+    # Cargar estado pendiente, si existe
+    pending_state = load_state()
+
     try:
         df = get_klines(args.symbol, args.interval, args.limit)
         if df.empty:
             logging.warning("No se recibieron datos de Binance. Abortando.")
             return
         
-        df = calculate_indicators(df, args.volume_sma_period)
-        signal = evaluate_trade(
-            df, args.rsi_low, args.rsi_high, args.rsi_doji_low, 
-            args.rsi_doji_high, args.hammer_multiplier, args.shooting_star_multiplier, args.volume_multiplier
-        )
+        # Decidir qué lógica ejecutar: confirmación o nueva señal
+        if pending_state:
+            df = calculate_indicators(df, args.volume_sma_period)
+            signal = check_confirmation(df, pending_state)
+        else:
+            # Si no hay estado pendiente, buscar nuevas señales
+            df = calculate_indicators(df, args.volume_sma_period)
+            signal = evaluate_trade(
+                df, args.rsi_low, args.rsi_high, args.rsi_doji_low, 
+                args.rsi_doji_high, args.hammer_multiplier, args.shooting_star_multiplier, args.volume_multiplier
+            )
         
         message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n{signal}"
         logging.info(f"Señal generada:\n{message}")
