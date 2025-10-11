@@ -41,8 +41,8 @@ def calculate_indicators(df, volume_sma_period):
     macd_indicator = ta.trend.MACD(df['close'])
     df['MACD'] = macd_indicator.macd()
     df['MACD_signal'] = macd_indicator.macd_signal()
-    sma_vol_indicator = ta.volume.SMAIndicator(volume=df['volume'], window=volume_sma_period)
-    df['volume_sma'] = sma_vol_indicator.sma_indicator()
+    # Usamos SMAIndicator de 'trend' pero aplicado a la columna 'volume'
+    df['volume_sma'] = ta.trend.sma_indicator(close=df['volume'], window=volume_sma_period)
     logging.info("Indicadores calculados: EMAs, RSI, MACD, Volume SMA.")
     return df
 
