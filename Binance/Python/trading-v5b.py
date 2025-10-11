@@ -1,4 +1,4 @@
-# trading-v5.py (versión mejorada con ATR, Bollinger, Backtesting y log de parámetros)
+# trading-v6.py (versión mejorada con ATR, Bollinger, Backtesting y POC reintegrado)
 
 import pandas as pd
 import requests
@@ -107,6 +107,14 @@ def check_confirmation(df, state, volume_multiplier):
     clear_state()
     return message
 
+# === FUNCIONES POC ===
+def check_poc_zone(latest, poc, tolerance=0.005):
+    if poc <= 0:
+        return False
+    poc_upper = poc * (1 + tolerance)
+    poc_lower = poc * (1 - tolerance)
+    return latest['high'] >= poc_lower and latest['low'] <= poc_upper
+
 # === EVALUACIÓN DE SEÑALES ===
 def evaluate_trade(df, args):
     latest = df.iloc[-1]
@@ -119,10 +127,14 @@ def evaluate_trade(df, args):
         logging.info("ATR bajo: mercado sin volatilidad significativa, no se generan señales.")
         return "⚠️ Volatilidad baja (ATR bajo). No se recomienda operar ahora."
 
+    poc_zone = check_poc_zone(latest, args.poc)
+
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Martillo detectado"
         if latest['close'] <= latest['Boll_Lower']:
             signal_text += " tocando banda inferior de Bollinger 📉"
+        if poc_zone:
+            signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥"
         if latest['ATR'] > atr_mean:
             signal_text += " con alta volatilidad 🔥"
         signals.append(signal_text)
@@ -132,6 +144,8 @@ def evaluate_trade(df, args):
         signal_text = "🕯️ Estrella Fugaz detectada"
         if latest['close'] >= latest['Boll_Upper']:
             signal_text += " tocando banda superior de Bollinger 📈"
+        if poc_zone:
+            signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️"
         if latest['ATR'] > atr_mean:
             signal_text += " con fuerte volatilidad ⚡"
         signals.append(signal_text)
@@ -205,7 +219,7 @@ def execute_single_run(args, telegram_token, chat_id):
 
 # === MAIN ===
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Bot de trading con ATR, Bollinger, Backtesting y log de parámetros.")
+    parser = argparse.ArgumentParser(description="Bot de trading con ATR, Bollinger, POC y Backtesting.")
     parser.add_argument("--symbol", type=str, default="BTCUSDT")
     parser.add_argument("--interval", type=str, default="1h")
     parser.add_argument("--limit", type=int, default=202)
@@ -215,8 +229,9 @@ if __name__ == "__main__":
     parser.add_argument("--hammer-multiplier", type=float, default=2.0)
     parser.add_argument("--shooting-star-multiplier", type=float, default=2.0)
     parser.add_argument("--volume-multiplier", type=float, default=1.5)
-    parser.add_argument("--atr-window", type=int, default=21)
-    parser.add_argument("--bollinger-window", type=int, default=30)
+    parser.add_argument("--atr-window", type=int, default=14)
+    parser.add_argument("--bollinger-window", type=int, default=20)
+    parser.add_argument("--poc", type=float, default=0, help="Nivel de precio del Point of Control (POC)")
     parser.add_argument("--backtest", action='store_true', help="Activa el modo backtesting.")
     parser.add_argument("--backtest-file", type=str, default="historical_data.csv", help="Ruta del archivo CSV para backtesting.")
     args = parser.parse_args()
@@ -227,6 +242,7 @@ if __name__ == "__main__":
     logging.info(f"ATR Window: {args.atr_window}")
     logging.info(f"Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
+    logging.info(f"POC: {args.poc}")
     logging.info("==========================================")
 
     if args.backtest:
