@@ -110,7 +110,7 @@ def volume_profile_analysis(symbol='BTCUSDT', interval='1h', limit=1000, num_bin
 
 # Ejemplo de uso:
 if __name__ == '__main__':
-    profile = volume_profile_analysis(symbol='BTCUSDT', interval='1h', limit=1500, num_bins=700)
+    profile = volume_profile_analysis(symbol='BTCUSDT', interval='1h', limit=2000, num_bins=700)
     if profile:
         print("\n--- RESULTADO DEL ANÁLISIS DE PERFIL DE VOLUMEN ---")
         print(f"Punto de Control (POC): Precio ~${profile['point_of_control']['price_level']:.2f} con un volumen de {profile['point_of_control']['volume']:.2f}")
