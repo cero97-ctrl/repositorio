@@ -246,8 +246,8 @@ def execute_single_run(args, telegram_token, chat_id):
                 clear_state()
                 pending_state = None # Anulamos el estado para buscar nuevas señales más abajo
             else:
-                df = calculate_indicators(df, args.volume_sma_period)
-                signal = check_confirmation(df, pending_state)
+                df = calculate_indicators(df, args.volume_sma_period) # Necesitamos los indicadores para el volumen
+                signal = check_confirmation(df, pending_state, args.volume_multiplier)
         
         # Si no hay estado pendiente (o fue descartado), buscar nuevas señales
         if not pending_state:
