@@ -1,4 +1,4 @@
-# trading-v6.py (versión mejorada con ATR, Bollinger, Backtesting y POC reintegrado)
+# trading-v6.py (versión mejorada con ATR, Bollinger, POC, Backtesting y carga completa de parámetros desde dotenv)
 
 import pandas as pd
 import requests
@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import argparse
+from dotenv import load_dotenv  # Soporte para dotenv
 
 # === FUNCIONES DE BINANCE ===
 def get_klines(symbol, interval, limit):
@@ -219,7 +220,7 @@ def execute_single_run(args, telegram_token, chat_id):
 
 # === MAIN ===
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Bot de trading con ATR, Bollinger, POC y Backtesting.")
+    parser = argparse.ArgumentParser(description="Bot de trading con ATR, Bollinger, POC, Backtesting y dotenv.")
     parser.add_argument("--symbol", type=str, default="BTCUSDT")
     parser.add_argument("--interval", type=str, default="1h")
     parser.add_argument("--limit", type=int, default=202)
@@ -238,19 +239,36 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=args.log.upper(), format='%(asctime)s - %(levelname)s - %(message)s', stream=sys.stdout)
 
+    # === CARGA DE VARIABLES DESDE .ENV ===
+    load_dotenv()
+    telegram_token = os.getenv('TELEGRAM_TOKEN', '').strip()
+    chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
+
+    # === CARGA OPCIONAL DE PARÁMETROS DESDE .ENV ===
+    args.symbol = os.getenv('SYMBOL', args.symbol)
+    args.interval = os.getenv('INTERVAL', args.interval)
+    args.limit = int(os.getenv('LIMIT', args.limit))
+    args.volume_sma_period = int(os.getenv('VOLUME_SMA_PERIOD', args.volume_sma_period))
+    args.hammer_multiplier = float(os.getenv('HAMMER_MULTIPLIER', args.hammer_multiplier))
+    args.shooting_star_multiplier = float(os.getenv('SHOOTING_STAR_MULTIPLIER', args.shooting_star_multiplier))
+    args.volume_multiplier = float(os.getenv('VOLUME_MULTIPLIER', args.volume_multiplier))
+    args.atr_window = int(os.getenv('ATR_WINDOW', args.atr_window))
+    args.bollinger_window = int(os.getenv('BOLLINGER_WINDOW', args.bollinger_window))
+    args.poc = float(os.getenv('POC', args.poc))
+    args.sleep = int(os.getenv('SLEEP', args.sleep))
+
     logging.info("==========================================")
     logging.info(f"ATR Window: {args.atr_window}")
     logging.info(f"Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
     logging.info(f"POC: {args.poc}")
+    logging.info(f"Símbolo: {args.symbol}")
+    logging.info(f"Intervalo: {args.interval}")
     logging.info("==========================================")
 
     if args.backtest:
         run_backtest(args)
         sys.exit(0)
-
-    telegram_token = os.getenv('TELEGRAM_TOKEN', '').strip()
-    chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
 
     while True:
         try:
@@ -263,4 +281,3 @@ if __name__ == "__main__":
         except Exception as e:
             logging.error(f"Error en ciclo principal: {e}")
             time.sleep(60)
-
