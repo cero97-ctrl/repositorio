@@ -5,6 +5,8 @@ import logging
 import argparse
 import sys
 import os
+import time
+from math import ceil
 
 # Configuración básica de logging
 logging.basicConfig(
@@ -17,25 +19,37 @@ def download_historical_data(symbol, interval, limit, output_file):
     """
     Descarga datos históricos de Binance y los guarda en un archivo CSV.
     """
-    logging.info(f"Iniciando descarga de {limit} velas para {symbol} en intervalo {interval}...")
-
-    # La API de Binance tiene un límite de 1000 velas por solicitud.
-    # Para simplificar, este script asume que 'limit' es <= 1000.
-    # Para una versión más avanzada, se necesitaría un bucle para obtener más de 1000 velas.
-    if limit > 1000:
-        logging.warning("La API de Binance tiene un límite de 1000 velas por solicitud. Se descargarán 1000.")
-        limit = 1000
-
-    url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
-
-    try:
-        response = requests.get(url, timeout=20)
-        response.raise_for_status()
-        data = response.json()
-        logging.info(f"Se recibieron {len(data)} velas de la API.")
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error al obtener datos de Binance: {e}")
-        return
+    logging.info(f"Iniciando descarga de hasta {limit} velas para {symbol} en intervalo {interval}...")
+    
+    base_url = 'https://api.binance.com/api/v3/klines'
+    all_data = []
+    klines_to_fetch = limit
+    end_time = None
+    
+    while klines_to_fetch > 0:
+        fetch_limit = min(klines_to_fetch, 1000)
+        logging.info(f"Petición para obtener {fetch_limit} velas...")
+        
+        params = {'symbol': symbol, 'interval': interval, 'limit': fetch_limit}
+        if end_time:
+            params['endTime'] = end_time
+        
+        try:
+            response = requests.get(base_url, params=params, timeout=20)
+            response.raise_for_status()
+            data = response.json()
+            
+            if not data:
+                logging.info("No se recibieron más datos de la API. Finalizando descarga.")
+                break
+            
+            all_data = data + all_data
+            end_time = data[0][0] - 1 # Timestamp de la primera vela para la siguiente petición
+            klines_to_fetch -= len(data)
+            time.sleep(0.5) # Pausa para no sobrecargar la API
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error al obtener datos de Binance: {e}")
+            break
 
     # Columnas requeridas por el script de backtesting
     required_columns = ['open', 'high', 'low', 'close', 'volume']
@@ -45,6 +59,10 @@ def download_historical_data(symbol, interval, limit, output_file):
         'close_time', 'quote_asset_volume', 'number_of_trades',
         'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
     ])
+
+    if df.empty:
+        logging.warning("No se descargaron datos. No se generará el archivo CSV.")
+        return
 
     # Convertir a numérico y seleccionar solo las columnas necesarias
     for col in required_columns:
@@ -64,7 +82,7 @@ if __name__ == "__main__":
     
     parser.add_argument("--symbol", type=str, default="BTCUSDT", help="Símbolo del par a descargar (ej: BTCUSDT).")
     parser.add_argument("--interval", type=str, default="1h", help="Intervalo de las velas (ej: 1h, 4h, 1d).")
-    parser.add_argument("--limit", type=int, default=1000, help="Número de velas a descargar (máximo 1000 por solicitud).")
+    parser.add_argument("--limit", type=int, default=1000, help="Número de velas a descargar. Puede ser mayor a 1000.")
     parser.add_argument("--output", type=str, default="historical_data.csv", help="Nombre del archivo de salida CSV.")
     
     args = parser.parse_args()
