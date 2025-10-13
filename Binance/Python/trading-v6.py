@@ -130,6 +130,20 @@ def evaluate_trade(df, args):
 
     poc_zone = check_poc_zone(latest, args.poc, args.poc_tolerance)
 
+    # --- Lógica de Gestión de Riesgo ---
+    def add_risk_management(signal_text, direction):
+        entry_price = latest['close']
+        if direction == 'long':
+            stop_loss = latest['low'] * (1 - args.sl_buffer) # Un pequeño buffer por debajo del mínimo
+            risk = entry_price - stop_loss
+            take_profit = entry_price + (risk * args.rr_ratio)
+        else: # short
+            stop_loss = latest['high'] * (1 + args.sl_buffer) # Un pequeño buffer por encima del máximo
+            risk = stop_loss - entry_price
+            take_profit = entry_price - (risk * args.rr_ratio)
+        
+        return f"{signal_text}\n\n🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n- Entrada: `${entry_price:.2f}`\n- Stop Loss: `${stop_loss:.2f}`\n- Take Profit: `${take_profit:.2f}`"
+
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Martillo detectado"
         if latest['close'] <= latest['Boll_Lower']:
@@ -138,7 +152,7 @@ def evaluate_trade(df, args):
             signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥"
         if latest['ATR'] > atr_mean:
             signal_text += " con alta volatilidad 🔥"
-        signals.append(signal_text)
+        signals.append(add_risk_management(signal_text, 'long'))
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
     if is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -149,7 +163,7 @@ def evaluate_trade(df, args):
             signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️"
         if latest['ATR'] > atr_mean:
             signal_text += " con fuerte volatilidad ⚡"
-        signals.append(signal_text)
+        signals.append(add_risk_management(signal_text, 'short'))
         pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
     if pending_state:
@@ -250,6 +264,8 @@ def load_config():
     parser.add_argument("--poc-tolerance", type=float, default=float(os.getenv('POC_TOLERANCE', 0.005)), help="Tolerancia porcentual para la zona POC.")
     parser.add_argument("--atr-mean-period", type=int, default=int(os.getenv('ATR_MEAN_PERIOD', 50)), help="Periodo para la media móvil del ATR.")
     parser.add_argument("--backtest", action='store_true', help="Activa el modo backtesting.")
+    parser.add_argument("--rr-ratio", type=float, default=float(os.getenv('RR_RATIO', 2.0)), help="Ratio Riesgo/Beneficio para Take Profit.")
+    parser.add_argument("--sl-buffer", type=float, default=float(os.getenv('SL_BUFFER', 0.002)), help="Buffer porcentual para el Stop Loss (ej: 0.002 para 0.2%).")
     parser.add_argument("--backtest-file", type=str, default=os.getenv('BACKTEST_FILE', "historical_data.csv"))
 
     args = parser.parse_args()
@@ -280,6 +296,8 @@ if __name__ == "__main__":
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
     logging.info(f"Tolerancia POC: {args.poc_tolerance}")
     logging.info(f"Periodo Media ATR: {args.atr_mean_period}")
+    logging.info(f"Ratio Riesgo/Beneficio: {args.rr_ratio}")
+    logging.info(f"Buffer de Stop Loss: {args.sl_buffer}")
     logging.info("==========================================")
 
     if args.backtest:
