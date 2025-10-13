@@ -144,6 +144,17 @@ def evaluate_trade(df, args):
         
         return f"{signal_text}\n\n🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n- Entrada: `${entry_price:.2f}`\n- Stop Loss: `${stop_loss:.2f}`\n- Take Profit: `${take_profit:.2f}`"
 
+    # --- ESTRATEGIA: CRUCE DE EMAs (Golden/Death Cross) ---
+    # Golden Cross (Cruce Dorado) -> Señal de Compra
+    if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
+        signal_text = "📈 **Golden Cross** detectado (EMA 50 cruza por encima de EMA 200)"
+        signals.append(add_risk_management(signal_text, 'long'))
+
+    # Death Cross (Cruce de la Muerte) -> Señal de Venta
+    if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
+        signal_text = "📉 **Death Cross** detectado (EMA 50 cruza por debajo de EMA 200)"
+        signals.append(add_risk_management(signal_text, 'short'))
+
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Martillo detectado"
         if latest['close'] <= latest['Boll_Lower']:
@@ -214,7 +225,7 @@ def run_backtest(args):
     for i in range(51, len(df)):
         sub_df = df.iloc[:i+1]
         signal = evaluate_trade(sub_df, args)
-        if 'Martillo' in signal or 'Estrella' in signal:
+        if "⏳" not in signal and "Volatilidad baja" not in signal:
             total_signals += 1
             print(f"[{i}] {signal} @ {sub_df.iloc[-1]['close']}")
 
