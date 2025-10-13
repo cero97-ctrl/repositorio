@@ -109,7 +109,7 @@ def check_confirmation(df, state, volume_multiplier):
     return message
 
 # === FUNCIONES POC ===
-def check_poc_zone(latest, poc, tolerance=0.005):
+def check_poc_zone(latest, poc, tolerance):
     if poc <= 0:
         return False
     poc_upper = poc * (1 + tolerance)
@@ -123,12 +123,12 @@ def evaluate_trade(df, args):
     signals = []
     pending_state = None
 
-    atr_mean = df['ATR'].rolling(50).mean().iloc[-1]
+    atr_mean = df['ATR'].rolling(args.atr_mean_period).mean().iloc[-1]
     if latest['ATR'] < atr_mean:
         logging.info("ATR bajo: mercado sin volatilidad significativa, no se generan señales.")
         return "⚠️ Volatilidad baja (ATR bajo). No se recomienda operar ahora."
 
-    poc_zone = check_poc_zone(latest, args.poc)
+    poc_zone = check_poc_zone(latest, args.poc, args.poc_tolerance)
 
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Martillo detectado"
@@ -160,13 +160,23 @@ def evaluate_trade(df, args):
     return "\n".join(signals) if signals else "⏳ Sin señales claras."
 
 # === TELEGRAM ===
+def escape_markdown_v2(text):
+    """Escapa los caracteres especiales para el modo MarkdownV2 de Telegram."""
+    escape_chars = r'_*[]()~`>#+-=|{}.!'
+    return ''.join(['\\' + char if char in escape_chars else char for char in text])
+
 def send_telegram_message(message, telegram_token, chat_id):
     if not telegram_token or not chat_id:
         logging.warning("Token o chat_id no configurados.")
         return
+
+    # Escapamos el mensaje para que sea compatible con MarkdownV2
+    escaped_message = escape_markdown_v2(message)
+
     url = f'https://api.telegram.org/bot{telegram_token}/sendMessage'
-    payload = {'chat_id': chat_id, 'text': message, 'parse_mode': 'MarkdownV2'}
+    payload = {'chat_id': chat_id, 'text': escaped_message, 'parse_mode': 'MarkdownV2'}
     try:
+        logging.info("Enviando notificación a Telegram...")
         requests.post(url, data=payload, timeout=10)
     except Exception as e:
         logging.error(f"Error al enviar mensaje Telegram: {e}")
@@ -212,7 +222,7 @@ def execute_single_run(args, telegram_token, chat_id):
     else:
         signal = evaluate_trade(df, args)
 
-    message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n{signal}"
+    message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n\n{signal}"
     logging.info(message)
 
     if "⏳" not in signal:
@@ -237,6 +247,8 @@ def load_config():
     parser.add_argument("--atr-window", type=int, default=int(os.getenv('ATR_WINDOW', 14)))
     parser.add_argument("--bollinger-window", type=int, default=int(os.getenv('BOLLINGER_WINDOW', 20)))
     parser.add_argument("--poc", type=float, default=float(os.getenv('POC', 0.0)))
+    parser.add_argument("--poc-tolerance", type=float, default=float(os.getenv('POC_TOLERANCE', 0.005)), help="Tolerancia porcentual para la zona POC.")
+    parser.add_argument("--atr-mean-period", type=int, default=int(os.getenv('ATR_MEAN_PERIOD', 50)), help="Periodo para la media móvil del ATR.")
     parser.add_argument("--backtest", action='store_true', help="Activa el modo backtesting.")
     parser.add_argument("--backtest-file", type=str, default=os.getenv('BACKTEST_FILE', "historical_data.csv"))
 
@@ -266,6 +278,8 @@ if __name__ == "__main__":
     logging.info(f"ATR Window: {args.atr_window}")
     logging.info(f"Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
+    logging.info(f"Tolerancia POC: {args.poc_tolerance}")
+    logging.info(f"Periodo Media ATR: {args.atr_mean_period}")
     logging.info("==========================================")
 
     if args.backtest:
