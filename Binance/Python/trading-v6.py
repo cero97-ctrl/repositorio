@@ -218,66 +218,73 @@ def execute_single_run(args, telegram_token, chat_id):
     if "⏳" not in signal:
         send_telegram_message(message, telegram_token, chat_id)
 
-# === MAIN ===
-if __name__ == "__main__":
+def load_config():
+    """Carga la configuración desde .env y argumentos de línea de comandos."""
+    load_dotenv()
+
     parser = argparse.ArgumentParser(description="Bot de trading con ATR, Bollinger, POC, Backtesting y dotenv.")
-    parser.add_argument("--symbol", type=str, default="BTCUSDT")
-    parser.add_argument("--interval", type=str, default="1h")
-    parser.add_argument("--limit", type=int, default=202)
-    parser.add_argument("--log", default="INFO", choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'])
-    parser.add_argument("--sleep", type=int, default=3600)
-    parser.add_argument("--volume-sma-period", type=int, default=20)
-    parser.add_argument("--hammer-multiplier", type=float, default=2.0)
-    parser.add_argument("--shooting-star-multiplier", type=float, default=2.0)
-    parser.add_argument("--volume-multiplier", type=float, default=1.5)
-    parser.add_argument("--atr-window", type=int, default=14)
-    parser.add_argument("--bollinger-window", type=int, default=20)
-    parser.add_argument("--poc", type=float, default=0, help="Nivel de precio del Point of Control (POC)")
+    
+    # La precedencia es: Argumento CLI > Variable de Entorno > Valor por defecto
+    parser.add_argument("--symbol", type=str, default=os.getenv('SYMBOL', "BTCUSDT"))
+    parser.add_argument("--interval", type=str, default=os.getenv('INTERVAL', "1h"))
+    parser.add_argument("--limit", type=int, default=int(os.getenv('LIMIT', 202)))
+    parser.add_argument("--log", default=os.getenv('LOG_LEVEL', "INFO"), choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
+    parser.add_argument("--sleep", type=int, default=int(os.getenv('SLEEP', 3600)))
+    parser.add_argument("--volume-sma-period", type=int, default=int(os.getenv('VOLUME_SMA_PERIOD', 20)))
+    parser.add_argument("--hammer-multiplier", type=float, default=float(os.getenv('HAMMER_MULTIPLIER', 2.0)))
+    parser.add_argument("--shooting-star-multiplier", type=float, default=float(os.getenv('SHOOTING_STAR_MULTIPLIER', 2.0)))
+    parser.add_argument("--volume-multiplier", type=float, default=float(os.getenv('VOLUME_MULTIPLIER', 1.5)))
+    parser.add_argument("--atr-window", type=int, default=int(os.getenv('ATR_WINDOW', 14)))
+    parser.add_argument("--bollinger-window", type=int, default=int(os.getenv('BOLLINGER_WINDOW', 20)))
+    parser.add_argument("--poc", type=float, default=float(os.getenv('POC', 0.0)))
     parser.add_argument("--backtest", action='store_true', help="Activa el modo backtesting.")
-    parser.add_argument("--backtest-file", type=str, default="historical_data.csv", help="Ruta del archivo CSV para backtesting.")
+    parser.add_argument("--backtest-file", type=str, default=os.getenv('BACKTEST_FILE', "historical_data.csv"))
+
     args = parser.parse_args()
 
-    logging.basicConfig(level=args.log.upper(), format='%(asctime)s - %(levelname)s - %(message)s', stream=sys.stdout)
-
-    # === CARGA DE VARIABLES DESDE .ENV ===
-    load_dotenv()
     telegram_token = os.getenv('TELEGRAM_TOKEN', '').strip()
     chat_id = os.getenv('TELEGRAM_CHAT_ID', '').strip()
 
-    # === CARGA OPCIONAL DE PARÁMETROS DESDE .ENV ===
-    args.symbol = os.getenv('SYMBOL', args.symbol)
-    args.interval = os.getenv('INTERVAL', args.interval)
-    args.limit = int(os.getenv('LIMIT', args.limit))
-    args.volume_sma_period = int(os.getenv('VOLUME_SMA_PERIOD', args.volume_sma_period))
-    args.hammer_multiplier = float(os.getenv('HAMMER_MULTIPLIER', args.hammer_multiplier))
-    args.shooting_star_multiplier = float(os.getenv('SHOOTING_STAR_MULTIPLIER', args.shooting_star_multiplier))
-    args.volume_multiplier = float(os.getenv('VOLUME_MULTIPLIER', args.volume_multiplier))
-    args.atr_window = int(os.getenv('ATR_WINDOW', args.atr_window))
-    args.bollinger_window = int(os.getenv('BOLLINGER_WINDOW', args.bollinger_window))
-    args.poc = float(os.getenv('POC', args.poc))
-    args.sleep = int(os.getenv('SLEEP', args.sleep))
+    return args, telegram_token, chat_id
+
+# === MAIN ===
+if __name__ == "__main__":
+    args, telegram_token, chat_id = load_config()
+    
+    # Configurar logging después de cargar la configuración para usar el nivel de log correcto
+    logging.basicConfig(
+        level=args.log.upper(), 
+        format='%(asctime)s - %(levelname)s - %(message)s', 
+        stream=sys.stdout
+    )
 
     logging.info("==========================================")
+    logging.info("Iniciando bot con la siguiente configuración:")
+    logging.info(f"Símbolo: {args.symbol}")
+    logging.info(f"Intervalo: {args.interval}")
+    logging.info(f"POC: {args.poc}")
     logging.info(f"ATR Window: {args.atr_window}")
     logging.info(f"Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
-    logging.info(f"POC: {args.poc}")
-    logging.info(f"Símbolo: {args.symbol}")
-    logging.info(f"Intervalo: {args.interval}")
     logging.info("==========================================")
 
     if args.backtest:
         run_backtest(args)
         sys.exit(0)
 
+    # Limpiar estado anterior al iniciar en modo live para evitar confirmaciones incorrectas
+    clear_state()
+    logging.info("Estado anterior limpiado. Iniciando en modo de operación en vivo.")
+
     while True:
         try:
             execute_single_run(args, telegram_token, chat_id)
+            logging.info(f"Análisis completado. Esperando {args.sleep} segundos para el próximo ciclo.")
             time.sleep(args.sleep)
         except KeyboardInterrupt:
-            logging.info("Bot detenido manualmente.")
+            logging.info("Bot detenido manualmente. Limpiando estado...")
             clear_state()
             sys.exit(0)
         except Exception as e:
-            logging.error(f"Error en ciclo principal: {e}")
-            time.sleep(60)
+            logging.error(f"Error inesperado en el ciclo principal: {e}")
+            time.sleep(60) # Esperar un minuto antes de reintentar en caso de error grave
