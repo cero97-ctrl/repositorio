@@ -165,16 +165,16 @@ def escape_markdown_v2(text):
     escape_chars = r'_*[]()~`>#+-=|{}.!'
     return ''.join(['\\' + char if char in escape_chars else char for char in text])
 
-def send_telegram_message(message, telegram_token, chat_id):
+def send_telegram_message(message, telegram_token, chat_id, pre_escaped=False):
     if not telegram_token or not chat_id:
         logging.warning("Token o chat_id no configurados.")
         return
 
-    # Escapamos el mensaje para que sea compatible con MarkdownV2
-    escaped_message = escape_markdown_v2(message)
+    # Escapamos el mensaje solo si no viene ya formateado
+    text_to_send = message if pre_escaped else escape_markdown_v2(message)
 
     url = f'https://api.telegram.org/bot{telegram_token}/sendMessage'
-    payload = {'chat_id': chat_id, 'text': escaped_message, 'parse_mode': 'MarkdownV2'}
+    payload = {'chat_id': chat_id, 'text': text_to_send, 'parse_mode': 'MarkdownV2'}
     try:
         logging.info("Enviando notificación a Telegram...")
         requests.post(url, data=payload, timeout=10)
@@ -226,7 +226,7 @@ def execute_single_run(args, telegram_token, chat_id):
     logging.info(message)
 
     if "⏳" not in signal:
-        send_telegram_message(message, telegram_token, chat_id)
+        send_telegram_message(message, telegram_token, chat_id, pre_escaped=False)
 
 def load_config():
     """Carga la configuración desde .env y argumentos de línea de comandos."""
@@ -289,6 +289,16 @@ if __name__ == "__main__":
     # Limpiar estado anterior al iniciar en modo live para evitar confirmaciones incorrectas
     clear_state()
     logging.info("Estado anterior limpiado. Iniciando en modo de operación en vivo.")
+
+    # Enviar mensaje de inicio a Telegram
+    startup_message = (
+        f"🚀 *Bot de Trading Iniciado* 🚀\n\n"
+        f"Monitoreando: `{args.symbol}` en intervalo `{args.interval}`\n"
+        f"POC configurado en: `{args.poc}`\n\n"
+        "El bot está en línea y funcionando correctamente\\."
+    )
+    send_telegram_message(startup_message, telegram_token, chat_id, pre_escaped=True)
+    logging.info("Mensaje de inicio enviado a Telegram.")
 
     while True:
         try:
