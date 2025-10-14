@@ -163,6 +163,8 @@ def evaluate_trade(df, args):
             signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥"
         if latest['ATR'] > atr_mean:
             signal_text += " con alta volatilidad 🔥"
+        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+            signal_text += " con volumen climático 📈"
         signals.append(add_risk_management(signal_text, 'long'))
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
@@ -174,6 +176,8 @@ def evaluate_trade(df, args):
             signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️"
         if latest['ATR'] > atr_mean:
             signal_text += " con fuerte volatilidad ⚡"
+        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+            signal_text += " con volumen climático 📉"
         signals.append(add_risk_management(signal_text, 'short'))
         pending_state = {"pattern": "shooting_star", "price": latest['close']}
 

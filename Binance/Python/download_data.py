@@ -22,7 +22,7 @@ def download_historical_data(symbol, interval, limit, output_file):
     logging.info(f"Iniciando descarga de hasta {limit} velas para {symbol} en intervalo {interval}...")
     
     base_url = 'https://api.binance.com/api/v3/klines'
-    all_data = []
+    all_klines = []
     klines_to_fetch = limit
     end_time = None
     
@@ -43,8 +43,8 @@ def download_historical_data(symbol, interval, limit, output_file):
                 logging.info("No se recibieron más datos de la API. Finalizando descarga.")
                 break
             
-            all_data = data + all_data
-            end_time = data[0][0] - 1 # Timestamp de la primera vela para la siguiente petición
+            all_klines.extend(data)
+            end_time = data[0][0] - 1  # Timestamp de la primera vela para la siguiente petición
             klines_to_fetch -= len(data)
             time.sleep(0.5) # Pausa para no sobrecargar la API
         except requests.exceptions.RequestException as e:
@@ -54,7 +54,10 @@ def download_historical_data(symbol, interval, limit, output_file):
     # Columnas requeridas por el script de backtesting
     required_columns = ['open', 'high', 'low', 'close', 'volume']
     
-    df = pd.DataFrame(data, columns=[
+    # Invertimos la lista para que los datos queden en orden cronológico correcto
+    all_klines.reverse()
+    
+    df = pd.DataFrame(all_klines, columns=[
         'timestamp', 'open', 'high', 'low', 'close', 'volume',
         'close_time', 'quote_asset_volume', 'number_of_trades',
         'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
@@ -68,8 +71,8 @@ def download_historical_data(symbol, interval, limit, output_file):
     for col in required_columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
     
-    df_to_save = df[required_columns]
-    df_to_save.dropna(inplace=True)
+    # Seleccionamos y limpiamos filas con datos nulos en las columnas clave
+    df_to_save = df[required_columns].dropna()
 
     try:
         df_to_save.to_csv(output_file, index=False)
