@@ -254,7 +254,7 @@ def execute_single_run(args, telegram_token, chat_id):
     message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n\n{signal}"
     logging.info(message)
 
-    if "⏳" not in signal:
+    if "⏳" not in signal and "Volatilidad baja" not in signal:
         send_telegram_message(message, telegram_token, chat_id, pre_escaped=False)
 
 def load_config():
