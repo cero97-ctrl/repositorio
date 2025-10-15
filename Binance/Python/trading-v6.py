@@ -91,38 +91,46 @@ def clear_state():
         os.remove(STATE_FILE)
 
 # === CONFIRMACIÓN ===
-# === CONFIRMACIÓN ===
 def check_confirmation(df, state, args):
     latest = df.iloc[-1]
     previous = df.iloc[-2]
     pattern = state.get("pattern")
-    confirmation_volume_ok = latest['volume'] > latest['volume_sma'] * args.volume_multiplier
 
     message = ""
 
-    # Reutilizamos la función de gestión de riesgo
-    def add_risk_management(signal_text, direction):
-        entry_price = latest['close']
-        if direction == 'long':
-            stop_loss = previous['low'] * (1 - args.sl_buffer) # SL basado en el mínimo del patrón original
-            risk = entry_price - stop_loss
-            take_profit = entry_price + (risk * args.rr_ratio)
-        else: # short
-            stop_loss = previous['high'] * (1 + args.sl_buffer) # SL basado en el máximo del patrón original
-            risk = stop_loss - entry_price
-            take_profit = entry_price - (risk * args.rr_ratio)
-        return f"{signal_text}\n\n🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n- Entrada: `${entry_price:.2f}`\n- Stop Loss: `${stop_loss:.2f}`\n- Take Profit: `${take_profit:.2f}`"
-
     if pattern in ["hammer"] and latest['close'] > previous['high']:
-        message = add_risk_management(f"✅ Confirmación alcista del patrón {pattern}", 'long')
+        message = add_risk_management(f"✅ Confirmación alcista del patrón {pattern}", 'long', latest, previous, args)
     elif pattern in ["shooting_star"] and latest['close'] < previous['low']:
-        message = add_risk_management(f"✅ Confirmación bajista del patrón {pattern}", 'short')
+        message = add_risk_management(f"✅ Confirmación bajista del patrón {pattern}", 'short', latest, previous, args)
     else:
         message = f"❌ Sin confirmación para patrón {pattern}"
 
     clear_state()
     return message
 
+
+# === GESTIÓN DE RIESGO ===
+def add_risk_management(signal_text, direction, entry_candle, pattern_candle, args):
+    """Añade los niveles de Stop Loss y Take Profit a una señal."""
+    entry_price = entry_candle['close']
+    
+    if direction == 'long':
+        stop_loss = pattern_candle['low'] * (1 - args.sl_buffer)
+        risk = entry_price - stop_loss
+        take_profit = entry_price + (risk * args.rr_ratio)
+    else:  # short
+        stop_loss = pattern_candle['high'] * (1 + args.sl_buffer)
+        risk = stop_loss - entry_price
+        take_profit = entry_price - (risk * args.rr_ratio)
+
+    if risk <= 0:
+        return f"{signal_text}\n\n⚠️ No se pudo calcular la gestión de riesgo (riesgo inválido)."
+
+    return (f"{signal_text}\n\n"
+            f"🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n"
+            f"- Entrada: `${entry_price:.2f}`\n"
+            f"- Stop Loss: `${stop_loss:.2f}`\n"
+            f"- Take Profit: `${take_profit:.2f}`")
 
 # === FUNCIONES POC ===
 def check_poc_zone(latest, poc, tolerance):
@@ -146,30 +154,17 @@ def evaluate_trade(df, args):
 
     poc_zone = check_poc_zone(latest, args.poc, args.poc_tolerance)
 
-    # --- Lógica de Gestión de Riesgo ---
-    def add_risk_management(signal_text, direction):
-        entry_price = latest['close']
-        if direction == 'long':
-            stop_loss = latest['low'] * (1 - args.sl_buffer) # Un pequeño buffer por debajo del mínimo
-            risk = entry_price - stop_loss
-            take_profit = entry_price + (risk * args.rr_ratio)
-        else: # short
-            stop_loss = latest['high'] * (1 + args.sl_buffer) # Un pequeño buffer por encima del máximo
-            risk = stop_loss - entry_price
-            take_profit = entry_price - (risk * args.rr_ratio)
-        
-        return f"{signal_text}\n\n🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n- Entrada: `${entry_price:.2f}`\n- Stop Loss: `${stop_loss:.2f}`\n- Take Profit: `${take_profit:.2f}`"
-
     # --- ESTRATEGIA: CRUCE DE EMAs (Golden/Death Cross) ---
     # Golden Cross (Cruce Dorado) -> Señal de Compra
     if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
         signal_text = "📈 **Golden Cross** detectado (EMA 50 cruza por encima de EMA 200)"
-        signals.append(add_risk_management(signal_text, 'long'))
+        # Para cruces, el patrón y la entrada son la misma vela
+        signals.append(add_risk_management(signal_text, 'long', latest, latest, args))
 
     # Death Cross (Cruce de la Muerte) -> Señal de Venta
     if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
         signal_text = "📉 **Death Cross** detectado (EMA 50 cruza por debajo de EMA 200)"
-        signals.append(add_risk_management(signal_text, 'short'))
+        signals.append(add_risk_management(signal_text, 'short', latest, latest, args))
 
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Martillo detectado"
@@ -181,7 +176,7 @@ def evaluate_trade(df, args):
             signal_text += " con alta volatilidad 🔥"
         if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
             signal_text += " con volumen climático 📈"
-        signals.append(add_risk_management(signal_text, 'long'))
+        signals.append(add_risk_management(signal_text, 'long', latest, latest, args))
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
     if is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -194,7 +189,7 @@ def evaluate_trade(df, args):
             signal_text += " con fuerte volatilidad ⚡"
         if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
             signal_text += " con volumen climático 📉"
-        signals.append(add_risk_management(signal_text, 'short'))
+        signals.append(add_risk_management(signal_text, 'short', latest, latest, args))
         pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
     if pending_state:
