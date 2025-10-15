@@ -91,22 +91,38 @@ def clear_state():
         os.remove(STATE_FILE)
 
 # === CONFIRMACIÓN ===
-def check_confirmation(df, state, volume_multiplier):
+# === CONFIRMACIÓN ===
+def check_confirmation(df, state, args):
     latest = df.iloc[-1]
     previous = df.iloc[-2]
     pattern = state.get("pattern")
-    confirmation_volume_ok = latest['volume'] > latest['volume_sma'] * volume_multiplier
+    confirmation_volume_ok = latest['volume'] > latest['volume_sma'] * args.volume_multiplier
 
     message = ""
+
+    # Reutilizamos la función de gestión de riesgo
+    def add_risk_management(signal_text, direction):
+        entry_price = latest['close']
+        if direction == 'long':
+            stop_loss = previous['low'] * (1 - args.sl_buffer) # SL basado en el mínimo del patrón original
+            risk = entry_price - stop_loss
+            take_profit = entry_price + (risk * args.rr_ratio)
+        else: # short
+            stop_loss = previous['high'] * (1 + args.sl_buffer) # SL basado en el máximo del patrón original
+            risk = stop_loss - entry_price
+            take_profit = entry_price - (risk * args.rr_ratio)
+        return f"{signal_text}\n\n🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n- Entrada: `${entry_price:.2f}`\n- Stop Loss: `${stop_loss:.2f}`\n- Take Profit: `${take_profit:.2f}`"
+
     if pattern in ["hammer"] and latest['close'] > previous['high']:
-        message = f"✅ Confirmación alcista del patrón {pattern}"
+        message = add_risk_management(f"✅ Confirmación alcista del patrón {pattern}", 'long')
     elif pattern in ["shooting_star"] and latest['close'] < previous['low']:
-        message = f"✅ Confirmación bajista del patrón {pattern}"
+        message = add_risk_management(f"✅ Confirmación bajista del patrón {pattern}", 'short')
     else:
         message = f"❌ Sin confirmación para patrón {pattern}"
 
     clear_state()
     return message
+
 
 # === FUNCIONES POC ===
 def check_poc_zone(latest, poc, tolerance):
@@ -236,6 +252,7 @@ def run_backtest(args):
     print(f"\n✅ Backtest completado. Señales detectadas: {total_signals}")
 
 # === EJECUCIÓN ===
+# === EJECUCIÓN ===
 def execute_single_run(args, telegram_token, chat_id):
     logging.info(f"Analizando {args.symbol} {args.interval}...")
     df = get_klines(args.symbol, args.interval, args.limit)
@@ -247,15 +264,16 @@ def execute_single_run(args, telegram_token, chat_id):
 
     pending_state = load_state()
     if pending_state:
-        signal = check_confirmation(df, pending_state, args.volume_multiplier)
+        signal = check_confirmation(df, pending_state, args)
     else:
         signal = evaluate_trade(df, args)
 
     message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n\n{signal}"
     logging.info(message)
 
-    if "⏳" not in signal and "Volatilidad baja" not in signal:
-        send_telegram_message(message, telegram_token, chat_id, pre_escaped=False)
+    if "⏳" not in signal and "Volatilidad baja" not in signal and "❌ Sin confirmación" not in signal:
+        send_telegram_message(message, telegram_token, chat_id, pre_escaped=True)
+
 
 def load_config():
     """Carga la configuración desde .env y argumentos de línea de comandos."""
