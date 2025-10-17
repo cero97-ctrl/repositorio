@@ -99,11 +99,11 @@ def check_confirmation(df, state, args):
     message = ""
 
     if pattern in ["hammer"] and latest['close'] > previous['high']:
-        message = add_risk_management(f"✅ Confirmación alcista del patrón {pattern}", 'long', latest, previous, args)
+        message = add_risk_management(f"✅ Bullish confirmation for {pattern} pattern", 'long', latest, previous, args)
     elif pattern in ["shooting_star"] and latest['close'] < previous['low']:
-        message = add_risk_management(f"✅ Confirmación bajista del patrón {pattern}", 'short', latest, previous, args)
+        message = add_risk_management(f"✅ Bearish confirmation for {pattern} pattern", 'short', latest, previous, args)
     else:
-        message = f"❌ Sin confirmación para patrón {pattern}"
+        message = f"❌ No confirmation for {pattern} pattern"
 
     clear_state()
     return message
@@ -167,7 +167,7 @@ def evaluate_trade(df, args):
         signals.append(add_risk_management(signal_text, 'short', latest, latest, args))
 
     if is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
-        signal_text = "🕯️ Martillo detectado"
+        signal_text = "🕯️ Hammer detected"
         if latest['close'] <= latest['Boll_Lower']:
             signal_text += " tocando banda inferior de Bollinger 📉"
         if poc_zone:
@@ -180,7 +180,7 @@ def evaluate_trade(df, args):
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
     if is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
-        signal_text = "🕯️ Estrella Fugaz detectada"
+        signal_text = "🕯️ Shooting Star detected"
         if latest['close'] >= latest['Boll_Upper']:
             signal_text += " tocando banda superior de Bollinger 📈"
         if poc_zone:
