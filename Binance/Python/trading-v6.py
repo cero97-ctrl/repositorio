@@ -175,8 +175,8 @@ if __name__ == "__main__":
     logging.info(f"ATR Window: {args.atr_window}")
     logging.info(f"Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
-    # Los siguientes argumentos son para compatibilidad con la gestión de riesgo de este script
-    # No están en la función load_config unificada, pero se pueden añadir si se desea.
+    logging.info(f"Risk/Reward Ratio (para v6): {args.rr_ratio}")
+    logging.info(f"Stop Loss Buffer (para v6): {args.sl_buffer}")
     logging.info("==========================================")
 
     if args.backtest:

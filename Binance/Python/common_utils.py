@@ -144,6 +144,10 @@ def load_config():
     parser.add_argument("--wyckoff-volume-mult", type=float, default=float(os.getenv('WYCKOFF_VOLUME_MULT', 1.3)))
     parser.add_argument("--wyckoff-atr-thresh", type=float, default=float(os.getenv('WYCKOFF_ATR_THRESH', 1.1)))
 
+    # Parámetros de gestión de riesgo para trading-v6.py
+    parser.add_argument("--rr-ratio", type=float, default=float(os.getenv('RR_RATIO', 2.0)), help="Ratio Riesgo/Beneficio para Take Profit (usado en v6)")
+    parser.add_argument("--sl-buffer", type=float, default=float(os.getenv('SL_BUFFER', 0.002)), help="Buffer porcentual para Stop Loss (usado en v6)")
+
     # Parámetros de Backtesting
     parser.add_argument("--backtest", action='store_true', default=str(os.getenv('BACKTEST', 'false')).lower() in ('true', '1', 't'))
     parser.add_argument("--backtest-file", type=str, default=os.getenv('BACKTEST_FILE', "historical_data.csv"))
