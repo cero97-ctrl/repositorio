@@ -236,9 +236,25 @@ if __name__ == "__main__":
         run_backtest(args)
         sys.exit(0)
 
+    # Limpiar estado anterior al iniciar en modo live para evitar confirmaciones incorrectas
+    utils.clear_state()
+    logging.info("Estado anterior limpiado. Iniciando en modo de operación en vivo.")
+
+    # Enviar mensaje de inicio a Telegram
+    startup_message = (
+        f"🚀 *Bot Wyckoff Iniciado* 🚀\n\n"
+        f"Monitoreando: `{args.symbol}` en intervalo `{args.interval}`\n"
+        f"POC configurado en: `{args.poc}`\n"
+        f"Wyckoff activado: `{'Sí' if args.wyckoff else 'No'}`\n\n"
+        "El bot está en línea y funcionando correctamente\\."
+    )
+    utils.send_telegram_message(startup_message, telegram_token, chat_id, pre_escaped=True)
+    logging.info("Mensaje de inicio enviado a Telegram.")
+
     while True:
         try:
             execute_single_run(args, telegram_token, chat_id)
+            logging.info(f"Análisis completado. Esperando {args.sleep} segundos para el próximo ciclo.")
             time.sleep(args.sleep)
         except KeyboardInterrupt:
             logging.info("Bot detenido manualmente.")
