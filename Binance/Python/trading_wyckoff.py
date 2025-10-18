@@ -30,7 +30,7 @@ def check_confirmation(df, state, args):
     if trade_type:
         entry, stop, tp, rr = compute_risk_levels(latest['close'], latest['ATR'], trade_type, args.risk_stop_mult, args.risk_tp_mult)
         message = f"{signal_text}\n- Entrada: {entry:.8f} | Stop: {stop:.8f} | TP: {tp:.8f} | R:R = {rr}"
-        record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_{trade_type.upper()}', entry, stop, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}')
+        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_{trade_type.upper()}', entry, stop, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}')
     return message
 
 # === GESTIÓN DE RIESGO (OPCIÓN A) ===
@@ -54,21 +54,6 @@ def compute_risk_levels(entry_price, atr, direction='long', stop_mult=1.5, tp_mu
     else:
         rr = round(reward / risk, 2)
     return round(stop_loss, 8), round(take_profit, 8), rr
-
-
-def ensure_trades_log_exists(file_path):
-    if not os.path.exists(file_path):
-        with open(file_path, 'w') as f:
-            f.write('timestamp,symbol,type,entry,stop_loss,take_profit,atr,rr,notes\n')
-
-
-def record_trade(file_path, symbol, ttype, entry, stop_loss, take_profit, atr, rr, notes=''):
-    ensure_trades_log_exists(file_path)
-    ts = datetime.utcnow().isoformat()
-    line = f'{ts},{symbol},{ttype},{entry},{stop_loss},{take_profit},{atr},{rr},{notes}\n'
-    with open(file_path, 'a') as f:
-        f.write(line)
-    logging.info(f"Trade registrado en {file_path}: {symbol} {ttype} entry={entry} rr={rr}")
 
 # === MÓDULO WYCKOFF SIMPLIFICADO ===
 def detect_wyckoff_event(df, args):
@@ -137,7 +122,7 @@ def evaluate_trade(df, args):
         if stop_loss and take_profit:
             signal_text += f"- Stop: {stop_loss:.8f} | TP: {take_profit:.8f} | R:R = {rr}\n"
         signals.append(signal_text)
-        record_trade(args.trades_log_file, args.symbol, 'LONG', entry, stop_loss, take_profit, latest['ATR'], rr, notes='hammer')
+        utils.record_trade(args.trades_log_file, args.symbol, 'LONG', entry, stop_loss, take_profit, latest['ATR'], rr, notes='hammer')
         pending_state = {"pattern": "hammer", "price": entry}
 
     if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -153,7 +138,7 @@ def evaluate_trade(df, args):
         if stop_loss and take_profit:
             signal_text += f"- Stop: {stop_loss:.8f} | TP: {take_profit:.8f} | R:R = {rr}\n"
         signals.append(signal_text)
-        record_trade(args.trades_log_file, args.symbol, 'SHORT', entry, stop_loss, take_profit, latest['ATR'], rr, notes='shooting_star')
+        utils.record_trade(args.trades_log_file, args.symbol, 'SHORT', entry, stop_loss, take_profit, latest['ATR'], rr, notes='shooting_star')
         pending_state = {"pattern": "shooting_star", "price": entry}
 
     # Wyckoff events (opcional)
@@ -161,11 +146,11 @@ def evaluate_trade(df, args):
         ev_type, ev_msg, entry, stop, tp, ev_atr, ev_rr = detect_wyckoff_event(df, args)
         if ev_type == 'SPRING':
             signals.append(ev_msg)
-            record_trade(args.trades_log_file, args.symbol, 'LONG_WYCKOFF', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_spring')
+            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_WYCKOFF', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_spring')
             pending_state = {"pattern": "wyckoff_spring", "price": entry}
         elif ev_type == 'UPTHRUST':
             signals.append(ev_msg)
-            record_trade(args.trades_log_file, args.symbol, 'SHORT_WYCKOFF', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_upthrust')
+            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_WYCKOFF', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_upthrust')
             pending_state = {"pattern": "wyckoff_upthrust", "price": entry}
 
     if pending_state:

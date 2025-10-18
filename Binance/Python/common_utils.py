@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import argparse
+from datetime import datetime
 from dotenv import load_dotenv
 
 # === FUNCIONES DE BINANCE ===
@@ -114,6 +115,23 @@ def send_telegram_message(message, telegram_token, chat_id, pre_escaped=False):
         requests.post(url, data=payload, timeout=10)
     except Exception as e:
         logging.error(f"Error al enviar mensaje Telegram: {e}")
+
+# === REGISTRO DE TRADES ===
+def ensure_trades_log_exists(file_path):
+    """Asegura que el archivo de log de trades exista y tenga encabezado."""
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f:
+            # Un encabezado más genérico para ambos scripts
+            f.write('timestamp,symbol,type,entry,stop_loss,take_profit,atr,rr,notes\n')
+
+def record_trade(file_path, symbol, ttype, entry, stop_loss, take_profit, atr, rr, notes=''):
+    """Registra una operación en el archivo CSV."""
+    ensure_trades_log_exists(file_path)
+    ts = datetime.utcnow().isoformat()
+    line = f'{ts},{symbol},{ttype},{entry},{stop_loss},{take_profit},{atr},{rr},{notes}\n'
+    with open(file_path, 'a') as f:
+        f.write(line)
+    logging.info(f"Trade registrado en {file_path}: {symbol} {ttype} entry={entry} rr={rr}")
 
 # === CONFIGURACIÓN ===
 def load_config():

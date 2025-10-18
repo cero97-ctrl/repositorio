@@ -38,6 +38,8 @@ def add_risk_management(signal_text, direction, entry_candle, pattern_candle, ar
     else:  # short
         stop_loss = pattern_candle['high'] * (1 + args.sl_buffer)
         risk = stop_loss - entry_price
+        if risk <= 0: # Evitar división por cero si la entrada es mala
+            return signal_text, None, None, None, None
         take_profit = entry_price - (risk * args.rr_ratio)
 
     if risk <= 0:
@@ -47,7 +49,8 @@ def add_risk_management(signal_text, direction, entry_candle, pattern_candle, ar
             f"🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n"
             f"- Entrada: `${entry_price:.2f}`\n"
             f"- Stop Loss: `${stop_loss:.2f}`\n"
-            f"- Take Profit: `${take_profit:.2f}`")
+            f"- Take Profit: `${take_profit:.2f}`"), entry_price, stop_loss, take_profit, args.rr_ratio
+
 
 # === EVALUACIÓN DE SEÑALES ===
 def evaluate_trade(df, args):
@@ -67,13 +70,18 @@ def evaluate_trade(df, args):
     # Golden Cross (Cruce Dorado) -> Señal de Compra
     if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
         signal_text = "📈 **Golden Cross** detectado (EMA 50 cruza por encima de EMA 200)"
-        # Para cruces, el patrón y la entrada son la misma vela
-        signals.append(add_risk_management(signal_text, 'long', latest, latest, args))
+        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'long', latest, latest, args)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross')
 
     # Death Cross (Cruce de la Muerte) -> Señal de Venta
     if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
         signal_text = "📉 **Death Cross** detectado (EMA 50 cruza por debajo de EMA 200)"
-        signals.append(add_risk_management(signal_text, 'short', latest, latest, args))
+        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'short', latest, latest, args)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross')
 
     if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Hammer detected"
@@ -85,7 +93,10 @@ def evaluate_trade(df, args):
             signal_text += " con alta volatilidad 🔥"
         if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
             signal_text += " con volumen climático 📈"
-        signals.append(add_risk_management(signal_text, 'long', latest, latest, args))
+        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'long', latest, latest, args)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer')
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
     if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -98,7 +109,10 @@ def evaluate_trade(df, args):
             signal_text += " con fuerte volatilidad ⚡"
         if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
             signal_text += " con volumen climático 📉"
-        signals.append(add_risk_management(signal_text, 'short', latest, latest, args))
+        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'short', latest, latest, args)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star')
         pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
     if pending_state:
