@@ -35,11 +35,22 @@ elif st.sidebar.button('Actualizar Datos Manualmente'):
 # --- Carga y Procesamiento de Datos ---
 @st.cache_data # Ya no se usa un TTL fijo, la actualización la controla el refresco de la página
 def load_data(symbol, interval, limit):
-    df = utils.get_klines(symbol, interval, limit)
+    # --- LÓGICA MEJORADA PARA LÍNEAS DE INDICADORES COMPLETAS ---
+    # 1. Determinar el periodo de "calentamiento" necesario. El indicador más largo es la EMA de 200.
+    warmup_period = 200
+
+    # 2. Pedir datos adicionales para que los indicadores se calculen correctamente desde el inicio.
+    #    Pedimos las velas que el usuario quiere ver (limit) + las velas para el calentamiento.
+    df = utils.get_klines(symbol, interval, limit + warmup_period)
+
     if not df.empty:
-        # Reutilizamos tus funciones de cálculo de indicadores
+        # 3. Calcular los indicadores sobre el conjunto de datos completo (ej: 250 + 200 = 450 velas).
         df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+
+        # 4. Recortar el DataFrame para mostrar solo las últimas 'limit' velas que el usuario solicitó.
+        #    Ahora, estas velas ya tienen los valores de los indicadores calculados.
+        df = df.tail(limit).reset_index(drop=True)
     return df
 
 df = load_data(symbol, interval, limit)
