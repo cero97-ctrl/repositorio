@@ -23,9 +23,14 @@ interval = st.sidebar.selectbox('Intervalo (Interval)', ['1m', '5m', '15m', '30m
 limit = st.sidebar.slider('Límite de Velas (Limit)', 100, 1000, args.limit)
 poc = st.sidebar.number_input('Punto de Control (POC)', value=args.poc, format="%.2f")
 
-# Botón para actualizar los datos
-if st.sidebar.button('Actualizar Datos'):
-    st.experimental_rerun()
+st.sidebar.header('Actualización Automática')
+auto_refresh = st.sidebar.checkbox('Activar auto-actualización', value=True)
+refresh_interval = st.sidebar.number_input('Intervalo (segundos)', value=60, min_value=10, max_value=3600)
+
+if auto_refresh:
+    st.html(f'<meta http-equiv="refresh" content="{refresh_interval}">')
+elif st.sidebar.button('Actualizar Datos Manualmente'):
+    st.rerun()
 
 # --- Carga y Procesamiento de Datos ---
 @st.cache_data(ttl=60) # Cachear los datos por 60 segundos
