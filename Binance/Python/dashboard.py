@@ -85,7 +85,7 @@ else:
 
     # Actualizar layout general
     fig.update_layout(xaxis_rangeslider_visible=False, height=700, title=f'Análisis Técnico de {symbol}',
-                      showlegend=False) # Ocultar leyenda para un look más limpio
+                      showlegend=True)
     fig.update_yaxes(title_text="Precio", row=1, col=1)
     fig.update_yaxes(title_text="Volumen", row=2, col=1)
     fig.update_yaxes(title_text="RSI", row=3, col=1)
