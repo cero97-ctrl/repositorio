@@ -51,8 +51,11 @@ else:
     st.subheader(f'Gráfico de Velas para {symbol} ({interval})')
 
     # Crear una figura con 2 subplots: uno para las velas y otro para el RSI
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
-                        vertical_spacing=0.05, row_heights=[0.7, 0.3])
+    fig = make_subplots(rows=3, cols=1, shared_xaxes=True, 
+                        vertical_spacing=0.03, row_heights=[0.6, 0.2, 0.2])
+    
+    # Determinar el color de las barras de volumen
+    volume_colors = ['green' if row['close'] >= row['open'] else 'red' for index, row in df.iterrows()]
 
     # --- Gráfico de Velas (subplot 1) ---
     fig.add_trace(go.Candlestick(x=df['timestamp'],
@@ -70,15 +73,21 @@ else:
         fig.add_hline(y=poc, line_width=2, line_dash="dot", line_color="red",
                       annotation_text=f"POC: {poc}", annotation_position="bottom right", row=1, col=1)
 
-    # --- Gráfico de RSI (subplot 2) ---
-    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['RSI'], mode='lines', name='RSI', line=dict(color='cyan')), row=2, col=1)
-    fig.add_hline(y=70, line_dash="dot", line_color="red", line_width=1, row=2, col=1)
-    fig.add_hline(y=30, line_dash="dot", line_color="green", line_width=1, row=2, col=1)
+    # --- Gráfico de Volumen (subplot 2) ---
+    fig.add_trace(go.Bar(x=df['timestamp'], y=df['volume'], name='Volumen', marker_color=volume_colors), row=2, col=1)
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['volume_sma'], mode='lines', name='Volumen SMA', line=dict(color='purple', width=1)), row=2, col=1)
+
+    # --- Gráfico de RSI (subplot 3) ---
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['RSI'], mode='lines', name='RSI', line=dict(color='cyan')), row=3, col=1)
+    fig.add_hline(y=70, line_dash="dot", line_color="red", line_width=1, row=3, col=1)
+    fig.add_hline(y=30, line_dash="dot", line_color="green", line_width=1, row=3, col=1)
 
     # Actualizar layout general
-    fig.update_layout(xaxis_rangeslider_visible=False, height=600, title=f'Análisis Técnico de {symbol}')
+    fig.update_layout(xaxis_rangeslider_visible=False, height=700, title=f'Análisis Técnico de {symbol}',
+                      showlegend=False) # Ocultar leyenda para un look más limpio
     fig.update_yaxes(title_text="Precio", row=1, col=1)
-    fig.update_yaxes(title_text="RSI", row=2, col=1)
+    fig.update_yaxes(title_text="Volumen", row=2, col=1)
+    fig.update_yaxes(title_text="RSI", row=3, col=1)
     st.plotly_chart(fig, use_container_width=True)
 
     # --- Mostrar últimos datos e indicadores ---
