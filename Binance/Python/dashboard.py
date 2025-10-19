@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import os
 import common_utils as utils
 
@@ -44,22 +45,35 @@ else:
     # --- Visualización del Gráfico Principal ---
     st.subheader(f'Gráfico de Velas para {symbol} ({interval})')
 
-    fig = go.Figure(data=[go.Candlestick(x=df['timestamp'],
+    # Crear una figura con 2 subplots: uno para las velas y otro para el RSI
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
+                        vertical_spacing=0.05, row_heights=[0.7, 0.3])
+
+    # --- Gráfico de Velas (subplot 1) ---
+    fig.add_trace(go.Candlestick(x=df['timestamp'],
                     open=df['open'], high=df['high'],
-                    low=df['low'], close=df['close'], name='Velas')])
+                    low=df['low'], close=df['close'], name='Velas'), row=1, col=1)
 
     # Añadir indicadores al gráfico
-    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['EMA_50'], mode='lines', name='EMA 50', line=dict(color='orange', width=1)))
-    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['EMA_200'], mode='lines', name='EMA 200', line=dict(color='purple', width=1)))
-    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['Boll_Upper'], mode='lines', name='Bollinger Superior', line=dict(color='lightblue', width=1, dash='dash')))
-    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['Boll_Lower'], mode='lines', name='Bollinger Inferior', line=dict(color='lightblue', width=1, dash='dash')))
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['EMA_50'], mode='lines', name='EMA 50', line=dict(color='orange', width=1)), row=1, col=1)
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['EMA_200'], mode='lines', name='EMA 200', line=dict(color='purple', width=1)), row=1, col=1)
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['Boll_Upper'], mode='lines', name='Bollinger Sup.', line=dict(color='lightblue', width=1, dash='dash')), row=1, col=1)
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['Boll_Lower'], mode='lines', name='Bollinger Inf.', line=dict(color='lightblue', width=1, dash='dash')), row=1, col=1)
 
     # Añadir línea de POC si está configurado
     if poc > 0:
         fig.add_hline(y=poc, line_width=2, line_dash="dot", line_color="red",
-                      annotation_text=f"POC: {poc}", annotation_position="bottom right")
+                      annotation_text=f"POC: {poc}", annotation_position="bottom right", row=1, col=1)
 
-    fig.update_layout(xaxis_rangeslider_visible=False, height=500, title=f'Análisis Técnico de {symbol}')
+    # --- Gráfico de RSI (subplot 2) ---
+    fig.add_trace(go.Scatter(x=df['timestamp'], y=df['RSI'], mode='lines', name='RSI', line=dict(color='cyan')), row=2, col=1)
+    fig.add_hline(y=70, line_dash="dot", line_color="red", line_width=1, row=2, col=1)
+    fig.add_hline(y=30, line_dash="dot", line_color="green", line_width=1, row=2, col=1)
+
+    # Actualizar layout general
+    fig.update_layout(xaxis_rangeslider_visible=False, height=600, title=f'Análisis Técnico de {symbol}')
+    fig.update_yaxes(title_text="Precio", row=1, col=1)
+    fig.update_yaxes(title_text="RSI", row=2, col=1)
     st.plotly_chart(fig, use_container_width=True)
 
     # --- Mostrar últimos datos e indicadores ---
