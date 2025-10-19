@@ -60,7 +60,8 @@ else:
     # --- Gráfico de Velas (subplot 1) ---
     fig.add_trace(go.Candlestick(x=df['timestamp'],
                     open=df['open'], high=df['high'],
-                    low=df['low'], close=df['close'], name='Velas'), row=1, col=1)
+                    low=df['low'], close=df['close'], name='Velas',
+                    increasing_line_color='green', decreasing_line_color='red'), row=1, col=1)
 
     # Añadir indicadores al gráfico
     fig.add_trace(go.Scatter(x=df['timestamp'], y=df['EMA_50'], mode='lines', name='EMA 50', line=dict(color='orange', width=1)), row=1, col=1)
