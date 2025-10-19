@@ -55,7 +55,7 @@ else:
                         vertical_spacing=0.03, row_heights=[0.6, 0.2, 0.2])
     
     # Determinar el color de las barras de volumen
-    volume_colors = ['green' if row['close'] >= row['open'] else 'red' for index, row in df.iterrows()]
+    volume_colors = ['green' if row['close'] >= row['open'] else 'red' for index, row in df.iloc[:-1].iterrows()] # Excluimos la última vela (en progreso)
 
     # --- Gráfico de Velas (subplot 1) ---
     fig.add_trace(go.Candlestick(x=df['timestamp'],
