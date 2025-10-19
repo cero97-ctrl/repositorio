@@ -33,7 +33,7 @@ elif st.sidebar.button('Actualizar Datos Manualmente'):
     st.rerun()
 
 # --- Carga y Procesamiento de Datos ---
-@st.cache_data(ttl=60) # Cachear los datos por 60 segundos
+@st.cache_data # Ya no se usa un TTL fijo, la actualización la controla el refresco de la página
 def load_data(symbol, interval, limit):
     df = utils.get_klines(symbol, interval, limit)
     if not df.empty:
