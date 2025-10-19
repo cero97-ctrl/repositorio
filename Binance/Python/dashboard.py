@@ -19,7 +19,7 @@ st.sidebar.header('Configuración')
 args, _, _ = utils.load_config()
 
 symbol = st.sidebar.text_input('Símbolo (Symbol)', args.symbol)
-interval = st.sidebar.selectbox('Intervalo (Interval)', ['1m', '5m', '15m', '30m', '1h', '4h', '1d'], index=5) # 1h por defecto
+interval = st.sidebar.selectbox('Intervalo (Interval)', ['1m', '5m', '15m', '30m', '1h', '4h', '1d'], index=4) # 1h por defecto
 limit = st.sidebar.slider('Límite de Velas (Limit)', 100, 1000, args.limit)
 poc = st.sidebar.number_input('Punto de Control (POC)', value=args.poc, format="%.2f")
 
