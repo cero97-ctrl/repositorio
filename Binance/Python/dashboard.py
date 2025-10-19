@@ -93,13 +93,13 @@ else:
 
     # --- Mostrar últimos datos e indicadores ---
     st.subheader('Últimos Datos e Indicadores')
-    st.dataframe(df.tail(10).iloc[::-1]) # Mostrar los 10 más recientes, invertidos para ver el último arriba
+    st.dataframe(df.tail(10).iloc[::-1], use_container_width=True) # Mostrar los 10 más recientes, invertidos para ver el último arriba
 
     # --- Historial de Trades ---
     st.subheader('Historial de Trades')
     trades_log_file = args.trades_log_file
     if os.path.exists(trades_log_file):
         trades_df = pd.read_csv(trades_log_file)
-        st.dataframe(trades_df.tail(20).iloc[::-1]) # Mostrar los últimos 20 trades
+        st.dataframe(trades_df.tail(20).iloc[::-1], use_container_width=True) # Mostrar los últimos 20 trades
     else:
         st.info(f"El archivo de log de trades '{trades_log_file}' no existe todavía.")
