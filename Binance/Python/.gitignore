@@ -1,0 +1,35 @@
+# =================================================
+# Archivo .gitignore para el Proyecto de Trading
+# =================================================
+
+# --- Archivos de Entorno ---
+# Contiene claves de API y secretos. NUNCA debe estar en el repositorio.
+.env
+
+# --- Archivos de Estado y Logs ---
+# Estos archivos se generan dinámicamente y no deben ser versionados.
+state.json
+trades_log.csv
+
+# --- Archivos de Datos de Backtesting ---
+# Descomenta la siguiente línea si no quieres guardar los CSV de datos históricos en Git.
+*.csv
+
+# --- Python ---
+# Archivos de caché y compilados.
+__pycache__/
+*.pyc
+
+# --- LaTeX ---
+# Archivos auxiliares generados durante la compilación.
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# --- Directorios de IDEs/Editores ---
+.vscode/
+.idea/
