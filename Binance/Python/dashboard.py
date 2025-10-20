@@ -85,6 +85,45 @@ else:
         fig.add_hline(y=poc, line_width=2, line_dash="dot", line_color="red",
                       annotation_text=f"POC: {poc}", annotation_position="bottom right", row=1, col=1)
 
+    # --- AÑADIR MARCADORES DE TRADES DESDE EL LOG ---
+    trades_log_file = args.trades_log_file
+    if os.path.exists(trades_log_file):
+        trades_df = pd.read_csv(trades_log_file)
+        # Asegurarse que la columna timestamp es datetime
+        trades_df['timestamp'] = pd.to_datetime(trades_df['timestamp'])
+        # Filtrar trades para el símbolo actual
+        symbol_trades = trades_df[trades_df['symbol'] == symbol].copy()
+
+        # Separar trades de compra (long) y venta (short)
+        buy_trades = symbol_trades[symbol_trades['type'].str.contains('LONG', case=False)]
+        sell_trades = symbol_trades[symbol_trades['type'].str.contains('SHORT', case=False)]
+
+        if not buy_trades.empty:
+            # Crear texto personalizado para el hover
+            buy_trades['hover_text'] = buy_trades.apply(
+                lambda row: f"<b>Compra ({row['type']})</b><br>Entrada: {row['entry']:.2f}<br>R:R: {row['rr']}",
+                axis=1
+            )
+            fig.add_trace(go.Scatter(
+                x=buy_trades['timestamp'], y=buy_trades['entry'],
+                mode='markers', name='Compras (Long)',
+                marker=dict(symbol='triangle-up', color='lime', size=10, line=dict(width=1, color='black')),
+                hoverinfo='text', text=buy_trades['hover_text']
+            ), row=1, col=1)
+
+        if not sell_trades.empty:
+            sell_trades['hover_text'] = sell_trades.apply(
+                lambda row: f"<b>Venta ({row['type']})</b><br>Entrada: {row['entry']:.2f}<br>R:R: {row['rr']}",
+                axis=1
+            )
+            fig.add_trace(go.Scatter(
+                x=sell_trades['timestamp'], y=sell_trades['entry'],
+                mode='markers', name='Ventas (Short)',
+                marker=dict(symbol='triangle-down', color='red', size=10, line=dict(width=1, color='black')),
+                hoverinfo='text', text=sell_trades['hover_text']
+            ), row=1, col=1)
+
+
     # --- Gráfico de Volumen (subplot 2) ---
     fig.add_trace(go.Bar(x=df['timestamp'], y=df['volume'], name='Volumen', marker_color=volume_colors), row=2, col=1)
     fig.add_trace(go.Scatter(x=df['timestamp'], y=df['volume_sma'], mode='lines', name='Volumen SMA', line=dict(color='purple', width=1)), row=2, col=1)

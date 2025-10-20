@@ -1,0 +1,217 @@
+% ===================================================================
+% Documentación del Sistema de Trading Automatizado para Binance
+% Autor: CERO
+% Versión: 1.0
+% ===================================================================
+
+\documentclass[12pt, a4paper]{article}
+
+% --- PAQUETES ESENCIALES ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip} % Para tener párrafos separados por espacio en vez de indentación
+
+% --- CONFIGURACIÓN DE PAQUETES ---
+
+% Márgenes del documento
+\geometry{a4paper, margin=2.5cm}
+
+% Configuración de hyperref para links
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Documentación del Sistema de Trading},
+    pdfpagemode=FullScreen,
+}
+
+% Configuración de 'listings' para bloques de código
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    % --- CORRECCIÓN PARA CARACTERES EN ESPAÑOL ---
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+             {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+}
+\lstset{style=mystyle}
+
+% --- INFORMACIÓN DEL DOCUMENTO ---
+\title{Documentación del Sistema de Trading Automatizado para Binance}
+\author{Cero}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ===================================================================
+\section{Introducción}
+% ===================================================================
+
+Este documento describe la arquitectura, configuración y uso del sistema de trading automatizado diseñado para interactuar con la API de Binance. El sistema está compuesto por un conjunto de scripts de Python que permiten el análisis de mercado en tiempo real, la ejecución de estrategias de trading, el backtesting y la visualización de datos.
+
+\subsection{Objetivos del Proyecto}
+\begin{itemize}
+    \item \textbf{Monitorización:} Analizar datos de mercado (precios, volumen) y calcular indicadores técnicos (EMAs, RSI, Bandas de Bollinger, etc.).
+    \item \textbf{Detección de Señales:} Identificar patrones de velas y configuraciones estratégicas (Cruce Dorado, Wyckoff, etc.) para generar señales de compra (LONG) y venta (SHORT).
+    \item \textbf{Gestión de Riesgo:} Calcular automáticamente los niveles de Stop Loss y Take Profit para cada operación.
+    \item \textbf{Notificaciones:} Enviar alertas en tiempo real a través de Telegram.
+    \item \textbf{Visualización:} Ofrecer un dashboard interactivo para visualizar gráficos, indicadores y operaciones ejecutadas.
+    \item \textbf{Backtesting:} Probar la efectividad de las estrategias utilizando datos históricos.
+\end{itemize}
+
+% ===================================================================
+\section{Arquitectura del Proyecto}
+% ===================================================================
+
+El sistema se compone de varios scripts de Python, cada uno con una responsabilidad específica:
+
+\begin{description}
+    \item[\texttt{common\_utils.py}] Librería central que contiene funciones compartidas por todos los demás scripts, como la obtención de datos de Binance, el cálculo de indicadores, el registro de operaciones y el envío de notificaciones.
+    
+    \item[\texttt{trading-v6.py}] El bot de trading principal. Implementa estrategias basadas en cruces de medias móviles y patrones de velas como Hammer y Shooting Star.
+    
+    \item[\texttt{trading\_wyckoff.py}] Un bot alternativo que implementa una estrategia simplificada basada en los conceptos de Wyckoff (eventos Spring y Upthrust), además de los patrones de velas.
+    
+    \item[\texttt{dashboard.py}] Una aplicación web interactiva construida con Streamlit. Permite visualizar los gráficos de precios, indicadores y las operaciones registradas en \texttt{trades\_log.csv}.
+    
+    \item[\texttt{download\_data.py}] Herramienta para descargar grandes volúmenes de datos históricos de Binance y guardarlos en un archivo CSV, esencial para el proceso de backtesting.
+    
+    \item[\texttt{.env}] Archivo de configuración para almacenar variables de entorno como claves de API, parámetros de estrategia y tokens de Telegram.
+    
+    \item[\texttt{trades\_log.csv}] Archivo donde se registran todas las operaciones generadas por los bots, tanto en modo real como en backtesting.
+\end{description}
+
+% ===================================================================
+\section{Configuración Inicial}
+% ===================================================================
+
+\subsection{Prerrequisitos}
+Asegúrate de tener instalado Python 3.8 o superior y pip.
+
+\subsection{Instalación de Dependencias}
+Instala todas las librerías necesarias ejecutando:
+\begin{lstlisting}[language=bash]
+pip install -r requirements.txt
+\end{lstlisting}
+
+\subsection{Archivo de Configuración (.env)}
+Crea un archivo llamado \texttt{.env} en la raíz del proyecto con el siguiente contenido y ajústalo a tus necesidades:
+
+\begin{lstlisting}[language=bash]
+# --- Parámetros Generales ---
+SYMBOL="BTCUSDT"
+INTERVAL="1h"
+LIMIT=250
+LOG_LEVEL="INFO"
+SLEEP=3600 # Segundos de espera entre ciclos (1 hora)
+
+# --- Parámetros de Indicadores ---
+VOLUME_SMA_PERIOD=20
+ATR_WINDOW=14
+BOLLINGER_WINDOW=20
+POC=65000.0
+
+# --- Parámetros de Estrategia (trading-v6.py) ---
+RR_RATIO=2.0
+SL_BUFFER=0.002
+
+# --- Parámetros de Estrategia (trading_wyckoff.py) ---
+RISK_STOP_MULT=1.5
+RISK_TP_MULT=2.5
+WYCKOFF="true"
+WYCKOFF_VOLUME_MULT=1.3
+
+# --- Logs y Notificaciones ---
+TRADES_LOG_FILE="trades_log.csv"
+TELEGRAM_TOKEN="TU_TOKEN_DE_TELEGRAM"
+TELEGRAM_CHAT_ID="TU_CHAT_ID"
+
+# --- Backtesting ---
+BACKTEST="false"
+BACKTEST_FILE="historical_data.csv"
+\end{lstlisting}
+
+% ===================================================================
+\section{Guía de Uso}
+% ===================================================================
+
+\subsection{Ejecución en Modo Real (Live Trading)}
+Para ejecutar uno de los bots en modo de operación real, monitorizando el mercado y enviando señales, utiliza los siguientes comandos.
+
+\textbf{Bot principal (v6):}
+\begin{lstlisting}[language=bash]
+python trading-v6.py
+\end{lstlisting}
+
+\textbf{Bot con estrategia Wyckoff:}
+\begin{lstlisting}[language=bash]
+python trading_wyckoff.py --wyckoff
+\end{lstlisting}
+
+\subsection{Backtesting de Estrategias}
+\subsubsection{Paso 1: Descargar Datos Históricos}
+Usa \texttt{download\_data.py} para obtener los datos necesarios.
+\begin{lstlisting}[language=bash]
+python download_data.py --symbol ETHUSDT --interval 4h --limit 2000 --output eth_4h_data.csv
+\end{lstlisting}
+
+\subsubsection{Paso 2: Ejecutar el Backtest}
+Ejecuta el bot deseado con el flag \texttt{--backtest} y especifica el archivo de datos.
+\begin{lstlisting}[language=bash]
+# Para trading-v6.py
+python trading-v6.py --backtest --backtest-file eth_4h_data.csv --symbol ETHUSDT
+
+# Para trading_wyckoff.py
+python trading_wyckoff.py --backtest --backtest-file eth_4h_data.csv --symbol ETHUSDT
+\end{lstlisting}
+
+\subsection{Visualización con el Dashboard}
+Para iniciar el dashboard interactivo, ejecuta:
+\begin{lstlisting}[language=bash]
+streamlit run dashboard.py
+\end{lstlisting}
+Accede a la URL proporcionada en la terminal (normalmente \texttt{http://localhost:8501}) para ver los gráficos. El dashboard se actualizará automáticamente y mostrará las operaciones del archivo \texttt{trades\_log.csv}.
+
+% ===================================================================
+\section{Despliegue en Servidor}
+% ===================================================================
+
+Para que los scripts se ejecuten de forma continua en un servidor, se recomienda usar \texttt{screen} o, para una solución más robusta, un servicio de \texttt{systemd}.
+
+\subsection{Uso de \texttt{screen}}
+\begin{enumerate}
+    \item Iniciar una nueva sesión: \texttt{screen -S trading-bot}
+    \item Ejecutar el script dentro de la sesión: \texttt{python trading-v6.py}
+    \item Desprenderse de la sesión: \texttt{Ctrl+A} y luego \texttt{d}.
+    \item Para volver a la sesión: \texttt{screen -r trading-bot}
+\end{enumerate}
+
+\end{document}
