@@ -30,7 +30,7 @@ def check_confirmation(df, state, args):
     if trade_type:
         entry, stop, tp, rr = compute_risk_levels(latest['close'], latest['ATR'], trade_type, args.risk_stop_mult, args.risk_tp_mult)
         message = f"{signal_text}\n- Entrada: {entry:.8f} | Stop: {stop:.8f} | TP: {tp:.8f} | R:R = {rr}"
-        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_{trade_type.upper()}', entry, stop, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}')
+        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_{trade_type.upper()}_{pattern.upper()}', entry, stop, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}')
     return message
 
 # === GESTIÓN DE RIESGO (OPCIÓN A) ===
@@ -122,7 +122,7 @@ def evaluate_trade(df, args):
         if stop_loss and take_profit:
             signal_text += f"- Stop: {stop_loss:.8f} | TP: {take_profit:.8f} | R:R = {rr}\n"
         signals.append(signal_text)
-        utils.record_trade(args.trades_log_file, args.symbol, 'LONG', entry, stop_loss, take_profit, latest['ATR'], rr, notes='hammer')
+        utils.record_trade(args.trades_log_file, args.symbol, 'LONG_HAMMER', entry, stop_loss, take_profit, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp'])
         pending_state = {"pattern": "hammer", "price": entry}
 
     if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -138,7 +138,7 @@ def evaluate_trade(df, args):
         if stop_loss and take_profit:
             signal_text += f"- Stop: {stop_loss:.8f} | TP: {take_profit:.8f} | R:R = {rr}\n"
         signals.append(signal_text)
-        utils.record_trade(args.trades_log_file, args.symbol, 'SHORT', entry, stop_loss, take_profit, latest['ATR'], rr, notes='shooting_star')
+        utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, stop_loss, take_profit, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp'])
         pending_state = {"pattern": "shooting_star", "price": entry}
 
     # Wyckoff events (opcional)
@@ -146,11 +146,11 @@ def evaluate_trade(df, args):
         ev_type, ev_msg, entry, stop, tp, ev_atr, ev_rr = detect_wyckoff_event(df, args)
         if ev_type == 'SPRING':
             signals.append(ev_msg)
-            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_WYCKOFF', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_spring')
+            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_WYCKOFF_SPRING', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_spring', timestamp=latest['timestamp'])
             pending_state = {"pattern": "wyckoff_spring", "price": entry}
         elif ev_type == 'UPTHRUST':
             signals.append(ev_msg)
-            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_WYCKOFF', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_upthrust')
+            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_WYCKOFF_UPTHRUST', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_upthrust', timestamp=latest['timestamp'])
             pending_state = {"pattern": "wyckoff_upthrust", "price": entry}
 
     if pending_state:
@@ -162,28 +162,32 @@ def evaluate_trade(df, args):
 
 # === MODO BACKTESTING ===
 def run_backtest(args):
-    logging.info(f"Iniciando backtest con datos: {args.backtest_file}")
+    logging.info(f"Iniciando backtest con simulación de trades desde: {args.backtest_file}")
     try:
         df = pd.read_csv(args.backtest_file)
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
     except Exception as e:
         logging.error(f"Error al cargar CSV: {e}")
         return
 
-    if not {'open','high','low','close','volume'}.issubset(df.columns):
-        logging.error("El CSV debe contener columnas: open, high, low, close, volume")
+    if not {'timestamp', 'open', 'high', 'low', 'close', 'volume'}.issubset(df.columns):
+        logging.error("El CSV debe contener columnas: timestamp, open, high, low, close, volume")
         return
 
     df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
-    total_signals = 0
+    
+    # Limpiar el log de trades antes de empezar un nuevo backtest
+    if os.path.exists(args.trades_log_file):
+        os.remove(args.trades_log_file)
+    utils.ensure_trades_log_exists(args.trades_log_file)
 
-    for i in range(51, len(df)):
-        sub_df = df.iloc[:i+1]
-        signal = evaluate_trade(sub_df, args)
-        if '🕯️' in signal or 'SPRING' in signal or 'UPTHRUST' in signal or '🌱' in signal or '🏔️' in signal:
-            total_signals += 1
-            print(f"[{i}] {signal} @ {sub_df.iloc[-1]['close']}")
+    logging.info("Recorriendo velas para encontrar y registrar señales...")
+    for i in range(201, len(df)): # Empezamos más tarde para asegurar que todos los indicadores están maduros
+        sub_df = df.iloc[:i].copy()
+        # La función evaluate_trade ya se encarga de registrar los trades
+        evaluate_trade(sub_df, args) # evaluate_trade ahora necesita el timestamp
 
-    print(f"\n✅ Backtest completado. Señales detectadas: {total_signals}")
+    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{args.trades_log_file}'.")
 
 # === EJECUCIÓN ===
 def execute_single_run(args, telegram_token, chat_id):

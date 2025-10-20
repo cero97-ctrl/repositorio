@@ -124,28 +124,58 @@ def evaluate_trade(df, args):
 
 # === MODO BACKTESTING ===
 def run_backtest(args):
-    logging.info(f"Iniciando backtest con datos: {args.backtest_file}")
+    logging.info(f"Iniciando backtest con simulación de trades desde: {args.backtest_file}")
     try:
         df = pd.read_csv(args.backtest_file)
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
     except Exception as e:
         logging.error(f"Error al cargar CSV: {e}")
         return
 
-    if not {'open','high','low','close','volume'}.issubset(df.columns):
-        logging.error("El CSV debe contener columnas: open, high, low, close, volume")
+    if not {'timestamp', 'open', 'high', 'low', 'close', 'volume'}.issubset(df.columns):
+        logging.error("El CSV debe contener columnas: timestamp, open, high, low, close, volume")
         return
 
     df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
-    total_signals = 0
+    
+    # Limpiar el log de trades antes de empezar un nuevo backtest
+    if os.path.exists(args.trades_log_file):
+        os.remove(args.trades_log_file)
+    utils.ensure_trades_log_exists(args.trades_log_file)
 
-    for i in range(51, len(df)):
-        sub_df = df.iloc[:i+1]
-        signal = evaluate_trade(sub_df, args)
-        if "⏳" not in signal and "Volatilidad baja" not in signal:
-            total_signals += 1
-            print(f"[{i}] {signal} @ {sub_df.iloc[-1]['close']}")
+    logging.info("Recorriendo velas para encontrar y simular señales...")
+    for i in range(201, len(df)): # Empezamos más tarde para asegurar que todos los indicadores están maduros
+        # Creamos un sub-dataframe que representa el "historial" hasta la vela actual
+        sub_df = df.iloc[:i].copy()
+        latest = sub_df.iloc[-1]
 
-    print(f"\n✅ Backtest completado. Señales detectadas: {total_signals}")
+        # --- Lógica de Detección de Señal (simplificada para el bucle) ---
+        # Golden Cross
+        previous = sub_df.iloc[-2]
+        if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
+            _, entry, sl, tp, rr = add_risk_management("GC", 'long', latest, latest, args)
+            if entry:
+                utils.record_trade(args.trades_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp'])
+
+        # Death Cross
+        if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
+            _, entry, sl, tp, rr = add_risk_management("DC", 'short', latest, latest, args)
+            if entry:
+                utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp'])
+
+        # Hammer
+        if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
+            _, entry, sl, tp, rr = add_risk_management("Hammer", 'long', latest, latest, args)
+            if entry:
+                utils.record_trade(args.trades_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp'])
+
+        # Shooting Star
+        if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
+            _, entry, sl, tp, rr = add_risk_management("SS", 'short', latest, latest, args)
+            if entry:
+                utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp'])
+
+    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{args.trades_log_file}'.")
 
 # === EJECUCIÓN ===
 # === EJECUCIÓN ===

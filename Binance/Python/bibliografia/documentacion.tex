@@ -1,6 +1,6 @@
 % ===================================================================
 % Documentación del Sistema de Trading Automatizado para Binance
-% Autor: CERO
+% Autor: Cero
 % Versión: 1.0
 % ===================================================================
 
@@ -100,13 +100,17 @@ El sistema se compone de varios scripts de Python, cada uno con una responsabili
     
     \item[\texttt{trading\_wyckoff.py}] Un bot alternativo que implementa una estrategia simplificada basada en los conceptos de Wyckoff (eventos Spring y Upthrust), además de los patrones de velas.
     
+    \item[\texttt{simulate\_trades.py}] Herramienta que lee el \texttt{trades\_log.csv} generado por un backtest y, utilizando los datos históricos, simula el resultado de cada operación (victoria o pérdida), calculando el P\&L y la evolución de un balance de cuenta.
+    
     \item[\texttt{dashboard.py}] Una aplicación web interactiva construida con Streamlit. Permite visualizar los gráficos de precios, indicadores y las operaciones registradas en \texttt{trades\_log.csv}.
     
     \item[\texttt{download\_data.py}] Herramienta para descargar grandes volúmenes de datos históricos de Binance y guardarlos en un archivo CSV, esencial para el proceso de backtesting.
     
     \item[\texttt{.env}] Archivo de configuración para almacenar variables de entorno como claves de API, parámetros de estrategia y tokens de Telegram.
     
-    \item[\texttt{trades\_log.csv}] Archivo donde se registran todas las operaciones generadas por los bots, tanto en modo real como en backtesting.
+    \item[\texttt{trades\_log.csv}] Archivo donde se registran las \textbf{oportunidades de trading} generadas por los bots.
+    
+    \item[\texttt{*\_results.csv}] Archivos generados por el simulador que contienen el resultado final y el análisis de rendimiento de cada operación.
 \end{description}
 
 % ===================================================================
@@ -176,22 +180,31 @@ python trading-v6.py
 python trading_wyckoff.py --wyckoff
 \end{lstlisting}
 
-\subsection{Backtesting de Estrategias}
+\subsection{Backtesting y Simulación de Estrategias}
+El proceso de backtesting se ha dividido en tres fases claras para un análisis más profundo y realista.
+
 \subsubsection{Paso 1: Descargar Datos Históricos}
-Usa \texttt{download\_data.py} para obtener los datos necesarios.
+Usa \texttt{download\_data.py} para obtener los datos necesarios. Este archivo CSV servirá como base para la detección y simulación.
 \begin{lstlisting}[language=bash]
 python download_data.py --symbol ETHUSDT --interval 4h --limit 2000 --output eth_4h_data.csv
 \end{lstlisting}
 
-\subsubsection{Paso 2: Ejecutar el Backtest}
-Ejecuta el bot deseado con el flag \texttt{--backtest} y especifica el archivo de datos.
+\subsubsection{Paso 2: Detección de Señales}
+En este paso, se ejecuta uno de los bots en modo backtest. El bot recorrerá los datos históricos y generará un archivo \texttt{trades\_log.csv} con todas las \textbf{oportunidades de trading} que encuentre.
 \begin{lstlisting}[language=bash]
 # Para trading-v6.py
 python trading-v6.py --backtest --backtest-file eth_4h_data.csv --symbol ETHUSDT
 
 # Para trading_wyckoff.py
-python trading_wyckoff.py --backtest --backtest-file eth_4h_data.csv --symbol ETHUSDT
+python trading_wyckoff.py --backtest --backtest-file eth_4h_data.csv
 \end{lstlisting}
+
+\subsubsection{Paso 3: Simulación de Resultados}
+Una vez generadas las señales, el script \texttt{simulate\_trades.py} las procesa para determinar el resultado de cada una (victoria o pérdida) y simular la evolución de una cuenta de trading.
+\begin{lstlisting}[language=bash]
+python simulate_trades.py --trades-file trades_log.csv --data-file eth_4h_data.csv --initial-balance 10000 --risk-per-trade 0.01
+\end{lstlisting}
+Este comando utiliza el archivo de señales, los datos históricos, y simula una cuenta que empieza con \$10,000 y arriesga el 1\% del capital en cada operación. El resultado se guarda en un nuevo archivo, \texttt{trades\_log\_results.csv}.
 
 \subsection{Visualización con el Dashboard}
 Para iniciar el dashboard interactivo, ejecuta:
@@ -199,6 +212,8 @@ Para iniciar el dashboard interactivo, ejecuta:
 streamlit run dashboard.py
 \end{lstlisting}
 Accede a la URL proporcionada en la terminal (normalmente \texttt{http://localhost:8501}) para ver los gráficos. El dashboard se actualizará automáticamente y mostrará las operaciones del archivo \texttt{trades\_log.csv}.
+\newline\newline
+\textbf{Análisis de Backtest:} La pestaña \texttt{Análisis de Backtest} permite cargar el archivo \texttt{*\_results.csv} para visualizar métricas de rendimiento detalladas (Profit Factor, Win Rate, P\&L en USD) y una curva de capital interactiva. Incluye filtros para analizar el rendimiento de tipos de señales específicas.
 
 % ===================================================================
 \section{Despliegue en Servidor}

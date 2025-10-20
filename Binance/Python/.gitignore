@@ -13,7 +13,7 @@ trades_log.csv
 
 # --- Archivos de Datos de Backtesting ---
 # Descomenta la siguiente línea si no quieres guardar los CSV de datos históricos en Git.
-*.csv
+# *.csv
 
 # --- Python ---
 # Archivos de caché y compilados.

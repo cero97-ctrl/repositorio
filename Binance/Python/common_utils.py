@@ -157,13 +157,15 @@ def ensure_trades_log_exists(file_path):
     """Asegura que el archivo de log de trades exista y tenga encabezado."""
     if not os.path.exists(file_path):
         with open(file_path, 'w') as f:
-            # Un encabezado más genérico para ambos scripts
-            f.write('timestamp,symbol,type,entry,stop_loss,take_profit,atr,rr,notes\n')
+            # Encabezado extendido para simulación de backtest
+            f.write('timestamp,symbol,type,entry,stop_loss,take_profit,atr,rr,notes,outcome,pnl_percentage,exit_price,exit_time\n')
 
-def record_trade(file_path, symbol, ttype, entry, stop_loss, take_profit, atr, rr, notes=''):
+def record_trade(file_path, symbol, ttype, entry, stop_loss, take_profit, atr, rr, notes='', timestamp=None):
     """Registra una operación en el archivo CSV."""
     ensure_trades_log_exists(file_path)
-    ts = datetime.utcnow().isoformat()
+    # Usar el timestamp de la vela del backtest si se proporciona, si no, el actual.
+    ts = timestamp if timestamp is not None else datetime.utcnow().isoformat()
+    # Dejamos las columnas de resultado vacías por ahora
     line = f'{ts},{symbol},{ttype},{entry},{stop_loss},{take_profit},{atr},{rr},{notes}\n'
     with open(file_path, 'a') as f:
         f.write(line)
