@@ -51,8 +51,8 @@ def download_historical_data(symbol, interval, limit, output_file):
             logging.error(f"Error al obtener datos de Binance: {e}")
             break
 
-    # Columnas requeridas por el script de backtesting
-    required_columns = ['open', 'high', 'low', 'close', 'volume']
+    # Columnas requeridas por el script de backtesting (timestamp es crucial)
+    required_columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume']
     
     # Invertimos la lista para que los datos queden en orden cronológico correcto
     all_klines.reverse()

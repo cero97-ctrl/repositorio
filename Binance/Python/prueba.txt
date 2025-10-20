@@ -1,0 +1,94 @@
+(base) cero@ZETA:~/MEGA/VSCODE/Binance/Python$ python trading-v6.py --backtest --backtest-file btc_1h_data.csv --symbol BTCUSDT
+2025-10-20 11:16:07,602 - INFO - ==========================================
+2025-10-20 11:16:07,602 - INFO - Iniciando bot con la siguiente configuración:
+2025-10-20 11:16:07,602 - INFO - Símbolo: BTCUSDT
+2025-10-20 11:16:07,602 - INFO - Intervalo: 1h
+2025-10-20 11:16:07,602 - INFO - POC: 112840.16
+2025-10-20 11:16:07,602 - INFO - ATR Window: 14
+2025-10-20 11:16:07,602 - INFO - Bollinger Window: 20
+2025-10-20 11:16:07,602 - INFO - Volumen SMA Period: 20
+2025-10-20 11:16:07,602 - INFO - Risk/Reward Ratio (para v6): 2.0
+2025-10-20 11:16:07,602 - INFO - Stop Loss Buffer (para v6): 0.002
+2025-10-20 11:16:07,602 - INFO - ==========================================
+2025-10-20 11:16:07,602 - INFO - Iniciando backtest con datos: btc_1h_data.csv
+2025-10-20 11:16:07,614 - INFO - Calculando indicadores técnicos...
+2025-10-20 11:16:07,682 - INFO - Indicadores calculados: EMAs, RSI, MACD, Volumen SMA, ATR, Bollinger Bands.
+2025-10-20 11:16:07,686 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,687 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,688 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,688 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,690 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,691 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,692 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,693 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,694 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,694 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,695 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,696 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,696 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,697 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,698 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,698 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,699 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,699 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,700 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,701 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,701 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,702 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,703 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,703 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,704 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,704 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,705 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,706 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,706 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,707 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,707 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,708 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,709 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,709 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,710 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,711 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,711 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,712 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,712 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,713 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,714 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,715 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,716 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,717 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,717 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,718 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,719 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,719 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-20 11:16:07,723 - INFO - Trade registrado en trades_log.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=96928.97 rr=2.0
+Traceback (most recent call last):
+  File "/home/cero/anaconda3/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'timestamp'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/cero/MEGA/VSCODE/Binance/Python/trading-v6.py", line 197, in <module>
+    run_backtest(args)
+    ~~~~~~~~~~~~^^^^^^
+  File "/home/cero/MEGA/VSCODE/Binance/Python/trading-v6.py", line 143, in run_backtest
+    signal = evaluate_trade(sub_df, args)
+  File "/home/cero/MEGA/VSCODE/Binance/Python/trading-v6.py", line 119, in evaluate_trade
+    pending_state["signal_time"] = pd.to_datetime(latest['timestamp'], unit='ms').isoformat()
+                                                  ~~~~~~^^^^^^^^^^^^^
+  File "/home/cero/anaconda3/lib/python3.13/site-packages/pandas/core/series.py", line 1121, in __getitem__
+    return self._get_value(key)
+           ~~~~~~~~~~~~~~~^^^^^
+  File "/home/cero/anaconda3/lib/python3.13/site-packages/pandas/core/series.py", line 1237, in _get_value
+    loc = self.index.get_loc(label)
+  File "/home/cero/anaconda3/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'timestamp'
+
