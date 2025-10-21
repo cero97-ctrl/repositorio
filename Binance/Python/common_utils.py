@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 import ta
 import logging
+import time
 import os
 import sys
 import json
@@ -26,48 +27,81 @@ def get_current_price_ticker(symbol):
         logging.error(f"Error al procesar la respuesta del ticker para {symbol}: {e}")
     return None
 
+# --- NUEVA FUNCIÓN: Convertir intervalo a milisegundos ---
+def interval_to_ms(interval_str):
+    unit = interval_str[-1]
+    value = int(interval_str[:-1])
+    if unit == 'm': return value * 60 * 1000
+    if unit == 'h': return value * 60 * 60 * 1000
+    if unit == 'd': return value * 24 * 60 * 60 * 1000
+    logging.error(f"Intervalo desconocido: {interval_str}")
+    return 0 # Debería manejar todos los casos válidos
+
 # === FUNCIONES DE BINANCE ===
-def get_klines(symbol, interval, limit):
-    logging.info(f"Obteniendo datos de velas para {symbol}...")
-    url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
-    try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error al obtener datos de Binance: {e}")
+def get_klines(symbol, interval, limit=None, start_time_ms=None, end_time_ms=None):
+    logging.info(f"Obteniendo datos de velas para {symbol} en intervalo {interval}...")
+    base_url = 'https://api.binance.com/api/v3/klines'
+    all_klines = []
+
+    if start_time_ms is not None and end_time_ms is not None:
+        # --- LÓGICA PARA OBTENER DATOS POR RANGO DE FECHAS (CON PAGINACIÓN) ---
+        logging.info(f"Obteniendo datos desde {datetime.fromtimestamp(start_time_ms/1000)} hasta {datetime.fromtimestamp(end_time_ms/1000)}")
+        current_start_time = start_time_ms
+        while current_start_time < end_time_ms:
+            params = {
+                'symbol': symbol, 'interval': interval, 'limit': 1000,
+                'startTime': current_start_time, 'endTime': end_time_ms
+            }
+            try:
+                response = requests.get(base_url, params=params, timeout=10)
+                response.raise_for_status()
+                data = response.json()
+                if not data: break
+                all_klines.extend(data)
+                current_start_time = data[-1][0] + interval_to_ms(interval)
+                time.sleep(0.1)
+            except requests.exceptions.RequestException as e:
+                logging.error(f"Error en paginación de Binance: {e}")
+                break
+        
+        if all_klines:
+            temp_df = pd.DataFrame(all_klines)
+            temp_df.drop_duplicates(subset=[0], inplace=True)
+            temp_df.sort_values(by=[0], inplace=True)
+            all_klines = temp_df.values.tolist()
+
+    elif limit is not None:
+        # --- LÓGICA ORIGINAL PARA OBTENER DATOS POR LÍMITE ---
+        logging.info(f"Obteniendo las últimas {limit} velas.")
+        params = {'symbol': symbol, 'interval': interval, 'limit': limit}
+        try:
+            response = requests.get(base_url, params=params, timeout=10)
+            response.raise_for_status()
+            all_klines = response.json()
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error al obtener datos de Binance por límite: {e}")
+            return pd.DataFrame()
+    else:
+        logging.error("Debe proporcionar 'limit' o un rango de fechas ('start_time_ms' y 'end_time_ms').")
         return pd.DataFrame()
 
-    df = pd.DataFrame(data, columns=[
+    if not all_klines:
+        logging.warning("No se descargaron datos de Binance.")
+        return pd.DataFrame()
+
+    df = pd.DataFrame(all_klines, columns=[
         'timestamp', 'open', 'high', 'low', 'close', 'volume',
         'close_time', 'quote_asset_volume', 'number_of_trades',
         'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
     ])
 
+    # --- Limpieza y conversión de datos ---
     for col in ['open', 'high', 'low', 'close', 'volume']:
         df[col] = pd.to_numeric(df[col], errors='coerce')
     df.dropna(inplace=True)
 
-    # --- LÓGICA MEJORADA: AÑADIR VELA EN PROGRESO ---
-    # 1. Obtener el precio actual para la vela en curso
-    current_price = get_current_price_ticker(symbol)
-    if current_price and not df.empty:
-        # --- CORRECCIÓN: Crear la vela en progreso de forma segura ---
-        # 1. Copiamos la última vela cerrada para mantener la estructura completa del DataFrame.
-        new_candle_series = df.iloc[-1].copy()
-
-        # 2. Actualizamos solo los valores que cambian para la vela en curso.
-        new_candle_series['timestamp'] = new_candle_series['close_time'] + 1
-        new_candle_series['open'] = new_candle_series['close'] # El open es el close anterior
-        new_candle_series['high'] = max(new_candle_series['high'], current_price)
-        new_candle_series['low'] = min(new_candle_series['low'], current_price)
-        new_candle_series['close'] = current_price
-        new_candle_series['volume'] = 0 # El volumen en tiempo real no es fácil de obtener
-
-        new_candle = pd.DataFrame([new_candle_series])
-        # --- CORRECCIÓN: Evitar doble envoltura de DataFrame ---
-        df = pd.concat([df, new_candle], ignore_index=True)
-        logging.info(f"Vela en progreso añadida con precio actual: {current_price}")
+    # La lógica de la "vela en progreso" se ha movido a dashboard.py para que sea condicional.
+    # Esta función ahora solo se encarga de descargar los datos.
 
     return df
 

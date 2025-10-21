@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import os
+from datetime import datetime, timedelta
 import json
 import common_utils as utils
 
@@ -34,8 +35,12 @@ args, _, _ = utils.load_config()
 
 symbol = st.sidebar.text_input('Símbolo (Symbol)', args.symbol)
 interval = st.sidebar.selectbox('Intervalo (Interval)', ['1m', '5m', '15m', '30m', '1h', '4h', '1d'], index=4) # 1h por defecto
-limit = st.sidebar.slider('Límite de Velas (Limit)', 100, 1000, args.limit)
 poc = st.sidebar.number_input('Punto de Control (POC)', value=args.poc, format="%.2f")
+
+# --- MEJORA: Selección de rango de fechas en lugar de límite de velas ---
+st.sidebar.subheader('Rango de Fechas')
+end_date = st.sidebar.date_input('Fecha Fin', value=datetime.now().date())
+start_date = st.sidebar.date_input('Fecha Inicio', value=end_date - timedelta(days=7)) # Por defecto, 7 días antes
 
 st.sidebar.header('Actualización Automática')
 auto_refresh = st.sidebar.checkbox('Activar auto-actualización', value=True)
@@ -47,28 +52,55 @@ elif st.sidebar.button('Actualizar Datos Manualmente'):
     st.rerun()
 
 # --- Carga y Procesamiento de Datos ---
-@st.cache_data # Ya no se usa un TTL fijo, la actualización la controla el refresco de la página
-def load_data(symbol, interval, limit, _args):
+@st.cache_data(ttl=refresh_interval) # Cache con TTL para auto-actualización
+def load_data(symbol, interval, start_date_obj, end_date_obj, _args):
     # --- LÓGICA MEJORADA PARA LÍNEAS DE INDICADORES COMPLETAS ---
     # 1. Determinar el periodo de "calentamiento" necesario. El indicador más largo es la EMA de 200.
     warmup_period = 200
 
-    # 2. Pedir datos adicionales para que los indicadores se calculen correctamente desde el inicio.
-    #    Pedimos las velas que el usuario quiere ver (limit) + las velas para el calentamiento.
-    df_full = utils.get_klines(symbol, interval, limit + warmup_period)
+    # Convertir fechas a timestamps en milisegundos
+    # Para la fecha de inicio, tomamos el inicio del día.
+    # Para la fecha de fin, tomamos el final del día (23:59:59.999).
+    start_time_ms = int(datetime.combine(start_date_obj, datetime.min.time()).timestamp() * 1000)
+    end_time_ms = int(datetime.combine(end_date_obj, datetime.max.time()).timestamp() * 1000)
+
+    # Calcular el tiempo adicional necesario para el calentamiento de indicadores
+    interval_ms = utils.interval_to_ms(interval)
+    fetch_start_time_ms = start_time_ms - (warmup_period * interval_ms)
+
+    # 2. Pedir datos desde Binance usando el rango de fechas extendido
+    #    get_klines ahora puede manejar start_time y end_time
+    df_full = utils.get_klines(symbol, interval, start_time_ms=fetch_start_time_ms, end_time_ms=end_time_ms)
 
     if not df_full.empty:
         # 3. Calcular los indicadores sobre el conjunto de datos completo (ej: 250 + 200 = 450 velas).
-        # --- CORRECCIÓN: Aplicar indicadores directamente sobre df_full ---
         df_full = utils.calculate_indicators(df_full, _args.volume_sma_period, _args.atr_window, _args.bollinger_window)
         df_full['timestamp'] = pd.to_datetime(df_full['timestamp'], unit='ms')
 
-        # 4. Recortar el DataFrame para mostrar solo las últimas 'limit' velas que el usuario solicitó.
-        #    Ahora, estas velas ya tienen los valores de los indicadores calculados.
-        return df_full.tail(limit).reset_index(drop=True)
+        # --- Añadir la vela en progreso (solo para el gráfico en vivo y si la fecha fin es hoy) ---
+        if end_date_obj == datetime.now().date():
+            current_price = utils.get_current_price_ticker(symbol)
+            if current_price and not df_full.empty:
+                new_candle_series = df_full.iloc[-1].copy()
+                # --- CORRECCIÓN: Asegurar que el nuevo timestamp sea un objeto Datetime ---
+                new_candle_series['timestamp'] = pd.to_datetime(new_candle_series['close_time'] + 1, unit='ms')
+                new_candle_series['open'] = new_candle_series['close']
+                new_candle_series['high'] = max(new_candle_series['high'], current_price)
+                new_candle_series['low'] = min(new_candle_series['low'], current_price)
+                new_candle_series['close'] = current_price
+                new_candle_series['volume'] = 0
+                new_candle = pd.DataFrame([new_candle_series])
+                df_full = pd.concat([df_full, new_candle], ignore_index=True)
+                # Recalcular indicadores para la última vela si es necesario (o simplemente dejarla sin algunos)
+                # Para simplificar, asumimos que los indicadores de la última vela no son críticos para el display
+
+        # 4. Recortar el DataFrame para mostrar solo el rango de fechas solicitado por el usuario.
+        df_display = df_full[(df_full['timestamp'] >= pd.to_datetime(start_time_ms, unit='ms')) &
+                              (df_full['timestamp'] <= pd.to_datetime(end_time_ms, unit='ms'))].reset_index(drop=True)
+        return df_display
     return pd.DataFrame() # Devolver un DataFrame vacío si no hay datos
 
-df = load_data(symbol, interval, limit, args)
+df = load_data(symbol, interval, start_date, end_date, args)
 
 # --- Pestañas Principales ---
 tab1, tab2, tab3 = st.tabs(["📈 Gráfico en Vivo", "📊 Análisis de Backtest", "📜 Historial de Trades"])
