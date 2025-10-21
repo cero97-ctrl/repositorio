@@ -34,26 +34,27 @@ elif st.sidebar.button('Actualizar Datos Manualmente'):
 
 # --- Carga y Procesamiento de Datos ---
 @st.cache_data # Ya no se usa un TTL fijo, la actualización la controla el refresco de la página
-def load_data(symbol, interval, limit):
+def load_data(symbol, interval, limit, _args):
     # --- LÓGICA MEJORADA PARA LÍNEAS DE INDICADORES COMPLETAS ---
     # 1. Determinar el periodo de "calentamiento" necesario. El indicador más largo es la EMA de 200.
     warmup_period = 200
 
     # 2. Pedir datos adicionales para que los indicadores se calculen correctamente desde el inicio.
     #    Pedimos las velas que el usuario quiere ver (limit) + las velas para el calentamiento.
-    df = utils.get_klines(symbol, interval, limit + warmup_period)
+    df_full = utils.get_klines(symbol, interval, limit + warmup_period)
 
-    if not df.empty:
+    if not df_full.empty:
         # 3. Calcular los indicadores sobre el conjunto de datos completo (ej: 250 + 200 = 450 velas).
-        df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
-        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        # --- CORRECCIÓN: Aplicar indicadores directamente sobre df_full ---
+        df_full = utils.calculate_indicators(df_full, _args.volume_sma_period, _args.atr_window, _args.bollinger_window)
+        df_full['timestamp'] = pd.to_datetime(df_full['timestamp'], unit='ms')
 
         # 4. Recortar el DataFrame para mostrar solo las últimas 'limit' velas que el usuario solicitó.
         #    Ahora, estas velas ya tienen los valores de los indicadores calculados.
-        df = df.tail(limit).reset_index(drop=True)
-    return df
+        return df_full.tail(limit).reset_index(drop=True)
+    return pd.DataFrame() # Devolver un DataFrame vacío si no hay datos
 
-df = load_data(symbol, interval, limit)
+df = load_data(symbol, interval, limit, args)
 
 # --- Pestañas Principales ---
 tab1, tab2, tab3 = st.tabs(["📈 Gráfico en Vivo", "📊 Análisis de Backtest", "📜 Historial de Trades"])
@@ -70,7 +71,8 @@ with tab1:
                             vertical_spacing=0.03, row_heights=[0.6, 0.2, 0.2])
         
         # Determinar el color de las barras de volumen
-        volume_colors = ['green' if row['close'] >= row['open'] else 'red' for index, row in df.iloc[:-1].iterrows()] # Excluimos la última vela (en progreso)
+        # --- CORRECCIÓN: Generar colores para todas las velas ---
+        volume_colors = ['green' if row['close'] >= row['open'] else 'red' for index, row in df.iterrows()]
     
         # --- Gráfico de Velas (subplot 1) ---
         fig.add_trace(go.Candlestick(x=df['timestamp'],
@@ -90,13 +92,17 @@ with tab1:
                           annotation_text=f"POC: {poc}", annotation_position="bottom right", row=1, col=1)
     
         # --- AÑADIR MARCADORES DE TRADES DESDE EL LOG ---
-        # Priorizamos el archivo con resultados si existe
-        results_log_file = 'trades_log_results.csv'
-        log_file_to_use = results_log_file if os.path.exists(results_log_file) else args.trades_log_file
+        # --- CORRECCIÓN: Usar siempre el log principal para el gráfico en vivo ---
+        # El gráfico en vivo solo debe mostrar las señales generadas, no los resultados de una simulación.
+        log_file_to_use = args.trades_log_file
 
         if os.path.exists(log_file_to_use):
             trades_df = pd.read_csv(log_file_to_use)
-            trades_df['timestamp'] = pd.to_datetime(trades_df['timestamp'])
+            # --- CORRECCIÓN DE TIMESTAMP ---
+            # Convertir el timestamp de los trades a datetime, asegurando compatibilidad
+            # con el formato de las velas (que es UTC por defecto al convertir desde ms).
+            # Esto alinea correctamente los marcadores en el gráfico.
+            trades_df['timestamp'] = pd.to_datetime(trades_df['timestamp'], utc=True)
             # Filtrar trades para el símbolo actual
             symbol_trades = trades_df[trades_df['symbol'] == symbol].copy()
     
@@ -140,8 +146,12 @@ with tab1:
         fig.add_hline(y=30, line_dash="dot", line_color="green", line_width=1, row=3, col=1)
     
         # Actualizar layout general
-        fig.update_layout(xaxis_rangeslider_visible=False, height=700, title=f'Análisis Técnico de {symbol}',
-                          showlegend=True)
+        fig.update_layout(
+            xaxis_rangeslider_visible=False, 
+            height=700, 
+            title=f'Análisis Técnico de {symbol}',
+            showlegend=True
+        )
         fig.update_yaxes(title_text="Precio", row=1, col=1)
         fig.update_yaxes(title_text="Volumen", row=2, col=1)
         fig.update_yaxes(title_text="RSI", row=3, col=1)
@@ -163,63 +173,99 @@ with tab2:
         st.info("Asegúrate de haber ejecutado el flujo de backtesting completo, incluyendo el script 'simulate_trades.py'.")
     else:
         selected_file = st.selectbox("Selecciona un archivo de resultados para analizar:", result_files)
+        
+        # --- MEJORA: Análisis de datos sin gráfico, enfocado en métricas ---
         if selected_file:
-            results_df = pd.read_csv(selected_file)
+            try:
+                results_df = pd.read_csv(selected_file)
+                results_df['timestamp'] = pd.to_datetime(results_df['timestamp'])
+            except Exception as e:
+                st.error(f"No se pudo leer el archivo '{selected_file}'. Error: {e}")
+                st.stop()
             
-            # --- MEJORA: Filtro por tipo de señal ---
-            # Extraer los tipos de señal únicos del log
             signal_types = results_df['type'].unique()
             selected_types = st.multiselect("Filtrar por tipo de señal:", options=signal_types, default=signal_types)
 
-            # Filtrar el DataFrame basado en la selección
             filtered_df = results_df[results_df['type'].isin(selected_types)]
             filtered_df = filtered_df[filtered_df['outcome'] != 'IN_PROGRESS'].copy() # Ignorar trades no cerrados
 
-            st.dataframe(filtered_df, use_container_width=True)
-
             if not filtered_df.empty:
-                # Recalcular métricas para los datos filtrados
+                # --- 1. MÉTRICAS DE RENDIMIENTO GLOBAL ---
+                st.subheader("Métricas de Rendimiento Global")
                 total_trades = len(filtered_df)
-                wins = filtered_df[filtered_df['outcome'] == 'WIN']                
-                win_rate = (len(wins) / total_trades) * 100 if total_trades > 0 else 0
+                wins_df = filtered_df[filtered_df['outcome'] == 'WIN']
+                losses_df = filtered_df[filtered_df['outcome'] == 'LOSS']
+                win_rate = (len(wins_df) / total_trades) * 100 if total_trades > 0 else 0
                 
-                # Profit Factor
-                total_gain = filtered_df[filtered_df['pnl_usd'] > 0]['pnl_usd'].sum()
-                total_loss = abs(filtered_df[filtered_df['pnl_usd'] < 0]['pnl_usd'].sum())
+                total_gain = wins_df['pnl_usd'].sum()
+                total_loss = abs(losses_df['pnl_usd'].sum())
                 profit_factor = total_gain / total_loss if total_loss > 0 else float('inf')
 
-                col1, col2, col3 = st.columns(3)
-                col1.metric("Total de Operaciones", f"{total_trades}")
-                col2.metric("Tasa de Acierto (Win Rate)", f"{win_rate:.2f}%")
-                col3.metric("Profit Factor", f"{profit_factor:.2f}")
+                avg_win = wins_df['pnl_usd'].mean() if not wins_df.empty else 0
+                avg_loss = abs(losses_df['pnl_usd'].mean()) if not losses_df.empty else 0
+                expectancy = (win_rate/100 * avg_win) - ((1 - win_rate/100) * avg_loss)
+
+                initial_balance = filtered_df.iloc[0]['balance_after_trade'] - filtered_df.iloc[0]['pnl_usd']
+                final_balance = filtered_df.iloc[-1]['balance_after_trade']
+                net_pnl_usd = final_balance - initial_balance
+                net_pnl_perc = (net_pnl_usd / initial_balance) * 100
+
+                # Cálculo de Max Drawdown
+                filtered_df['cummax_balance'] = filtered_df['balance_after_trade'].cummax()
+                filtered_df['drawdown'] = (filtered_df['cummax_balance'] - filtered_df['balance_after_trade']) / filtered_df['cummax_balance']
+                max_drawdown = filtered_df['drawdown'].max() * 100
+
+                col1, col2, col3, col4 = st.columns(4)
+                col1.metric("Total Operaciones", f"{total_trades}")
+                col1.metric("Victorias", f"{len(wins_df)}")
+                col1.metric("Derrotas", f"{len(losses_df)}")
                 
-                # --- MÉTRICAS DE CUENTA REAL ---
-                if 'balance_after_trade' in filtered_df.columns:
-                    initial_balance = filtered_df.iloc[0]['balance_after_trade'] - filtered_df.iloc[0]['pnl_usd']
-                    final_balance = filtered_df.iloc[-1]['balance_after_trade']
-                    net_pnl_usd = final_balance - initial_balance
-                    
-                    st.divider()
-                    col1_b, col2_b, col3_b = st.columns(3)
-                    col1_b.metric("Balance Inicial", f"${initial_balance:,.2f}")
-                    col2_b.metric("Balance Final", f"${final_balance:,.2f}")
-                    col3_b.metric("Ganancia/Pérdida Neta", f"${net_pnl_usd:,.2f}", delta=f"{(net_pnl_usd/initial_balance)*100:.2f}%")
+                col2.metric("Tasa de Acierto", f"{win_rate:.2f}%")
+                col2.metric("Profit Factor", f"{profit_factor:.2f}")
+                col2.metric("Expectativa / Trade", f"${expectancy:.2f}")
 
-                    # Gráfico de Curva de Capital en USD
-                    st.subheader("Curva de Capital (Balance de Cuenta)")
-                    st.line_chart(filtered_df.set_index('timestamp')['balance_after_trade'])
-                else:
-                    # Mantener la lógica anterior si el archivo de resultados es antiguo
-                    total_pnl = filtered_df['pnl_percentage'].sum()
-                    st.metric("Ganancia/Pérdida Neta (Porcentual)", f"{total_pnl:.2f}%")
+                col3.metric("Ganancia/Pérdida Neta", f"${net_pnl_usd:,.2f}", delta=f"{net_pnl_perc:.2f}%")
+                col3.metric("Ganancia Media", f"${avg_win:,.2f}")
+                col3.metric("Pérdida Media", f"${avg_loss:,.2f}")
 
-                # Gráfico de P&L Acumulado
-                filtered_df['cumulative_pnl'] = filtered_df['pnl_percentage'].cumsum()
-                st.subheader("Curva de Capital (P&L Acumulado)")
-                st.line_chart(filtered_df.set_index('timestamp')['cumulative_pnl'])
+                col4.metric("Balance Inicial", f"${initial_balance:,.2f}")
+                col4.metric("Balance Final", f"${final_balance:,.2f}")
+                col4.metric("Máximo Drawdown", f"{max_drawdown:.2f}%", delta_color="inverse")
+
+                # --- 2. ANÁLISIS POR TIPO DE SEÑAL ---
+                st.subheader("Análisis por Tipo de Señal")
+                analysis_by_type = filtered_df.groupby('type').agg(
+                    total_trades=('type', 'count'),
+                    pnl_usd=('pnl_usd', 'sum'),
+                    wins=('outcome', lambda x: (x == 'WIN').sum())
+                ).reset_index()
+                analysis_by_type['win_rate'] = (analysis_by_type['wins'] / analysis_by_type['total_trades']) * 100
+                analysis_by_type = analysis_by_type.sort_values(by='pnl_usd', ascending=False)
+                st.dataframe(analysis_by_type, use_container_width=True,
+                             column_config={"pnl_usd": st.column_config.NumberColumn(format="$%.2f"),
+                                            "win_rate": st.column_config.NumberColumn(format="%.2f%%")})
+
+                # --- 3. ANÁLISIS POR DIRECCIÓN (LONG/SHORT) ---
+                st.subheader("Análisis por Dirección")
+                filtered_df['direction'] = filtered_df['type'].apply(lambda x: 'LONG' if 'LONG' in x else 'SHORT')
+                analysis_by_direction = filtered_df.groupby('direction').agg(
+                    total_trades=('direction', 'count'),
+                    pnl_usd=('pnl_usd', 'sum'),
+                    wins=('outcome', lambda x: (x == 'WIN').sum())
+                ).reset_index()
+                analysis_by_direction['win_rate'] = (analysis_by_direction['wins'] / analysis_by_direction['total_trades']) * 100
+                st.dataframe(analysis_by_direction, use_container_width=True,
+                             column_config={"pnl_usd": st.column_config.NumberColumn(format="$%.2f"),
+                                            "win_rate": st.column_config.NumberColumn(format="%.2f%%")})
+                
+                # --- 4. CURVA DE CAPITAL Y LOG DE TRADES ---
+                st.subheader("Curva de Capital (Balance de Cuenta)")
+                st.line_chart(filtered_df.set_index('timestamp')['balance_after_trade'])
+                
+                st.subheader("Log de Trades Filtrados")
+                st.dataframe(filtered_df, use_container_width=True)
             else:
                 st.info("No hay trades que coincidan con los filtros seleccionados.")
-
 
 with tab3:
     st.header("Historial Completo de Trades")

@@ -1,0 +1,51 @@
+streamlit.runtime.caching.cache_errors.UnhashableParamError: Cannot hash argument 'args' (of type argparse.Namespace) in 'load_data'.
+
+To address this, you can tell Streamlit not to hash this argument by adding a leading underscore to the argument's name in the function signature:
+
+@st.cache_data
+def load_data(_args, ...):
+    ...
+
+Traceback:
+
+File "/home/cero/MEGA/VSCODE/Binance/Python/dashboard.py", line 56, in <module>
+    df = load_data(symbol, interval, limit, args)
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/cache_utils.py", line 219, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/cache_utils.py", line 234, in _get_or_create_cached_value
+    value_key = _make_value_key(
+        cache_type=self._info.cache_type,
+    ...<3 lines>...
+        hash_funcs=self._info.hash_funcs,
+    )
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/cache_utils.py", line 458, in _make_value_key
+    raise UnhashableParamError(cache_type, func, arg_name, arg_value, exc)
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/cache_utils.py", line 450, in _make_value_key
+    update_hash(
+    ~~~~~~~~~~~^
+        arg_value,
+        ^^^^^^^^^^
+    ...<3 lines>...
+        hash_source=func,
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 162, in update_hash
+    ch.update(hasher, val)
+    ~~~~~~~~~^^^^^^^^^^^^^
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 345, in update
+    b = self.to_bytes(obj)
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 327, in to_bytes
+    b = b"%s:%s" % (tname, self._to_bytes(obj))
+                           ~~~~~~~~~~~~~~^^^^^
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 630, in _to_bytes
+    self.update(h, item)
+    ~~~~~~~~~~~^^^^^^^^^
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 345, in update
+    b = self.to_bytes(obj)
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 327, in to_bytes
+    b = b"%s:%s" % (tname, self._to_bytes(obj))
+                           ~~~~~~~~~~~~~~^^^^^
+File "/home/cero/anaconda3/lib/python3.13/site-packages/streamlit/runtime/caching/hashing.py", line 627, in _to_bytes
+    raise UnhashableTypeError() from ex

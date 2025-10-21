@@ -52,20 +52,21 @@ def get_klines(symbol, interval, limit):
     # 1. Obtener el precio actual para la vela en curso
     current_price = get_current_price_ticker(symbol)
     if current_price and not df.empty:
-        last_closed_candle = df.iloc[-1].copy()
-        
-        # 2. Crear una nueva fila para la vela actual
-        # El 'open' es el 'close' de la vela anterior.
-        # El 'timestamp' es el de la vela anterior más el intervalo.
-        new_candle = {
-            'timestamp': last_closed_candle['close_time'] + 1,
-            'open': last_closed_candle['close'],
-            'high': max(last_closed_candle['close'], current_price),
-            'low': min(last_closed_candle['close'], current_price),
-            'close': current_price,
-            'volume': 0 # El volumen en tiempo real no es fácil de obtener, lo dejamos en 0
-        }
-        df = pd.concat([df, pd.DataFrame([new_candle])], ignore_index=True)
+        # --- CORRECCIÓN: Crear la vela en progreso de forma segura ---
+        # 1. Copiamos la última vela cerrada para mantener la estructura completa del DataFrame.
+        new_candle_series = df.iloc[-1].copy()
+
+        # 2. Actualizamos solo los valores que cambian para la vela en curso.
+        new_candle_series['timestamp'] = new_candle_series['close_time'] + 1
+        new_candle_series['open'] = new_candle_series['close'] # El open es el close anterior
+        new_candle_series['high'] = max(new_candle_series['high'], current_price)
+        new_candle_series['low'] = min(new_candle_series['low'], current_price)
+        new_candle_series['close'] = current_price
+        new_candle_series['volume'] = 0 # El volumen en tiempo real no es fácil de obtener
+
+        new_candle = pd.DataFrame([new_candle_series])
+        # --- CORRECCIÓN: Evitar doble envoltura de DataFrame ---
+        df = pd.concat([df, new_candle], ignore_index=True)
         logging.info(f"Vela en progreso añadida con precio actual: {current_price}")
 
     return df
@@ -73,6 +74,11 @@ def get_klines(symbol, interval, limit):
 # === FUNCIONES DE INDICADORES ===
 def calculate_indicators(df, volume_sma_period, atr_window, boll_window):
     logging.info("Calculando indicadores técnicos...")
+    
+    # --- CORRECCIÓN CRÍTICA PARA EVITAR SettingWithCopyWarning ---
+    # Creamos una copia explícita del DataFrame para asegurar que todos los
+    # indicadores se calculen y añadan correctamente sin ambigüedades.
+    df = df.copy()
 
     df['EMA_50'] = ta.trend.ema_indicator(df['close'], window=50)
     df['EMA_200'] = ta.trend.ema_indicator(df['close'], window=200)

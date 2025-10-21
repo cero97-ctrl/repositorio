@@ -175,19 +175,21 @@ def run_backtest(args):
         return
 
     df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
+    # --- MEJORA: Usar un archivo de log específico para el backtest ---
+    backtest_log_file = args.trades_log_file.replace('.csv', '_backtest.csv')
     
     # Limpiar el log de trades antes de empezar un nuevo backtest
-    if os.path.exists(args.trades_log_file):
-        os.remove(args.trades_log_file)
-    utils.ensure_trades_log_exists(args.trades_log_file)
+    if os.path.exists(backtest_log_file):
+        os.remove(backtest_log_file)
+    utils.ensure_trades_log_exists(backtest_log_file)
 
     logging.info("Recorriendo velas para encontrar y registrar señales...")
     for i in range(201, len(df)): # Empezamos más tarde para asegurar que todos los indicadores están maduros
         sub_df = df.iloc[:i].copy()
         # La función evaluate_trade ya se encarga de registrar los trades
-        evaluate_trade(sub_df, args) # evaluate_trade ahora necesita el timestamp
+        evaluate_trade(sub_df, args, backtest_log_file) # Pasamos el nombre del archivo de log
 
-    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{args.trades_log_file}'.")
+    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'.")
 
 # === EJECUCIÓN ===
 def execute_single_run(args, telegram_token, chat_id):

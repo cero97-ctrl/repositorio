@@ -137,11 +137,13 @@ def run_backtest(args):
         return
 
     df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
+    # --- MEJORA: Usar un archivo de log específico para el backtest ---
+    backtest_log_file = args.trades_log_file.replace('.csv', '_backtest.csv')
     
     # Limpiar el log de trades antes de empezar un nuevo backtest
-    if os.path.exists(args.trades_log_file):
-        os.remove(args.trades_log_file)
-    utils.ensure_trades_log_exists(args.trades_log_file)
+    if os.path.exists(backtest_log_file):
+        os.remove(backtest_log_file)
+    utils.ensure_trades_log_exists(backtest_log_file)
 
     logging.info("Recorriendo velas para encontrar y simular señales...")
     for i in range(201, len(df)): # Empezamos más tarde para asegurar que todos los indicadores están maduros
@@ -155,27 +157,27 @@ def run_backtest(args):
         if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
             _, entry, sl, tp, rr = add_risk_management("GC", 'long', latest, latest, args)
             if entry:
-                utils.record_trade(args.trades_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp'])
 
         # Death Cross
         if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
             _, entry, sl, tp, rr = add_risk_management("DC", 'short', latest, latest, args)
             if entry:
-                utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp'])
 
         # Hammer
         if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
             _, entry, sl, tp, rr = add_risk_management("Hammer", 'long', latest, latest, args)
             if entry:
-                utils.record_trade(args.trades_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp'])
 
         # Shooting Star
         if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
             _, entry, sl, tp, rr = add_risk_management("SS", 'short', latest, latest, args)
             if entry:
-                utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp'])
 
-    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{args.trades_log_file}'.")
+    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'.")
 
 # === EJECUCIÓN ===
 # === EJECUCIÓN ===
