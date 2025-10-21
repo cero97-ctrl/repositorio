@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.3)  20 OCT 2025 13:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.3)  21 OCT 2025 19:23
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -343,28 +343,23 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 97.
-
-Overfull \hbox (1.6912pt too wide) in paragraph at lines 97--98
-[]\OT1/cmr/m/n/12 Librer^^S^^Pa cen-tral que con-tie-ne fun-cio-nes com-par-ti-das por to-dos los dem^^Sas
- []
-
-
-Overfull \hbox (13.17572pt too wide) in paragraph at lines 105--106
-\OT1/cmr/m/n/12 zar los gr^^Safi-cos de pre-cios, in-di-ca-do-res y las ope-ra-cio-nes re-gis-tra-das en \OT1/cmtt/m/n/12 trades[]log.csv\OT1/cmr/m/n/12 . 
- []
-
-[2] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+ [2] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
-) [3] [4{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 214--217
+) [3] [4]
+Overfull \hbox (26.33945pt too wide) in paragraph at lines 210--211
+[]\OT1/cmr/m/n/12 Una vez ge-ne-ra-das las se~nales, \OT1/cmtt/m/n/12 simulate[]trades.py \OT1/cmr/m/n/12 las pro-ce-sa. Lee el ar-chi-vo \OT1/cmtt/m/n/12 *[]backtest.csv
+ []
 
+
+Overfull \hbox (34.49777pt too wide) in paragraph at lines 214--215
+\OT1/cmr/m/n/12 ca-da ope-ra-ci^^Son. El re-sul-ta-do se guar-da en un nue-vo ar-chi-vo, \OT1/cmtt/m/n/12 trades[]log[]backtest[]results.csv\OT1/cmr/m/n/12 . 
  []
 
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 224.
-[5] (./documentacion.aux
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 232.
+[5{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./documentacion.aux
 LaTeX Info: Redefining \. on input line 11.
 LaTeX Info: Redefining \% on input line 11.
 )
@@ -376,18 +371,18 @@ Package rerunfilecheck Info: File `documentacion.out' has not changed.
 (rerunfilecheck)             Checksum: 9E22E69984D4590ACE8D638C02191F05;3037.
  ) 
 Here is how much of TeX's memory you used:
- 12676 strings out of 474222
- 194541 string characters out of 5748734
- 2031975 words of memory out of 5000000
- 34728 multiletter control sequences out of 15000+600000
+ 12693 strings out of 474222
+ 194819 string characters out of 5748734
+ 2048975 words of memory out of 5000000
+ 34740 multiletter control sequences out of 15000+600000
  564080 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,557b,1249s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,557b,1998s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on documentacion.pdf (5 pages, 106837 bytes).
+Output written on documentacion.pdf (5 pages, 110412 bytes).
 PDF statistics:
- 218 PDF objects out of 1000 (max. 8388607)
- 195 compressed objects within 2 object streams
- 77 named destinations out of 1000 (max. 500000)
+ 225 PDF objects out of 1000 (max. 8388607)
+ 201 compressed objects within 3 object streams
+ 82 named destinations out of 1000 (max. 500000)
  129 words of extra memory for PDF output out of 10000 (max. 10000000)
 

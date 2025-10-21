@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1760979634.94466 "/home/cero/MEGA/VSCODE/Binance/Python/bibliografia/documentacion.tex" "documentacion.pdf" "documentacion" 1760979636.34299 0
+["pdflatex"] 1761089026.35754 "/home/cero/MEGA/VSCODE/Binance/Python/bibliografia/documentacion.tex" "documentacion.pdf" "documentacion" 1761089028.35144 0
   "/etc/texmf/web2c/texmf.cnf" 1754246095.34578 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/cero/MEGA/VSCODE/Binance/Python/bibliografia/documentacion.tex" 1760979195.04065 10671 7b7b497cc809b158d697e44bbd077304 ""
+  "/home/cero/MEGA/VSCODE/Binance/Python/bibliografia/documentacion.tex" 1761089020.38568 11732 d5bce200054df21d0c0ad04fa2192530 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -86,10 +86,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754246131.98867 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754246351 8211763 bcebfc983d877799c23bfb0bbf784be3 ""
-  "documentacion.aux" 1760979636.18652 2437 a019d8fadfb4298235820844bdd09265 "pdflatex"
-  "documentacion.out" 1760979636.18952 3037 9e22e69984d4590ace8d638c02191f05 "pdflatex"
-  "documentacion.tex" 1760979195.04065 10671 7b7b497cc809b158d697e44bbd077304 ""
-  "documentacion.toc" 1760979636.19052 1486 7433a4bb3456a33fba382e190537ee89 "pdflatex"
+  "documentacion.aux" 1761089028.17394 2437 2d3ab4c83fbf7c037f3389892b70f41f "pdflatex"
+  "documentacion.out" 1761089028.17794 3037 9e22e69984d4590ace8d638c02191f05 "pdflatex"
+  "documentacion.tex" 1761089020.38568 11732 d5bce200054df21d0c0ad04fa2192530 ""
+  "documentacion.toc" 1761089028.17894 1486 ff1d1b76f6bf0b44761439285d6f0d88 "pdflatex"
   (generated)
   "documentacion.aux"
   "documentacion.log"
