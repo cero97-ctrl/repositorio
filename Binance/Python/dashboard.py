@@ -4,7 +4,21 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import os
+import json
 import common_utils as utils
+
+# --- Funciones para Presets de Backtest ---
+PRESETS_FILE = 'backtest_presets.json'
+
+def load_presets():
+    if not os.path.exists(PRESETS_FILE):
+        return {}
+    with open(PRESETS_FILE, 'r') as f:
+        return json.load(f)
+
+def save_presets(presets):
+    with open(PRESETS_FILE, 'w') as f:
+        json.dump(presets, f, indent=4)
 
 # --- Configuración de la página ---
 st.set_page_config(layout="wide", page_title="Dashboard de Trading")
@@ -172,7 +186,35 @@ with tab2:
         st.warning("No se encontraron archivos de resultados de backtest (ej: 'trades_log_results.csv').")
         st.info("Asegúrate de haber ejecutado el flujo de backtesting completo, incluyendo el script 'simulate_trades.py'.")
     else:
-        selected_file = st.selectbox("Selecciona un archivo de resultados para analizar:", result_files)
+        # --- MEJORA: Cargar y aplicar presets ---
+        presets = load_presets()
+        preset_options = ["- Personalizado -"] + list(presets.keys())
+        
+        # Usar session_state para manejar la selección de preset
+        if 'selected_preset' not in st.session_state:
+            st.session_state.selected_preset = preset_options[0]
+
+        def apply_preset():
+            preset_name = st.session_state.preset_selector
+            st.session_state.selected_preset = preset_name
+
+        selected_preset_name = st.selectbox(
+            "Cargar Preset de Filtros:", 
+            options=preset_options, 
+            key='preset_selector',
+            on_change=apply_preset
+        )
+
+        # Determinar los valores por defecto para los filtros
+        default_file_index = 0
+        default_signal_types = []
+        if st.session_state.selected_preset != preset_options[0]:
+            preset_data = presets.get(st.session_state.selected_preset, {})
+            if preset_data.get('file') in result_files:
+                default_file_index = result_files.index(preset_data['file'])
+            default_signal_types = preset_data.get('signal_types', [])
+
+        selected_file = st.selectbox("Selecciona un archivo de resultados para analizar:", result_files, index=default_file_index)
         
         # --- MEJORA: Análisis de datos sin gráfico, enfocado en métricas ---
         if selected_file:
@@ -184,7 +226,9 @@ with tab2:
                 st.stop()
             
             signal_types = results_df['type'].unique()
-            selected_types = st.multiselect("Filtrar por tipo de señal:", options=signal_types, default=signal_types)
+            # Si hay tipos por defecto del preset, úsalos. Si no, selecciona todos.
+            default_selection = default_signal_types if default_signal_types else list(signal_types)
+            selected_types = st.multiselect("Filtrar por tipo de señal:", options=signal_types, default=default_selection)
 
             filtered_df = results_df[results_df['type'].isin(selected_types)]
             filtered_df = filtered_df[filtered_df['outcome'] != 'IN_PROGRESS'].copy() # Ignorar trades no cerrados
@@ -266,7 +310,38 @@ with tab2:
                 st.dataframe(filtered_df, use_container_width=True)
             else:
                 st.info("No hay trades que coincidan con los filtros seleccionados.")
-
+            
+            # --- MEJORA: Guardar presets ---
+            with st.expander("Gestión de Presets"):
+                st.write("Guarda la configuración actual de filtros (archivo y tipos de señal) para usarla más tarde.")
+                new_preset_name = st.text_input("Nombre del nuevo preset:")
+                if st.button("Guardar Preset"):
+                    if new_preset_name:
+                        presets[new_preset_name] = {
+                            "file": selected_file,
+                            "signal_types": selected_types
+                        }
+                        save_presets(presets)
+                        st.success(f"¡Preset '{new_preset_name}' guardado! Refrescando...")
+                        st.rerun()
+                    else:
+                        st.warning("Por favor, introduce un nombre para el preset.")
+                
+                st.divider()
+                
+                st.write("Elimina un preset guardado.")
+                if not presets:
+                    st.info("No hay presets guardados para eliminar.")
+                else:
+                    preset_to_delete = st.selectbox("Selecciona un preset para eliminar:", options=list(presets.keys()))
+                    if st.button("Eliminar Preset Seleccionado", type="primary"):
+                        if preset_to_delete in presets:
+                            del presets[preset_to_delete]
+                            save_presets(presets)
+                            st.success(f"¡Preset '{preset_to_delete}' eliminado! Refrescando...")
+                            st.rerun()
+                        else:
+                            st.error("El preset seleccionado ya no existe.")
 with tab3:
     st.header("Historial Completo de Trades")
     trades_log_file = args.trades_log_file
