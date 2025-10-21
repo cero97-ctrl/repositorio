@@ -338,6 +338,18 @@ with tab2:
                 st.subheader("Curva de Capital (Balance de Cuenta)")
                 st.line_chart(filtered_df.set_index('timestamp')['balance_after_trade'])
                 
+                # --- 5. DISTRIBUCIÓN DE GANANCIAS Y PÉRDIDAS (HISTOGRAMA) ---
+                st.subheader("Distribución de Ganancias y Pérdidas")
+                if not filtered_df.empty:
+                    fig_hist = go.Figure(data=[go.Histogram(x=filtered_df['pnl_usd'], nbinsx=50)])
+                    fig_hist.update_layout(
+                        title_text='Distribución de P&L por Trade (USD)',
+                        xaxis_title_text='P&L (USD)',
+                        yaxis_title_text='Frecuencia',
+                        bargap=0.1
+                    )
+                    st.plotly_chart(fig_hist, use_container_width=True)
+
                 st.subheader("Log de Trades Filtrados")
                 st.dataframe(filtered_df, use_container_width=True)
             else:

@@ -1,10 +1,8 @@
 # trading-v6.py (versión mejorada con ATR, Bollinger, POC, Backtesting y carga completa de parámetros desde dotenv)
 
 import pandas as pd
-import time
 import logging
 import os
-import sys
 import common_utils as utils
 
 # === CONFIRMACIÓN ===
@@ -15,51 +13,28 @@ def check_confirmation(df, state, args):
 
     message = ""
 
-    if pattern in ["hammer"] and latest['close'] > previous['high']:
-        message = add_risk_management(f"✅ Bullish confirmation for {pattern} pattern", 'long', latest, previous, args)
-    elif pattern in ["shooting_star"] and latest['close'] < previous['low']:
-        message = add_risk_management(f"✅ Bearish confirmation for {pattern} pattern", 'short', latest, previous, args)
+    if pattern == "hammer" and latest['close'] > previous['high']:
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        message = utils.format_risk_management_message(f"✅ Confirmación alcista para patrón {pattern.upper()}", entry, sl, tp, rr)
+        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_LONG_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
+    elif pattern == "shooting_star" and latest['close'] < previous['low']:
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        message = utils.format_risk_management_message(f"✅ Confirmación bajista para patrón {pattern.upper()}", entry, sl, tp, rr)
+        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_SHORT_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
     else:
-        message = f"❌ No confirmation for {pattern} pattern"
+        message = f"❌ Sin confirmación para el patrón {pattern.upper()}"
 
     utils.clear_state()
     return message
 
-
-# === GESTIÓN DE RIESGO ===
-def add_risk_management(signal_text, direction, entry_candle, pattern_candle, args):
-    """Añade los niveles de Stop Loss y Take Profit a una señal."""
-    entry_price = entry_candle['close']
-    
-    if direction == 'long':
-        stop_loss = pattern_candle['low'] * (1 - args.sl_buffer)
-        risk = entry_price - stop_loss
-        take_profit = entry_price + (risk * args.rr_ratio)
-    else:  # short
-        stop_loss = pattern_candle['high'] * (1 + args.sl_buffer)
-        risk = stop_loss - entry_price
-        if risk <= 0: # Evitar división por cero si la entrada es mala
-            return signal_text, None, None, None, None
-        take_profit = entry_price - (risk * args.rr_ratio)
-
-    if risk <= 0:
-        return f"{signal_text}\n\n⚠️ No se pudo calcular la gestión de riesgo (riesgo inválido)."
-
-    return (f"{signal_text}\n\n"
-            f"🎯 **Gestión de Riesgo (R:R 1:{args.rr_ratio})**\n"
-            f"- Entrada: `${entry_price:.2f}`\n"
-            f"- Stop Loss: `${stop_loss:.2f}`\n"
-            f"- Take Profit: `${take_profit:.2f}`"), entry_price, stop_loss, take_profit, args.rr_ratio
-
-
 # === EVALUACIÓN DE SEÑALES ===
-def evaluate_trade(df, args):
+def evaluate_trade(df, args, log_file=None):
     latest = df.iloc[-1]
     previous = df.iloc[-2]
     signals = []
     pending_state = None
 
-    atr_mean = df['ATR'].rolling(50).mean().iloc[-1] # Usamos 50 como en wyckoff para consistencia
+    atr_mean = utils.get_atr_mean_for_volatility(df) # Usamos 50 como en wyckoff para consistencia
     if latest['ATR'] < atr_mean:
         logging.info("ATR bajo: mercado sin volatilidad significativa, no se generan señales.")
         return "⚠️ Volatilidad baja (ATR bajo). No se recomienda operar ahora."
@@ -70,33 +45,36 @@ def evaluate_trade(df, args):
     # Golden Cross (Cruce Dorado) -> Señal de Compra
     if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
         signal_text = "📈 **Golden Cross** detectado (EMA 50 cruza por encima de EMA 200)"
-        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'long', latest, latest, args)
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
         if entry:
-            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross')
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp']) # type: ignore
 
     # Death Cross (Cruce de la Muerte) -> Señal de Venta
     if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
         signal_text = "📉 **Death Cross** detectado (EMA 50 cruza por debajo de EMA 200)"
-        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'short', latest, latest, args)
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
         if entry:
-            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross')
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp']) # type: ignore
 
     if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
         signal_text = "🕯️ Hammer detected"
         if latest['close'] <= latest['Boll_Lower']:
             signal_text += " tocando banda inferior de Bollinger 📉"
         if poc_zone:
-            signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥"
+            signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.8f}) 🔥"
         if latest['ATR'] > atr_mean:
             signal_text += " con alta volatilidad 🔥"
         if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
             signal_text += " con volumen climático 📈"
-        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'long', latest, latest, args)
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
         if entry:
-            utils.record_trade(args.trades_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer')
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
     if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -104,15 +82,16 @@ def evaluate_trade(df, args):
         if latest['close'] >= latest['Boll_Upper']:
             signal_text += " tocando banda superior de Bollinger 📈"
         if poc_zone:
-            signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️"
+            signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.8f}) ⚠️"
         if latest['ATR'] > atr_mean:
             signal_text += " con fuerte volatilidad ⚡"
         if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
             signal_text += " con volumen climático 📉"
-        formatted_signal, entry, sl, tp, rr = add_risk_management(signal_text, 'short', latest, latest, args)
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
         if entry:
-            utils.record_trade(args.trades_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star')
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
         pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
     if pending_state:
@@ -152,77 +131,48 @@ def run_backtest(args):
         latest = sub_df.iloc[-1]
 
         # --- Lógica de Detección de Señal (simplificada para el bucle) ---
+        # Nota: Aquí se usa 'latest' para el entry_candle y 'latest' para el pattern_candle
+        # porque en el backtest estamos evaluando la vela actual como la que genera la señal.
+
         # Golden Cross
         previous = sub_df.iloc[-2]
         if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
-            _, entry, sl, tp, rr = add_risk_management("GC", 'long', latest, latest, args)
+            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
             if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp']) # type: ignore
 
         # Death Cross
         if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
-            _, entry, sl, tp, rr = add_risk_management("DC", 'short', latest, latest, args)
+            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
             if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp']) # type: ignore
 
         # Hammer
         if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
-            _, entry, sl, tp, rr = add_risk_management("Hammer", 'long', latest, latest, args)
+            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
             if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
 
         # Shooting Star
         if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
-            _, entry, sl, tp, rr = add_risk_management("SS", 'short', latest, latest, args)
+            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
             if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp'])
+                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
 
     logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'.")
 
 # === EJECUCIÓN ===
-# === EJECUCIÓN ===
-def execute_single_run(args, telegram_token, chat_id):
-    logging.info(f"Analizando {args.symbol} {args.interval}...")
-    df = utils.get_klines(args.symbol, args.interval, args.limit)
-    if df.empty or len(df) < 2:
-        logging.warning("Datos insuficientes.")
-        return
-
-    df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
-
-    pending_state = utils.load_state()
-    if pending_state:
-        signal = check_confirmation(df, pending_state, args)
-    else:
-        signal = evaluate_trade(df, args)
-
-    message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n\n{signal}"
-    logging.info(message)
-
-    if "⏳" not in signal and "Volatilidad baja" not in signal and "❌ Sin confirmación" not in signal:
-        utils.send_telegram_message(message, telegram_token, chat_id, pre_escaped=True)
-
 # === MAIN ===
 if __name__ == "__main__":
-    args, telegram_token, chat_id = utils.load_config()
-    
-    # Configurar logging después de cargar la configuración para usar el nivel de log correcto
-    logging.basicConfig(
-        level=args.log.upper(), 
-        format='%(asctime)s - %(levelname)s - %(message)s', 
-        stream=sys.stdout
-    )
+    args, telegram_token, chat_id = utils.setup_logging_and_config()
 
     logging.info("==========================================")
     logging.info("Iniciando bot con la siguiente configuración:")
-    logging.info(f"Símbolo: {args.symbol}")
-    logging.info(f"Intervalo: {args.interval}")
-    logging.info(f"POC: {args.poc}")
-    logging.info(f"ATR Window: {args.atr_window}")
-    logging.info(f"Bollinger Window: {args.bollinger_window}")
+    logging.info(f"Símbolo: {args.symbol} | Intervalo: {args.interval}")
+    logging.info(f"POC: {args.poc} | ATR Window: {args.atr_window} | Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
-    logging.info(f"Risk/Reward Ratio (para v6): {args.rr_ratio}")
-    logging.info(f"Stop Loss Buffer (para v6): {args.sl_buffer}")
+    logging.info(f"Risk Stop Mult: {args.risk_stop_mult} | RR Ratio: {args.rr_ratio} | SL Buffer: {args.sl_buffer}")
+    logging.info(f"Trades Log File: {args.trades_log_file}")
     logging.info("==========================================")
 
     if args.backtest:
@@ -233,25 +183,11 @@ if __name__ == "__main__":
     utils.clear_state()
     logging.info("Estado anterior limpiado. Iniciando en modo de operación en vivo.")
 
-    # Enviar mensaje de inicio a Telegram
     startup_message = (
         f"🚀 *Bot de Trading Iniciado* 🚀\n\n"
         f"Monitoreando: `{args.symbol}` en intervalo `{args.interval}`\n"
         f"POC configurado en: `{args.poc}`\n\n"
         "El bot está en línea y funcionando correctamente\\."
     )
-    utils.send_telegram_message(startup_message, telegram_token, chat_id, pre_escaped=True)
-    logging.info("Mensaje de inicio enviado a Telegram.")
 
-    while True:
-        try:
-            execute_single_run(args, telegram_token, chat_id)
-            logging.info(f"Análisis completado. Esperando {args.sleep} segundos para el próximo ciclo.")
-            time.sleep(args.sleep)
-        except KeyboardInterrupt:
-            logging.info("Bot detenido manualmente. Limpiando estado...")
-            utils.clear_state()
-            sys.exit(0)
-        except Exception as e:
-            logging.error(f"Error inesperado en el ciclo principal: {e}")
-            time.sleep(60) # Esperar un minuto antes de reintentar en caso de error grave
+    utils.run_bot_main_loop(args, telegram_token, chat_id, evaluate_trade, check_confirmation, startup_message)

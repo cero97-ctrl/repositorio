@@ -1,6 +1,7 @@
 # common_utils.py
 
 import pandas as pd
+import numpy as np
 import requests
 import ta
 import logging
@@ -11,6 +12,7 @@ import json
 import argparse
 from datetime import datetime
 from dotenv import load_dotenv
+import sys
 
 # === NUEVA FUNCIÓN PARA PRECIO ACTUAL ===
 def get_current_price_ticker(symbol):
@@ -133,6 +135,56 @@ def calculate_indicators(df, volume_sma_period, atr_window, boll_window):
     logging.info("Indicadores calculados: EMAs, RSI, MACD, Volumen SMA, ATR, Bollinger Bands.")
     return df
 
+# === GESTIÓN DE RIESGO ===
+def compute_risk_levels(entry_price, atr, direction='long', stop_mult=1.5, tp_mult=2.5, sl_buffer=0.0):
+    """
+    Calcula stop_loss, take_profit y risk:reward (rr) dependiendo de la dirección.
+    Retorna (stop_loss, take_profit, rr).
+    """
+    if pd.isna(atr) or atr <= 0:
+        return None, None, None, None # Añadido None para entry_price
+
+    # Ajustar entry_price para el cálculo del riesgo si se usa sl_buffer
+    # Esto es más relevante si el SL se basa en un punto fijo (ej. low de la vela)
+    # y el entry_price es el close.
+    
+    if direction == 'long':
+        # stop_loss = entry_price - atr * stop_mult # Basado en ATR
+        stop_loss = entry_price * (1 - sl_buffer) # Basado en porcentaje del precio de entrada
+        risk = entry_price - stop_loss
+        take_profit = entry_price + (risk * tp_mult)
+    else:  # short
+        # stop_loss = entry_price + atr * stop_mult # Basado en ATR
+        stop_loss = entry_price * (1 + sl_buffer) # Basado en porcentaje del precio de entrada
+        risk = stop_loss - entry_price
+        take_profit = entry_price - (risk * tp_mult)
+
+    if risk <= 0:
+        return None, None, None, None
+
+    rr = round((take_profit - entry_price) / risk, 2) if direction == 'long' else round((entry_price - take_profit) / risk, 2)
+    
+    return entry_price, round(stop_loss, 8), round(take_profit, 8), rr
+
+def format_risk_management_message(signal_text, entry_price, stop_loss, take_profit, rr_ratio):
+    """Formatea un mensaje de gestión de riesgo para Telegram."""
+    if entry_price is None or stop_loss is None or take_profit is None or rr_ratio is None:
+        return f"{signal_text}\n\n⚠️ No se pudo calcular la gestión de riesgo (riesgo inválido)."
+
+    return (f"{signal_text}\n\n"
+            f"🎯 *Gestión de Riesgo (R:R 1:{rr_ratio})*\n"
+            f"- Entrada: `${entry_price:.8f}`\n"
+            f"- Stop Loss: `${stop_loss:.8f}`\n"
+            f"- Take Profit: `${take_profit:.8f}`")
+
+def get_atr_mean_for_volatility(df, window=50):
+    """Calcula la media del ATR para determinar la volatilidad."""
+    if 'ATR' not in df.columns or len(df) < window:
+        return np.nan
+    atr_mean = df['ATR'].rolling(window=window, min_periods=1).mean().iloc[-1]
+    return atr_mean
+
+
 # === PATRONES DE VELAS ===
 def is_hammer(open_price, close_price, high, low, body_multiplier=2.0):
     body = abs(close_price - open_price)
@@ -210,6 +262,72 @@ def record_trade(file_path, symbol, ttype, entry, stop_loss, take_profit, atr, r
     with open(file_path, 'a') as f:
         f.write(line)
     logging.info(f"Trade registrado en {file_path}: {symbol} {ttype} entry={entry} rr={rr}")
+
+# === FUNCIONES COMUNES PARA BOTS ===
+def execute_single_run_common(args, telegram_token, chat_id, evaluate_trade_func, check_confirmation_func):
+    """
+    Ejecuta un único ciclo de análisis para un bot de trading.
+    :param args: Argumentos de configuración del bot.
+    :param telegram_token: Token de Telegram.
+    :param chat_id: ID del chat de Telegram.
+    :param evaluate_trade_func: Función específica del bot para evaluar señales.
+    :param check_confirmation_func: Función específica del bot para verificar confirmaciones.
+    """
+    logging.info(f"Analizando {args.symbol} {args.interval}...")
+    df = get_klines(args.symbol, args.interval, args.limit)
+    if df.empty or len(df) < 2:
+        logging.warning("Datos insuficientes.")
+        return
+
+    df = calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
+
+    pending_state = load_state()
+    if pending_state:
+        signal_message = check_confirmation_func(df, pending_state, args)
+    else:
+        signal_message = evaluate_trade_func(df, args)
+
+    message = f"--- Análisis para {args.symbol} ({args.interval}) ---\n\n{signal_message}"
+    logging.info(message)
+
+    # Solo enviar a Telegram si hay una señal activa y no es solo un mensaje de espera o baja volatilidad
+    if "⏳" not in signal_message and "Volatilidad baja" not in signal_message and "❌ Sin confirmación" not in signal_message:
+        send_telegram_message(message, telegram_token, chat_id, pre_escaped=True)
+
+def run_bot_main_loop(args, telegram_token, chat_id, evaluate_trade_func, check_confirmation_func, startup_message_text):
+    """
+    Bucle principal para la ejecución de un bot de trading.
+    :param args: Argumentos de configuración del bot.
+    :param telegram_token: Token de Telegram.
+    :param chat_id: ID del chat de Telegram.
+    :param evaluate_trade_func: Función específica del bot para evaluar señales.
+    :param check_confirmation_func: Función específica del bot para verificar confirmaciones.
+    :param startup_message_text: Mensaje de inicio para Telegram.
+    """
+    # Limpiar estado anterior al iniciar en modo live para evitar confirmaciones incorrectas
+    clear_state()
+    logging.info("Estado anterior limpiado. Iniciando en modo de operación en vivo.")
+
+    send_telegram_message(startup_message_text, telegram_token, chat_id, pre_escaped=True)
+    logging.info("Mensaje de inicio enviado a Telegram.")
+
+    while True:
+        try:
+            execute_single_run_common(args, telegram_token, chat_id, evaluate_trade_func, check_confirmation_func)
+            logging.info(f"Análisis completado. Esperando {args.sleep} segundos para el próximo ciclo.")
+            time.sleep(args.sleep)
+        except KeyboardInterrupt:
+            logging.info("Bot detenido manualmente. Limpiando estado...")
+            clear_state()
+            sys.exit(0)
+        except Exception as e:
+            logging.error(f"Error inesperado en el ciclo principal: {e}")
+            time.sleep(60) # Esperar un minuto antes de reintentar en caso de error grave
+
+def setup_logging_and_config():
+    args, telegram_token, chat_id = load_config()
+    logging.basicConfig(level=args.log.upper(), format='%(asctime)s - %(levelname)s - %(message)s', stream=sys.stdout)
+    return args, telegram_token, chat_id
 
 # === CONFIGURACIÓN ===
 def load_config():
