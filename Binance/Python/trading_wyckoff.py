@@ -164,6 +164,17 @@ def run_backtest(args):
         # La función evaluate_trade ya se encarga de registrar los trades
         evaluate_trade(sub_df, args, backtest_log_file) # Pasamos el nombre del archivo de log
 
+    # --- CORRECCIÓN CRÍTICA: Ordenar el log de backtest por fecha ---
+    # Esto es esencial para que la simulación posterior sea cronológicamente correcta.
+    logging.info(f"Ordenando el archivo de log de backtest '{backtest_log_file}' por fecha...")
+    try:
+        log_df = pd.read_csv(backtest_log_file)
+        log_df['timestamp'] = pd.to_datetime(log_df['timestamp'])
+        log_df.sort_values(by='timestamp', inplace=True)
+        log_df.to_csv(backtest_log_file, index=False)
+    except Exception as e:
+        logging.error(f"No se pudo ordenar el archivo de log de backtest: {e}")
+
     logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'.")
 
 # === EJECUCIÓN ===

@@ -160,6 +160,17 @@ def run_backtest(args):
             if entry:
                 utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
 
+    # --- CORRECCIÓN CRÍTICA: Ordenar el log de backtest por fecha ---
+    # Esto es esencial para que la simulación posterior sea cronológicamente correcta.
+    logging.info(f"Ordenando el archivo de log de backtest '{backtest_log_file}' por fecha...")
+    try:
+        log_df = pd.read_csv(backtest_log_file)
+        log_df['timestamp'] = pd.to_datetime(log_df['timestamp'])
+        log_df.sort_values(by='timestamp', inplace=True)
+        log_df.to_csv(backtest_log_file, index=False)
+    except Exception as e:
+        logging.error(f"No se pudo ordenar el archivo de log de backtest: {e}")
+
     logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'.")
 
 # === EJECUCIÓN ===
