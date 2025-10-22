@@ -2,6 +2,7 @@
 import pandas as pd
 import argparse
 import logging
+import uuid # Para dar un ID único a cada trade
 
 logging.basicConfig(level="INFO", format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -9,6 +10,7 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
     """
     Simula el resultado de los trades registrados en un archivo CSV
     utilizando datos históricos de precios y gestionando un balance de cuenta.
+    --- VERSIÓN REFACTORIZADA PARA MANEJAR MÚLTIPLES POSICIONES ABIERTAS ---
     """
     logging.info(f"Iniciando simulación con Balance Inicial=${initial_balance:,.2f} y Riesgo por Trade={risk_per_trade:.2%}")
 
@@ -23,70 +25,93 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
     trades_df['timestamp'] = pd.to_datetime(trades_df['timestamp'])
     historical_df['timestamp'] = pd.to_datetime(historical_df['timestamp'], unit='ms')
 
+    # Crear un diccionario de trades para un acceso rápido por timestamp
+    trades_by_timestamp = {}
+    for _, trade in trades_df.iterrows():
+        ts = trade['timestamp']
+        if ts not in trades_by_timestamp:
+            trades_by_timestamp[ts] = []
+        trades_by_timestamp[ts].append(trade.to_dict())
+
     current_balance = initial_balance
-    results = []
-    for index, trade in trades_df.iterrows():
-        logging.info(f"Simulando trade #{index+1} ({trade['type']} en {trade['timestamp']})")
+    open_positions = []
+    closed_trades = []
 
-        # Filtrar los datos históricos posteriores al inicio del trade
-        future_candles = historical_df[historical_df['timestamp'] > trade['timestamp']]
+    # Bucle principal: iterar sobre cada vela del historial
+    for candle_index, candle in historical_df.iterrows():
+        # --- 1. REVISAR POSICIONES ABIERTAS PARA CERRARLAS ---
+        positions_to_close_indices = []
+        for i, pos in enumerate(open_positions):
+            exit_price = None
+            outcome = None
 
-        outcome = 'IN_PROGRESS'
-        pnl_percentage = 0
-        exit_price = None
-        exit_time = None
-        pnl_usd = 0
-
-        # --- Lógica de Simulación de Cuenta ---
-        risk_amount_usd = current_balance * risk_per_trade
-        risk_per_share = abs(trade['entry'] - trade['stop_loss'])
-        position_size = risk_amount_usd / risk_per_share if risk_per_share > 0 else 0
-
-        for _, candle in future_candles.iterrows():
             # Lógica para trades LONG
-            if 'LONG' in trade['type'].upper():
-                if candle['low'] <= trade['stop_loss']:
-                    outcome = 'LOSS'
-                    exit_price = trade['stop_loss']
-                    exit_time = candle['timestamp']
-                    pnl_usd = (exit_price - trade['entry']) * position_size
-                    break
-                elif candle['high'] >= trade['take_profit']:
-                    outcome = 'WIN'
-                    exit_price = trade['take_profit']
-                    exit_time = candle['timestamp']
-                    pnl_usd = (exit_price - trade['entry']) * position_size
-                    break
+            if 'LONG' in pos['type'].upper():
+                if candle['low'] <= pos['stop_loss']:
+                    outcome, exit_price = 'LOSS', pos['stop_loss']
+                elif candle['high'] >= pos['take_profit']:
+                    outcome, exit_price = 'WIN', pos['take_profit']
             # Lógica para trades SHORT
-            elif 'SHORT' in trade['type'].upper():
-                if candle['high'] >= trade['stop_loss']:
-                    outcome = 'LOSS'
-                    exit_price = trade['stop_loss']
-                    exit_time = candle['timestamp']
-                    pnl_usd = (trade['entry'] - exit_price) * position_size
-                    break
-                elif candle['low'] <= trade['take_profit']:
-                    outcome = 'WIN'
-                    exit_price = trade['take_profit']
-                    exit_time = candle['timestamp']
-                    pnl_usd = (trade['entry'] - exit_price) * position_size
-                    break
-        
-        # Actualizar P&L porcentual y balance
-        pnl_percentage = (pnl_usd / current_balance) * 100 if current_balance > 0 else 0
-        current_balance += pnl_usd
+            elif 'SHORT' in pos['type'].upper():
+                if candle['high'] >= pos['stop_loss']:
+                    outcome, exit_price = 'LOSS', pos['stop_loss']
+                elif candle['low'] <= pos['take_profit']:
+                    outcome, exit_price = 'WIN', pos['take_profit']
 
-        trade['outcome'] = outcome
-        trade['pnl_percentage'] = pnl_percentage
-        trade['pnl_usd'] = pnl_usd
-        trade['exit_price'] = exit_price
-        trade['exit_time'] = exit_time
-        trade['position_size'] = position_size
-        trade['balance_after_trade'] = current_balance
-        results.append(trade)
+            if outcome:
+                # Calcular P&L
+                pnl_usd = (exit_price - pos['entry']) * pos['position_size'] if 'LONG' in pos['type'].upper() else (pos['entry'] - exit_price) * pos['position_size']
+                pnl_percentage = (pnl_usd / pos['balance_at_entry']) * 100
+                
+                # Actualizar balance
+                current_balance += pnl_usd
+
+                # Guardar resultado
+                pos.update({
+                    'outcome': outcome, 'pnl_percentage': pnl_percentage, 'pnl_usd': pnl_usd,
+                    'exit_price': exit_price, 'exit_time': candle['timestamp'],
+                    'balance_after_trade': current_balance
+                })
+                closed_trades.append(pos)
+                positions_to_close_indices.append(i)
+                logging.info(f"  -> CERRADO trade {pos['id']}: {outcome}, P&L: ${pnl_usd:,.2f}, Nuevo Balance: ${current_balance:,.2f}")
+
+        # Eliminar posiciones cerradas de la lista de abiertas (iterando en reversa para evitar problemas de índice)
+        for i in sorted(positions_to_close_indices, reverse=True):
+            del open_positions[i]
+
+        # --- 2. BUSCAR NUEVAS SEÑALES PARA ABRIR ---
+        if candle['timestamp'] in trades_by_timestamp:
+            for new_trade_signal in trades_by_timestamp[candle['timestamp']]:
+                # --- Lógica de Simulación de Cuenta Realista ---
+                capital_at_risk_in_open_trades = sum(pos.get('risk_amount_usd', 0) for pos in open_positions)
+                available_balance = current_balance - capital_at_risk_in_open_trades
+                
+                risk_amount_usd = available_balance * risk_per_trade
+                risk_per_share = abs(new_trade_signal['entry'] - new_trade_signal['stop_loss'])
+                position_size = risk_amount_usd / risk_per_share if risk_per_share > 0 else 0
+
+                new_position = new_trade_signal.copy()
+                new_position.update({
+                    'id': str(uuid.uuid4())[:8], # ID corto y único
+                    'position_size': position_size,
+                    'risk_amount_usd': risk_amount_usd,
+                    'balance_at_entry': current_balance
+                })
+                open_positions.append(new_position)
+                logging.info(f"-> ABIERTO nuevo trade {new_position['id']} ({new_position['type']}) en {candle['timestamp']}. Riesgo: ${risk_amount_usd:,.2f}")
+
+    # Al final, cualquier posición que quede abierta se marca como 'IN_PROGRESS'
+    for pos in open_positions:
+        pos.update({'outcome': 'IN_PROGRESS', 'balance_after_trade': current_balance})
+        closed_trades.append(pos)
 
     # Guardar los resultados en un nuevo archivo CSV
-    results_df = pd.DataFrame(results)
+    results_df = pd.DataFrame(closed_trades)
+    # Ordenar por fecha de cierre para que la curva de capital tenga sentido
+    if 'exit_time' in results_df.columns:
+        results_df.sort_values(by='exit_time', inplace=True)
+
     output_file = trades_file.replace('.csv', '_results.csv')
     results_df.to_csv(output_file, index=False)
     logging.info(f"✅ Simulación completada. Resultados guardados en '{output_file}'")
