@@ -72,7 +72,7 @@ def detect_wyckoff_event(df, args):
 
 
 # === EVALUACIÓN DE SEÑALES (con gestión de riesgo y Wyckoff) ===
-def evaluate_trade(df, args):
+def evaluate_trade(df, args, log_file=None):
     latest = df.iloc[-1]
     previous = df.iloc[-2]
     signals = []
@@ -98,7 +98,7 @@ def evaluate_trade(df, args):
         if entry and stop_loss and take_profit:
             signal_text = utils.format_risk_management_message(signal_text, entry, stop_loss, take_profit, rr)
         signals.append(signal_text)
-        utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, stop_loss, take_profit, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp']) # type: ignore
+        utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'LONG_HAMMER', entry, stop_loss, take_profit, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp'])
         pending_state = {"pattern": "hammer", "price": entry}
 
     if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
@@ -113,7 +113,7 @@ def evaluate_trade(df, args):
         if entry and stop_loss and take_profit:
             signal_text = utils.format_risk_management_message(signal_text, entry, stop_loss, take_profit, rr)
         signals.append(signal_text)
-        utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, stop_loss, take_profit, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp']) # type: ignore
+        utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, stop_loss, take_profit, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp'])
         pending_state = {"pattern": "shooting_star", "price": entry}
 
     # Wyckoff events (opcional)
@@ -121,11 +121,11 @@ def evaluate_trade(df, args):
         ev_type, ev_msg, entry, stop, tp, ev_atr, ev_rr = detect_wyckoff_event(df, args)
         if ev_type == 'SPRING':
             signals.append(ev_msg) # ev_msg ya viene formateado con la gestión de riesgo
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_WYCKOFF_SPRING', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_spring', timestamp=latest['timestamp']) # type: ignore
+            utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'LONG_WYCKOFF_SPRING', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_spring', timestamp=latest['timestamp'])
             pending_state = {"pattern": "wyckoff_spring", "price": entry}
         elif ev_type == 'UPTHRUST':
             signals.append(ev_msg) # ev_msg ya viene formateado con la gestión de riesgo
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_WYCKOFF_UPTHRUST', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_upthrust', timestamp=latest['timestamp']) # type: ignore
+            utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'SHORT_WYCKOFF_UPTHRUST', entry, stop, tp, ev_atr, ev_rr, notes='wyckoff_upthrust', timestamp=latest['timestamp'])
             pending_state = {"pattern": "wyckoff_upthrust", "price": entry}
 
     if pending_state:
