@@ -10,8 +10,8 @@ set -e
 # --- CONFIGURACIÓN ---
 # Modifica estas variables para cambiar los parámetros del backtest
 # Los parámetros se pueden pasar como argumentos o usar los valores por defecto.
-# Uso: ./trading.sh [SYMBOL] [STRATEGY_SCRIPT]
-# Ejemplo: ./trading.sh ETHUSDT trading_wyckoff.py
+# Uso: ./backtest.sh [SYMBOL] [STRATEGY_SCRIPT]
+# Ejemplo: ./backtest.sh ETHUSDT trading_wyckoff.py
 
 SYMBOL=${1:-"BTCUSDT"}
 INTERVAL="1h"
