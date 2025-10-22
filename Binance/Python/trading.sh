@@ -9,15 +9,17 @@ set -e
 
 # --- CONFIGURACIÓN ---
 # Modifica estas variables para cambiar los parámetros del backtest
-SYMBOL="BTCUSDT"
+# Los parámetros se pueden pasar como argumentos o usar los valores por defecto.
+# Uso: ./trading.sh [SYMBOL] [STRATEGY_SCRIPT]
+# Ejemplo: ./trading.sh ETHUSDT trading_wyckoff.py
+
+SYMBOL=${1:-"BTCUSDT"}
 INTERVAL="1h"
 LIMIT=2000
 INITIAL_BALANCE=60
 RISK_PER_TRADE=0.01
 
-# Elige qué script de estrategia usar para el backtest:
-# Opciones: "trading-v6.py" o "trading_wyckoff.py"
-STRATEGY_SCRIPT="trading-v6.py" 
+STRATEGY_SCRIPT=${2:-"trading-v6.py"} # Opciones: "trading-v6.py" o "trading_wyckoff.py"
 
 # Nombres de los archivos generados
 DATA_FILE="${SYMBOL,,}_${INTERVAL}_data.csv" # ej: btc_1h_data.csv
