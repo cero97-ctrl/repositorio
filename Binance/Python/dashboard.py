@@ -281,13 +281,16 @@ with tab2:
                 avg_loss = abs(losses_df['pnl_usd'].mean()) if not losses_df.empty else 0
                 expectancy = (win_rate/100 * avg_win) - ((1 - win_rate/100) * avg_loss)
 
-                initial_balance = filtered_df.iloc[0]['balance_after_trade'] - filtered_df.iloc[0]['pnl_usd']
-                final_balance = filtered_df.iloc[-1]['balance_after_trade']
-                net_pnl_usd = final_balance - initial_balance
-                net_pnl_perc = (net_pnl_usd / initial_balance) * 100
+                # --- CORRECCIÓN CRÍTICA EN EL CÁLCULO DE P&L ---
+                # Sumar el P&L de las operaciones filtradas es la forma correcta y robusta
+                # de calcular la ganancia/pérdida neta para el subconjunto de datos.
+                net_pnl_usd = filtered_df['pnl_usd'].sum()
+                # El balance inicial para este cálculo porcentual debe ser el global.
+                initial_balance_global = results_df.iloc[0]['balance_after_trade'] - results_df.iloc[0]['pnl_usd']
+                net_pnl_perc = (net_pnl_usd / initial_balance_global) * 100 if initial_balance_global > 0 else 0
 
                 # Cálculo de Max Drawdown
-                filtered_df['cummax_balance'] = filtered_df['balance_after_trade'].cummax()
+                filtered_df['cummax_balance'] = (initial_balance_global + filtered_df['pnl_usd'].cumsum()).cummax()
                 filtered_df['drawdown'] = (filtered_df['cummax_balance'] - filtered_df['balance_after_trade']) / filtered_df['cummax_balance']
                 max_drawdown = filtered_df['drawdown'].max() * 100
 
@@ -304,8 +307,10 @@ with tab2:
                 col3.metric("Ganancia Media", f"${avg_win:,.2f}")
                 col3.metric("Pérdida Media", f"${avg_loss:,.2f}")
 
-                col4.metric("Balance Inicial", f"${initial_balance:,.2f}")
-                col4.metric("Balance Final", f"${final_balance:,.2f}")
+                # El balance inicial y final no tienen sentido en una vista filtrada,
+                # es mejor mostrar el balance global para dar contexto.
+                col4.metric("Balance Inicial Global", f"${initial_balance_global:,.2f}")
+                col4.metric("Balance Final Global", f"${results_df.iloc[-1]['balance_after_trade']:,.2f}")
                 col4.metric("Máximo Drawdown", f"{max_drawdown:.2f}%", delta_color="inverse")
 
                 # --- 2. ANÁLISIS POR TIPO DE SEÑAL ---

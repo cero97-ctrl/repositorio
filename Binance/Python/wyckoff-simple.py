@@ -47,10 +47,14 @@ def detect_wyckoff_event(df, args):
     if pd.notna(latest['ATR']) and pd.notna(atr_mean) and atr_mean > 0:
         atr_ok = latest['ATR'] > atr_mean * args.wyckoff_atr_thresh
 
+    # --- NUEVO FILTRO DE CONFLUENCIA CON BANDAS DE BOLLINGER ---
+    boll_lower_zone = latest['low'] <= latest['Boll_Lower']
+    boll_upper_zone = latest['high'] >= latest['Boll_Upper']
+
     # SPRING: falsa ruptura a la baja seguida de recuperación
-    if latest['low'] < previous['low'] and latest['close'] > previous['close'] and vol_ok and atr_ok:
+    if latest['low'] < previous['low'] and latest['close'] > previous['close'] and vol_ok and atr_ok and boll_lower_zone:
         entry, stop, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
-        msg = f"🌱 SPRING detectado | Entrada: {entry:.8f} | ATR: {latest['ATR']:.8f}\n"
+        msg = f"🌱 SPRING (con Bollinger) detectado | Entrada: {entry:.8f} | ATR: {latest['ATR']:.8f}\n"
         msg += "- Falsa ruptura por debajo del mínimo previo y recuperación\n"
         msg += f"- Volumen >= {args.wyckoff_volume_mult}×SMA volumen | ATR >= {args.wyckoff_atr_thresh}×ATR_mean\n"
         if entry and stop and tp:
@@ -58,9 +62,9 @@ def detect_wyckoff_event(df, args):
         return 'SPRING', msg, entry, stop, tp, latest['ATR'], rr
 
     # UPTHRUST: falsa ruptura al alza seguida de rechazo
-    if latest['high'] > previous['high'] and latest['close'] < previous['close'] and vol_ok and atr_ok:
+    if latest['high'] > previous['high'] and latest['close'] < previous['close'] and vol_ok and atr_ok and boll_upper_zone:
         entry, stop, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
-        msg = f"🏔️ UPTHRUST detectado | Entrada: {entry:.8f} | ATR: {latest['ATR']:.8f}\n"
+        msg = f"🏔️ UPTHRUST (con Bollinger) detectado | Entrada: {entry:.8f} | ATR: {latest['ATR']:.8f}\n"
         msg += "- Falsa ruptura por encima del máximo previo y rechazo\n"
         msg += f"- Volumen >= {args.wyckoff_volume_mult}×SMA volumen | ATR >= {args.wyckoff_atr_thresh}×ATR_mean\n"
         if entry and stop and tp:

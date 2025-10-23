@@ -20,6 +20,13 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
     except FileNotFoundError as e:
         logging.error(f"Error: No se encontró el archivo - {e}")
         return
+    
+    # --- MEJORA: Manejar archivo de trades vacío ---
+    if trades_df.empty:
+        logging.warning(f"El archivo de señales '{trades_file}' está vacío. No se encontraron trades para simular.")
+        # Creamos un archivo de resultados vacío pero con encabezado para evitar errores en el dashboard.
+        pd.DataFrame(columns=trades_df.columns.tolist() + ['outcome', 'pnl_percentage', 'pnl_usd', 'exit_price', 'exit_time', 'balance_after_trade']).to_csv(trades_file.replace('.csv', '_results.csv'), index=False)
+        return
 
     # Convertir timestamps a datetime para poder comparar
     trades_df['timestamp'] = pd.to_datetime(trades_df['timestamp'])

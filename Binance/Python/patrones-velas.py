@@ -61,39 +61,39 @@ def evaluate_trade(df, args, log_file=None):
         if entry:
             utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp']) # type: ignore
 
-    if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
-        signal_text = "🕯️ Hammer detected"
-        if latest['close'] <= latest['Boll_Lower']:
-            signal_text += " tocando banda inferior de Bollinger 📉"
-        if poc_zone:
-            signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.8f}) 🔥"
-        if latest['ATR'] > atr_mean:
-            signal_text += " con alta volatilidad 🔥"
-        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
-            signal_text += " con volumen climático 📈"
-        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
-        signals.append(formatted_signal)
-        if entry:
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
-        pending_state = {"pattern": "hammer", "price": latest['close']}
+    # if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
+    #     signal_text = "🕯️ Hammer detected"
+    #     if latest['close'] <= latest['Boll_Lower']:
+    #         signal_text += " tocando banda inferior de Bollinger 📉"
+    #     if poc_zone:
+    #         signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.8f}) 🔥"
+    #     if latest['ATR'] > atr_mean:
+    #         signal_text += " con alta volatilidad 🔥"
+    #     if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+    #         signal_text += " con volumen climático 📈"
+    #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+    #     formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
+    #     signals.append(formatted_signal)
+    #     if entry:
+    #         utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
+    #     pending_state = {"pattern": "hammer", "price": latest['close']}
 
-    if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
-        signal_text = "🕯️ Shooting Star detected"
-        if latest['close'] >= latest['Boll_Upper']:
-            signal_text += " tocando banda superior de Bollinger 📈"
-        if poc_zone:
-            signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.8f}) ⚠️"
-        if latest['ATR'] > atr_mean:
-            signal_text += " con fuerte volatilidad ⚡"
-        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
-            signal_text += " con volumen climático 📉"
-        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
-        signals.append(formatted_signal)
-        if entry:
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
-        pending_state = {"pattern": "shooting_star", "price": latest['close']}
+    # if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
+    #     signal_text = "🕯️ Shooting Star detected"
+    #     if latest['close'] >= latest['Boll_Upper']:
+    #         signal_text += " tocando banda superior de Bollinger 📈"
+    #     if poc_zone:
+    #         signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.8f}) ⚠️"
+    #     if latest['ATR'] > atr_mean:
+    #         signal_text += " con fuerte volatilidad ⚡"
+    #     if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+    #         signal_text += " con volumen climático 📉"
+    #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+    #     formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
+    #     signals.append(formatted_signal)
+    #     if entry:
+    #         utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
+    #     pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
     if pending_state:
         pending_state["signal_time"] = pd.to_datetime(latest['timestamp'], unit='ms').isoformat()
@@ -116,6 +116,11 @@ def run_backtest(args):
         logging.error("El CSV debe contener columnas: timestamp, open, high, low, close, volume")
         return
 
+    # --- CORRECCIÓN: Respetar el límite de velas para el backtest ---
+    if args.limit > 0 and len(df) > args.limit:
+        logging.info(f"El archivo de datos tiene {len(df)} velas. Usando las últimas {args.limit} para el backtest.")
+        df = df.tail(args.limit).reset_index(drop=True)
+
     df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, args.bollinger_window)
     # --- MEJORA: Usar un archivo de log específico para el backtest ---
     backtest_log_file = args.trades_log_file.replace('.csv', '_backtest.csv')
@@ -137,28 +142,28 @@ def run_backtest(args):
 
         # Golden Cross
         previous = sub_df.iloc[-2]
-        if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
+        if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200'] and latest['RSI'] < 50:
             entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
             if entry:
                 utils.record_trade(backtest_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp']) # type: ignore
 
         # Death Cross
-        if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
+        if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200'] and latest['RSI'] > 50:
             entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
             if entry:
                 utils.record_trade(backtest_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp']) # type: ignore
 
-        # Hammer
-        if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
-            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-            if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
+        # # Hammer
+        # if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier) and latest['RSI'] < 50:
+        #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        #     if entry:
+        #         utils.record_trade(backtest_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
 
-        # Shooting Star
-        if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
-            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-            if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
+        # # Shooting Star
+        # if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier) and latest['RSI'] > 50:
+        #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        #     # if entry:
+        #     #     utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp'])
 
     # --- CORRECCIÓN CRÍTICA: Ordenar el log de backtest por fecha ---
     # Esto es esencial para que la simulación posterior sea cronológicamente correcta.

@@ -358,6 +358,18 @@ def load_config():
     parser.add_argument("--wyckoff-volume-mult", type=float, default=float(os.getenv('WYCKOFF_VOLUME_MULT', 1.3)))
     parser.add_argument("--wyckoff-atr-thresh", type=float, default=float(os.getenv('WYCKOFF_ATR_THRESH', 1.1)))
 
+    # Parámetros para Wyckoff Multi-Timeframe (v1, v2, v3)
+    parser.add_argument("--wyckoff-professional", action='store_true', default=str(os.getenv('WYCKOFF_PROFESSIONAL', 'false')).lower() in ('true', '1', 't'))
+    parser.add_argument("--htf-interval", type=str, default=os.getenv('HTF_INTERVAL', "4h"))
+    parser.add_argument("--htf-limit", type=int, default=int(os.getenv('HTF_LIMIT', 120)))
+    parser.add_argument("--htf-vol-mult", type=float, default=float(os.getenv('HTF_VOL_MULT', 1.2)))
+    # Añadimos los de v2 y v3 para que no den error en el futuro
+    parser.add_argument("--htf-lookback", type=int, default=int(os.getenv('HTF_LOOKBACK', 100)))
+    parser.add_argument("--htf-range-thresh", type=float, default=float(os.getenv('HTF_RANGE_THRESH', 0.10)))
+    parser.add_argument("--htf-climactic-vol-mult", type=float, default=float(os.getenv('HTF_CLIMACTIC_VOL_MULT', 2.5)))
+    parser.add_argument("--htf-test-vol-mult", type=float, default=float(os.getenv('HTF_TEST_VOL_MULT', 0.8)))
+    parser.add_argument("--htf-breakout-vol-mult", type=float, default=float(os.getenv('HTF_BREAKOUT_VOL_MULT', 1.5)))
+
     # Parámetros de gestión de riesgo para trading-v6.py
     parser.add_argument("--rr-ratio", type=float, default=float(os.getenv('RR_RATIO', 2.0)), help="Ratio Riesgo/Beneficio para Take Profit (usado en v6)")
     parser.add_argument("--sl-buffer", type=float, default=float(os.getenv('SL_BUFFER', 0.002)), help="Buffer porcentual para Stop Loss (usado en v6)")
