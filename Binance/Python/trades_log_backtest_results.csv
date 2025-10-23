@@ -1,2 +1,2 @@
 timestamp,symbol,type,entry,stop_loss,take_profit,atr,rr,notes,outcome,pnl_percentage,exit_price,exit_time,id,position_size,risk_amount_usd,balance_at_entry,pnl_usd,balance_after_trade,initial_balance
-2025-09-12 13:00:00,BTCUSDT,LONG_HAMMER,115018.53,114788.49294,115593.62265,505.04762099150594,2.5,hammer,WIN,5.0,115593.62265,2025-09-12 06:00:00,872a6c09,0.08694251265426446,20.0,1000.0,50.0,1050.0,1000.0
+2025-09-12 13:00:00,BTCUSDT,LONG_HAMMER,115018.53,114788.49294,115593.62265,505.0476338074495,2.5,hammer,WIN,5.0,115593.62265,2025-09-12 06:00:00,f25f7647,0.08694251265426446,20.0,1000.0,50.0,1050.0,1000.0

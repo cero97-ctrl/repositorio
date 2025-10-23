@@ -74,10 +74,11 @@ echo "Servidor del dashboard iniciado. Abriendo en Opera..."
 (sleep 2 && opera http://localhost:8501 > /dev/null 2>&1) &
 OPERA_PID=$! # Capturamos el PID del proceso de Opera
 
-# --- CORRECCIÓN: Usar pkill para cerrar el proceso de Opera de forma más robusta ---
+# --- SOLUCIÓN CON XDOTOL: Simular Ctrl+W para cerrar la pestaña activa ---
 # La trampa se activa cuando el script recibe la señal de salida (EXIT), por ejemplo, con Ctrl+C.
-# pkill -f buscará y cerrará el proceso de opera que contenga la URL del dashboard.
-trap "echo -e '\nCerrando la ventana del dashboard en Opera...'; pkill -f 'opera http://localhost:8501' 2>/dev/null || true" EXIT
+# Este método busca la ventana de Opera, la activa y le envía el atajo de teclado para cerrar la pestaña.
+# Asegúrate de tener 'xdotool' instalado: sudo apt-get install xdotool
+trap "echo -e '\nEnviando señal de cierre de pestaña (Ctrl+W) a Opera...'; xdotool search --onlyvisible --class 'opera' windowactivate --sync key ctrl+w 2>/dev/null || true" EXIT
 
 # Ejecutar Streamlit en primer plano. Cuando se presiona Ctrl+C aquí, el script sale y la trampa se activa.
 streamlit run dashboard.py --server.headless true
