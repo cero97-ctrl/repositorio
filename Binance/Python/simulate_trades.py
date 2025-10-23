@@ -26,7 +26,9 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
     if trades_df.empty:
         logging.warning(f"El archivo de señales '{trades_file}' está vacío. No se encontraron trades para simular.")
         # Creamos un archivo de resultados vacío pero con encabezado para evitar errores en el dashboard.
-        pd.DataFrame(columns=trades_df.columns.tolist() + ['outcome', 'pnl_percentage', 'pnl_usd', 'exit_price', 'exit_time', 'balance_after_trade']).to_csv(trades_file.replace('.csv', '_results.csv'), index=False)
+        # --- MEJORA: Añadir initial_balance al encabezado ---
+        header = trades_df.columns.tolist() + ['outcome', 'pnl_percentage', 'pnl_usd', 'exit_price', 'exit_time', 'balance_after_trade', 'initial_balance']
+        pd.DataFrame(columns=header).to_csv(trades_file.replace('.csv', '_results.csv'), index=False)
         return
 
     # Convertir timestamps a datetime para poder comparar
@@ -115,6 +117,29 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
                 logging.warning(f"  -> ORDEN CANCELADA {order['type']} de {order['timestamp']}. SL tocado antes de la entrada.")
                 orders_to_open_indices.append(i) # Marcar para eliminar
             elif entry_price_reached:
+                # --- MEJORA: Simulación de Orden a Mercado ---
+                # Si es un patrón de momentum, la entrada real es el 'open' de la vela actual,
+                # no el precio de la orden (que era el 'close' de la vela anterior).
+                # Esto simula una orden a mercado que se ejecuta al inicio de la nueva vela.
+                is_momentum_pattern = '3SOLDIERS' in order['type'].upper() or '3CROWS' in order['type'].upper()
+                
+                # Para órdenes límite, la entrada es el precio de la orden.
+                # Para órdenes de mercado, la entrada es el open de la vela que la ejecuta.
+                actual_entry_price = candle['open'] if is_momentum_pattern else order['entry']
+
+                # Recalcular SL/TP si la entrada de mercado es muy diferente a la esperada
+                # (esto evita que un gap grande invalide el riesgo)
+                if is_momentum_pattern:
+                    # Mantenemos el riesgo original (distancia de la señal al SL)
+                    original_risk_per_share = abs(order['entry'] - order['stop_loss'])
+                    if 'LONG' in order['type'].upper():
+                        order['stop_loss'] = actual_entry_price - original_risk_per_share
+                        order['take_profit'] = actual_entry_price + (original_risk_per_share * order['rr'])
+                    else: # SHORT
+                        order['stop_loss'] = actual_entry_price + original_risk_per_share
+                        order['take_profit'] = actual_entry_price - (original_risk_per_share * order['rr'])
+                    order['entry'] = actual_entry_price # Actualizamos la orden con el precio real de entrada
+
                 # --- LÓGICA PARA ABRIR LA POSICIÓN ---
                 if len(open_positions) < max_open_trades:
                     capital_at_risk_in_open_trades = sum(pos.get('risk_amount_usd', 0) for pos in open_positions)
@@ -155,6 +180,9 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
     # Guardar los resultados en un nuevo archivo CSV
     results_df = pd.DataFrame(closed_trades)
     # Ordenar por fecha de cierre para que la curva de capital tenga sentido
+    # --- MEJORA: Añadir la columna de balance inicial a todos los trades ---
+    results_df['initial_balance'] = initial_balance
+
     if 'exit_time' in results_df.columns:
         results_df.sort_values(by='exit_time', inplace=True)
 

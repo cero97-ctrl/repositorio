@@ -11,11 +11,11 @@ set -e
 # Modifica estas variables para cambiar los parámetros del backtest
 # Los parámetros se pueden pasar como argumentos o usar los valores por defecto.
 # Uso: ./backtest.sh [SYMBOL] [INTERVAL] [STRATEGY_SCRIPT]
-# Ejemplo: ./backtest.sh ETHUSDT 4h wyckoff-multiframe-v2.py
+# Ejemplo: ./backtest.sh BTCUSDT 1h patrones-velas.py
 
 SYMBOL=${1:-"BTCUSDT"}
 INTERVAL=${2:-"1h"}
-STRATEGY_SCRIPT=${3:-"patrones-velas.py"} # Script de estrategia a probar
+STRATEGY_SCRIPT=${3:-"patrones-velas-v1.py"} # Script de estrategia a probar
 
 # Parámetros de descarga de datos
 LIMIT=2160 # Número de velas a descargar
@@ -62,4 +62,22 @@ echo -e "\nPASO 3: Simulando resultados de los trades..."
 python simulate_trades.py --trades-file "$TRADES_LOG_FILE" --data-file "$DATA_FILE" --initial-balance "$INITIAL_BALANCE" --risk-per-trade "$RISK_PER_TRADE" --max-open-trades "$MAX_OPEN_TRADES"
 
 echo -e "\nPASO 4: Iniciando el dashboard de visualización..."
-streamlit run dashboard.py
+
+# --- MEJORA: Abrir el dashboard en Opera y cerrarlo automáticamente al salir ---
+# 1. Iniciar Streamlit en modo "headless" para que no abra el navegador por defecto.
+# 2. Esperar un par de segundos para que el servidor esté listo.
+# 3. Abrir la URL con 'opera' en segundo plano y capturar su PID.
+# 4. Establecer una trampa (trap) para que, al salir del script (Ctrl+C), se mate el proceso de Opera.
+
+echo "Servidor del dashboard iniciado. Abriendo en Opera..."
+# Lanzamos Opera en segundo plano y redirigimos su salida para no ensuciar la terminal
+(sleep 2 && opera http://localhost:8501 > /dev/null 2>&1) &
+OPERA_PID=$! # Capturamos el PID del proceso de Opera
+
+# --- CORRECCIÓN: Usar pkill para cerrar el proceso de Opera de forma más robusta ---
+# La trampa se activa cuando el script recibe la señal de salida (EXIT), por ejemplo, con Ctrl+C.
+# pkill -f buscará y cerrará el proceso de opera que contenga la URL del dashboard.
+trap "echo -e '\nCerrando la ventana del dashboard en Opera...'; pkill -f 'opera http://localhost:8501' 2>/dev/null || true" EXIT
+
+# Ejecutar Streamlit en primer plano. Cuando se presiona Ctrl+C aquí, el script sale y la trampa se activa.
+streamlit run dashboard.py --server.headless true

@@ -286,8 +286,14 @@ with tab2:
                 # de calcular la ganancia/pérdida neta para el subconjunto de datos.
                 net_pnl_usd = filtered_df['pnl_usd'].sum()
                 # El balance inicial para este cálculo porcentual debe ser el global.
-                initial_balance_global = results_df.iloc[0]['balance_after_trade'] - results_df.iloc[0]['pnl_usd']
-                net_pnl_perc = (net_pnl_usd / initial_balance_global) * 100 if initial_balance_global > 0 else 0
+                # --- MEJORA: Leer el balance inicial directamente del archivo si existe ---
+                if 'initial_balance' in results_df.columns:
+                    initial_balance_global = results_df['initial_balance'].iloc[0]
+                else:
+                    # Fallback a la lógica anterior si la columna no existe (para compatibilidad con resultados antiguos)
+                    initial_balance_global = results_df.iloc[0]['balance_after_trade'] - results_df.iloc[0]['pnl_usd']
+                
+                net_pnl_perc = (net_pnl_usd / initial_balance_global) * 100 if initial_balance_global != 0 else 0
 
                 # Cálculo de Max Drawdown
                 filtered_df['cummax_balance'] = (initial_balance_global + filtered_df['pnl_usd'].cumsum()).cummax()
