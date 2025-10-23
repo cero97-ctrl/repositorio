@@ -200,6 +200,57 @@ def is_shooting_star(open_price, close_price, high, low, body_multiplier=2.0):
     lower_shadow = min(open_price, close_price) - low
     return upper_shadow > body * body_multiplier and lower_shadow < body
 
+def is_bullish_engulfing(latest, previous):
+    """Detecta un patrón envolvente alcista."""
+    # La vela anterior debe ser bajista y la actual alcista.
+    if previous['close'] >= previous['open'] or latest['close'] <= latest['open']:
+        return False
+    # El cuerpo de la vela actual debe envolver el cuerpo de la anterior.
+    return latest['open'] < previous['close'] and latest['close'] > previous['open']
+
+def is_bearish_engulfing(latest, previous):
+    """Detecta un patrón envolvente bajista."""
+    if previous['close'] <= previous['open'] or latest['close'] >= latest['open']:
+        return False
+    return latest['open'] > previous['close'] and latest['close'] < previous['open']
+
+def is_three_white_soldiers(df_slice, body_ratio_threshold=0.3):
+    """
+    Detecta el patrón 'Three White Soldiers' con una lógica más flexible.
+    Busca 3 velas alcistas consecutivas con cierres crecientes y cuerpos decentes.
+    """
+    if len(df_slice) < 3:
+        return False
+    c1, c2, c3 = df_slice.iloc[-3], df_slice.iloc[-2], df_slice.iloc[-1]
+    
+    # 1. Las 3 velas deben ser alcistas
+    are_all_bullish = (c1['close'] > c1['open']) and (c2['close'] > c2['open']) and (c3['close'] > c3['open'])
+    # 2. Cada cierre debe ser más alto que el anterior
+    are_closes_higher = (c2['close'] > c1['close']) and (c3['close'] > c2['close'])
+    # 3. El cuerpo de cada vela debe ser de un tamaño razonable (evitar Dojis)
+    c1_body_ok = (c1['close'] - c1['open']) > ((c1['high'] - c1['low']) * body_ratio_threshold)
+    c2_body_ok = (c2['close'] - c2['open']) > ((c2['high'] - c2['low']) * body_ratio_threshold)
+    c3_body_ok = (c3['close'] - c3['open']) > ((c3['high'] - c3['low']) * body_ratio_threshold)
+
+    return are_all_bullish and are_closes_higher and c1_body_ok and c2_body_ok and c3_body_ok
+
+def is_three_black_crows(df_slice, body_ratio_threshold=0.3):
+    """
+    Detecta el patrón 'Three Black Crows' con una lógica más flexible.
+    Busca 3 velas bajistas consecutivas con cierres decrecientes y cuerpos decentes.
+    """
+    if len(df_slice) < 3:
+        return False
+    c1, c2, c3 = df_slice.iloc[-3], df_slice.iloc[-2], df_slice.iloc[-1]
+    
+    are_all_bearish = (c1['close'] < c1['open']) and (c2['close'] < c2['open']) and (c3['close'] < c3['open'])
+    are_closes_lower = (c2['close'] < c1['close']) and (c3['close'] < c2['close'])
+    c1_body_ok = (c1['open'] - c1['close']) > ((c1['high'] - c1['low']) * body_ratio_threshold)
+    c2_body_ok = (c2['open'] - c2['close']) > ((c2['high'] - c2['low']) * body_ratio_threshold)
+    c3_body_ok = (c3['open'] - c3['close']) > ((c3['high'] - c3['low']) * body_ratio_threshold)
+
+    return are_all_bearish and are_closes_lower and c1_body_ok and c2_body_ok and c3_body_ok
+
 # === ESTADO ===
 STATE_FILE = "state.json"
 

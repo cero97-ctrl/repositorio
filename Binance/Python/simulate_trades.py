@@ -6,13 +6,14 @@ import uuid # Para dar un ID único a cada trade
 
 logging.basicConfig(level="INFO", format='%(asctime)s - %(levelname)s - %(message)s')
 
-def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_trade):
+def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_trade, max_open_trades):
     """
     Simula el resultado de los trades registrados en un archivo CSV
     utilizando datos históricos de precios y gestionando un balance de cuenta.
     --- VERSIÓN REFACTORIZADA PARA MANEJAR MÚLTIPLES POSICIONES ABIERTAS ---
     """
-    logging.info(f"Iniciando simulación con Balance Inicial=${initial_balance:,.2f} y Riesgo por Trade={risk_per_trade:.2%}")
+    logging.info(f"Iniciando simulación con Balance Inicial=${initial_balance:,.2f}, Riesgo por Trade={risk_per_trade:.2%}")
+    logging.info(f"Límite de operaciones abiertas simultáneamente: {max_open_trades}")
 
     try:
         trades_df = pd.read_csv(trades_file)
@@ -42,6 +43,7 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
 
     current_balance = initial_balance
     open_positions = []
+    pending_orders = [] # NUEVO: Lista para órdenes límite que esperan ser ejecutadas
     closed_trades = []
 
     # Bucle principal: iterar sobre cada vela del historial
@@ -87,26 +89,63 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
         for i in sorted(positions_to_close_indices, reverse=True):
             del open_positions[i]
 
-        # --- 2. BUSCAR NUEVAS SEÑALES PARA ABRIR ---
+        # --- 2. REVISAR ÓRDENES PENDIENTES PARA ABRIRLAS ---
+        orders_to_open_indices = []
+        for i, order in enumerate(pending_orders):
+            entry_price_reached = False
+            stop_loss_breached_before_entry = False
+
+            if 'LONG' in order['type'].upper():
+                # El precio de entrada se alcanza si el 'low' de la vela es menor o igual a la entrada
+                if candle['low'] <= order['entry']:
+                    entry_price_reached = True
+                # La orden se invalida si el precio toca el SL antes que la entrada
+                if candle['low'] <= order['stop_loss']:
+                    stop_loss_breached_before_entry = True
+            
+            elif 'SHORT' in order['type'].upper():
+                # El precio de entrada se alcanza si el 'high' de la vela es mayor o igual a la entrada
+                if candle['high'] >= order['entry']:
+                    entry_price_reached = True
+                # La orden se invalida si el precio toca el SL antes que la entrada
+                if candle['high'] >= order['stop_loss']:
+                    stop_loss_breached_before_entry = True
+
+            if stop_loss_breached_before_entry and not entry_price_reached:
+                logging.warning(f"  -> ORDEN CANCELADA {order['type']} de {order['timestamp']}. SL tocado antes de la entrada.")
+                orders_to_open_indices.append(i) # Marcar para eliminar
+            elif entry_price_reached:
+                # --- LÓGICA PARA ABRIR LA POSICIÓN ---
+                if len(open_positions) < max_open_trades:
+                    capital_at_risk_in_open_trades = sum(pos.get('risk_amount_usd', 0) for pos in open_positions)
+                    available_balance = current_balance - capital_at_risk_in_open_trades
+                    risk_amount_usd = available_balance * risk_per_trade
+                    risk_per_share = abs(order['entry'] - order['stop_loss'])
+                    position_size = risk_amount_usd / risk_per_share if risk_per_share > 0 else 0
+
+                    new_position = order.copy()
+                    new_position.update({
+                        'id': str(uuid.uuid4())[:8],
+                        'position_size': position_size,
+                        'risk_amount_usd': risk_amount_usd,
+                        'balance_at_entry': current_balance
+                    })
+                    open_positions.append(new_position)
+                    logging.info(f"-> ABIERTO nuevo trade {new_position['id']} ({new_position['type']}) en {candle['timestamp']}. Riesgo: ${risk_amount_usd:,.2f}")
+                else:
+                    logging.warning(f"  -> OMITIDO trade {order['type']} en {candle['timestamp']}. Límite de {max_open_trades} posiciones abiertas alcanzado.")
+                
+                orders_to_open_indices.append(i) # Marcar para eliminar de pendientes, ya sea abierta o omitida
+
+        # Eliminar órdenes procesadas de la lista de pendientes
+        for i in sorted(orders_to_open_indices, reverse=True):
+            del pending_orders[i]
+
+        # --- 3. BUSCAR NUEVAS SEÑALES PARA AÑADIR A ÓRDENES PENDIENTES ---
         if candle['timestamp'] in trades_by_timestamp:
             for new_trade_signal in trades_by_timestamp[candle['timestamp']]:
-                # --- Lógica de Simulación de Cuenta Realista ---
-                capital_at_risk_in_open_trades = sum(pos.get('risk_amount_usd', 0) for pos in open_positions)
-                available_balance = current_balance - capital_at_risk_in_open_trades
-                
-                risk_amount_usd = available_balance * risk_per_trade
-                risk_per_share = abs(new_trade_signal['entry'] - new_trade_signal['stop_loss'])
-                position_size = risk_amount_usd / risk_per_share if risk_per_share > 0 else 0
-
-                new_position = new_trade_signal.copy()
-                new_position.update({
-                    'id': str(uuid.uuid4())[:8], # ID corto y único
-                    'position_size': position_size,
-                    'risk_amount_usd': risk_amount_usd,
-                    'balance_at_entry': current_balance
-                })
-                open_positions.append(new_position)
-                logging.info(f"-> ABIERTO nuevo trade {new_position['id']} ({new_position['type']}) en {candle['timestamp']}. Riesgo: ${risk_amount_usd:,.2f}")
+                pending_orders.append(new_trade_signal)
+                logging.info(f"  -> NUEVA ORDEN PENDIENTE ({new_trade_signal['type']}) registrada en {candle['timestamp']}. Esperando entrada en {new_trade_signal['entry']:.2f}")
 
     # Al final, cualquier posición que quede abierta se marca como 'IN_PROGRESS'
     for pos in open_positions:
@@ -129,5 +168,6 @@ if __name__ == "__main__":
     parser.add_argument("--data-file", type=str, required=True, help="Archivo CSV con los datos históricos de precios (ej: btc_1h_data.csv).")
     parser.add_argument("--initial-balance", type=float, default=10000, help="Balance inicial de la cuenta para la simulación.")
     parser.add_argument("--risk-per-trade", type=float, default=0.01, help="Porcentaje del capital a arriesgar por operación (ej: 0.01 para 1%).")
+    parser.add_argument("--max-open-trades", type=int, default=999, help="Número máximo de posiciones abiertas simultáneamente.")
     args = parser.parse_args()
-    run_simulation(args.trades_file, args.data_file, args.initial_balance, args.risk_per_trade)
+    run_simulation(args.trades_file, args.data_file, args.initial_balance, args.risk_per_trade, args.max_open_trades)

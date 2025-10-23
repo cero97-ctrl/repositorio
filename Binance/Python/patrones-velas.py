@@ -1,4 +1,4 @@
-# trading-v6.py (versión mejorada con ATR, Bollinger, POC, Backtesting y carga completa de parámetros desde dotenv)
+# patrones-velas.py (Bot enfocado en patrones de velas + filtro de volatilidad ATR)
 
 import pandas as pd
 import logging
@@ -14,12 +14,13 @@ def check_confirmation(df, state, args):
 
     message = ""
 
+    # --- CORRECCIÓN: Usar risk_tp_mult para consistencia con otros bots y common_utils ---
     if pattern == "hammer" and latest['close'] > previous['high']:
-        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         message = utils.format_risk_management_message(f"✅ Confirmación alcista para patrón {pattern.upper()}", entry, sl, tp, rr)
         utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_LONG_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
     elif pattern == "shooting_star" and latest['close'] < previous['low']:
-        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         message = utils.format_risk_management_message(f"✅ Confirmación bajista para patrón {pattern.upper()}", entry, sl, tp, rr)
         utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_SHORT_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
     else:
@@ -42,58 +43,106 @@ def evaluate_trade(df, args, log_file=None):
 
     poc_zone = utils.check_poc_zone(latest, args.poc)
 
-    # --- ESTRATEGIA: CRUCE DE EMAs (Golden/Death Cross) ---
-    # Golden Cross (Cruce Dorado) -> Señal de Compra
-    if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200']:
-        signal_text = "📈 **Golden Cross** detectado (EMA 50 cruza por encima de EMA 200)"
-        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+    # --- ESTRATEGIA: PATRONES DE VELAS + FILTROS ---
+
+    # --- Filtro de RSI para evitar comprar en sobrecompra o vender en sobreventa ---
+    is_not_overbought = latest['RSI'] < 70
+    is_not_oversold = latest['RSI'] > 30
+
+    if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier) and is_not_overbought:
+        signal_text = "🕯️ Hammer detectado"
+        if latest['close'] <= latest['Boll_Lower']:
+            signal_text += " tocando banda inferior de Bollinger 📉"
+        if poc_zone:
+            signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥"
+        if latest['ATR'] > atr_mean:
+            signal_text += " con alta volatilidad 🔥"
+        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+            signal_text += " con volumen climático 📈"
+        
+        # MEJORA: Entrada por retroceso al 50% de la vela de la señal
+        pullback_entry = (latest['high'] + latest['low']) / 2
+        entry, sl, tp, rr = utils.compute_risk_levels(pullback_entry, latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
         if entry:
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp']) # type: ignore
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp'])
+        pending_state = {"pattern": "hammer", "price": latest['close']}
 
-    # Death Cross (Cruce de la Muerte) -> Señal de Venta
-    if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200']:
-        signal_text = "📉 **Death Cross** detectado (EMA 50 cruza por debajo de EMA 200)"
-        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
+    if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier) and is_not_oversold:
+        signal_text = "🕯️ Shooting Star detectado"
+        if latest['close'] >= latest['Boll_Upper']:
+            signal_text += " tocando banda superior de Bollinger 📈"
+        if poc_zone:
+            signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️"
+        if latest['ATR'] > atr_mean:
+            signal_text += " con fuerte volatilidad ⚡"
+        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+            signal_text += " con volumen climático 📉"
+
+        # MEJORA: Entrada por retroceso al 50% de la vela de la señal
+        pullback_entry = (latest['high'] + latest['low']) / 2
+        entry, sl, tp, rr = utils.compute_risk_levels(pullback_entry, latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
         if entry:
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp']) # type: ignore
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp'])
+        pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
-    # if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
-    #     signal_text = "🕯️ Hammer detected"
-    #     if latest['close'] <= latest['Boll_Lower']:
-    #         signal_text += " tocando banda inferior de Bollinger 📉"
-    #     if poc_zone:
-    #         signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.8f}) 🔥"
-    #     if latest['ATR'] > atr_mean:
-    #         signal_text += " con alta volatilidad 🔥"
-    #     if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
-    #         signal_text += " con volumen climático 📈"
-    #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-    #     formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
-    #     signals.append(formatted_signal)
-    #     if entry:
-    #         utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
-    #     pending_state = {"pattern": "hammer", "price": latest['close']}
+    # --- NUEVO: Patrón Envolvente Alcista (Bullish Engulfing) ---
+    if utils.is_bullish_engulfing(latest, previous) and is_not_overbought:
+        signal_text = "🕯️ Envolvente Alcista detectado"
+        if poc_zone:
+            signal_text += f" en ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥"
+        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+            signal_text += " con volumen climático 📈"
+        
+        # MEJORA: Entrada por retroceso al 50% de la vela de la señal
+        pullback_entry = (latest['high'] + latest['low']) / 2
+        entry, sl, tp, rr = utils.compute_risk_levels(pullback_entry, latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_ENGULFING', entry, sl, tp, latest['ATR'], rr, notes='bullish_engulfing', timestamp=latest['timestamp'])
+        # Los patrones envolventes son fuertes y no necesitan confirmación para este ejemplo
+        # Si quisiéramos confirmación, añadiríamos: pending_state = {"pattern": "bullish_engulfing", ...}
 
-    # if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
-    #     signal_text = "🕯️ Shooting Star detected"
-    #     if latest['close'] >= latest['Boll_Upper']:
-    #         signal_text += " tocando banda superior de Bollinger 📈"
-    #     if poc_zone:
-    #         signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.8f}) ⚠️"
-    #     if latest['ATR'] > atr_mean:
-    #         signal_text += " con fuerte volatilidad ⚡"
-    #     if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
-    #         signal_text += " con volumen climático 📉"
-    #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-    #     formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
-    #     signals.append(formatted_signal)
-    #     if entry:
-    #         utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp']) # type: ignore
-    #     pending_state = {"pattern": "shooting_star", "price": latest['close']}
+    # --- NUEVO: Patrón Envolvente Bajista (Bearish Engulfing) ---
+    if utils.is_bearish_engulfing(latest, previous) and is_not_oversold:
+        signal_text = "🕯️ Envolvente Bajista detectado"
+        if poc_zone:
+            signal_text += f" en ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️"
+        if latest['volume'] > latest['volume_sma'] * args.volume_multiplier:
+            signal_text += " con volumen climático 📉"
+
+        # MEJORA: Entrada por retroceso al 50% de la vela de la señal
+        pullback_entry = (latest['high'] + latest['low']) / 2
+        entry, sl, tp, rr = utils.compute_risk_levels(pullback_entry, latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_ENGULFING', entry, sl, tp, latest['ATR'], rr, notes='bearish_engulfing', timestamp=latest['timestamp'])
+
+    # --- NUEVO: Patrón de Continuación 'Three White Soldiers' ---
+    if utils.is_three_white_soldiers(df.tail(3)) and is_not_overbought:
+        signal_text = "=> Three White Soldiers detectado"
+        # Para patrones de momentum, entramos al cierre, sin esperar retroceso.
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_3SOLDIERS', entry, sl, tp, latest['ATR'], rr, notes='three_white_soldiers', timestamp=latest['timestamp'])
+
+    # --- NUEVO: Patrón de Continuación 'Three Black Crows' ---
+    if utils.is_three_black_crows(df.tail(3)) and is_not_oversold:
+        signal_text = "=> Three Black Crows detectado"
+        # Para patrones de momentum, entramos al cierre, sin esperar retroceso.
+        entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
+        formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
+        signals.append(formatted_signal)
+        if entry:
+            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_3CROWS', entry, sl, tp, latest['ATR'], rr, notes='three_black_crows', timestamp=latest['timestamp'])
+
 
     if pending_state:
         pending_state["signal_time"] = pd.to_datetime(latest['timestamp'], unit='ms').isoformat()
@@ -104,7 +153,7 @@ def evaluate_trade(df, args, log_file=None):
 
 # === MODO BACKTESTING ===
 def run_backtest(args):
-    logging.info(f"Iniciando backtest con simulación de trades desde: {args.backtest_file}")
+    logging.info(f"Iniciando backtest de detección de señales desde: {args.backtest_file}")
     try:
         df = pd.read_csv(args.backtest_file)
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
@@ -130,40 +179,22 @@ def run_backtest(args):
         os.remove(backtest_log_file)
     utils.ensure_trades_log_exists(backtest_log_file)
 
-    logging.info("Recorriendo velas para encontrar y simular señales...")
+    logging.info("Recorriendo velas para encontrar y registrar señales...")
+    utils.clear_state() # Asegurar un estado limpio al inicio del backtest
+
     for i in range(201, len(df)): # Empezamos más tarde para asegurar que todos los indicadores están maduros
-        # Creamos un sub-dataframe que representa el "historial" hasta la vela actual
         sub_df = df.iloc[:i].copy()
-        latest = sub_df.iloc[-1]
+        
+        pending_state = utils.load_state()
+        signal_message = ""
 
-        # --- Lógica de Detección de Señal (simplificada para el bucle) ---
-        # Nota: Aquí se usa 'latest' para el entry_candle y 'latest' para el pattern_candle
-        # porque en el backtest estamos evaluando la vela actual como la que genera la señal.
-
-        # Golden Cross
-        previous = sub_df.iloc[-2]
-        if previous['EMA_50'] <= previous['EMA_200'] and latest['EMA_50'] > latest['EMA_200'] and latest['RSI'] < 50:
-            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-            if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'LONG_GOLDENCROSS', entry, sl, tp, latest['ATR'], rr, 'golden_cross', timestamp=latest['timestamp']) # type: ignore
-
-        # Death Cross
-        if previous['EMA_50'] >= previous['EMA_200'] and latest['EMA_50'] < latest['EMA_200'] and latest['RSI'] > 50:
-            entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-            if entry:
-                utils.record_trade(backtest_log_file, args.symbol, 'SHORT_DEATHCROSS', entry, sl, tp, latest['ATR'], rr, 'death_cross', timestamp=latest['timestamp']) # type: ignore
-
-        # # Hammer
-        # if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier) and latest['RSI'] < 50:
-        #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-        #     if entry:
-        #         utils.record_trade(backtest_log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, 'hammer', timestamp=latest['timestamp']) # type: ignore
-
-        # # Shooting Star
-        # if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier) and latest['RSI'] > 50:
-        #     entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.rr_ratio, args.sl_buffer)
-        #     # if entry:
-        #     #     utils.record_trade(backtest_log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, 'shooting_star', timestamp=latest['timestamp'])
+        if pending_state:
+            signal_message = check_confirmation(sub_df, pending_state, args)
+        else:
+            signal_message = evaluate_trade(sub_df, args, backtest_log_file)
+        
+        if signal_message and "⏳ Sin señales claras." not in signal_message and "⚠️ Volatilidad baja" not in signal_message:
+            logging.info(f"[{i}] {signal_message}")
 
     # --- CORRECCIÓN CRÍTICA: Ordenar el log de backtest por fecha ---
     # Esto es esencial para que la simulación posterior sea cronológicamente correcta.
@@ -184,11 +215,11 @@ if __name__ == "__main__":
     args, telegram_token, chat_id = utils.setup_logging_and_config()
 
     logging.info("==========================================")
-    logging.info("Iniciando bot con la siguiente configuración:")
+    logging.info("Iniciando bot de Patrones de Velas con la siguiente configuración:")
     logging.info(f"Símbolo: {args.symbol} | Intervalo: {args.interval}")
     logging.info(f"POC: {args.poc} | ATR Window: {args.atr_window} | Bollinger Window: {args.bollinger_window}")
     logging.info(f"Volumen SMA Period: {args.volume_sma_period}")
-    logging.info(f"Risk Stop Mult: {args.risk_stop_mult} | RR Ratio: {args.rr_ratio} | SL Buffer: {args.sl_buffer}")
+    logging.info(f"Risk Stop Mult: {args.risk_stop_mult} | Risk TP Mult: {args.risk_tp_mult} | SL Buffer: {args.sl_buffer}")
     logging.info(f"Trades Log File: {args.trades_log_file}")
     logging.info("==========================================")
 
@@ -201,10 +232,9 @@ if __name__ == "__main__":
     logging.info("Estado anterior limpiado. Iniciando en modo de operación en vivo.")
 
     startup_message = (
-        f"🚀 *Bot de Trading Iniciado* 🚀\n\n"
+        f"🚀 *Bot de Patrones de Velas Iniciado* 🚀\n\n"
         f"Monitoreando: `{args.symbol}` en intervalo `{args.interval}`\n"
-        f"POC configurado en: `{args.poc}`\n\n"
-        "El bot está en línea y funcionando correctamente\\."
+        f"Estrategia: Detección de Hammers y Shooting Stars con filtro de volatilidad ATR\\."
     )
 
     utils.run_bot_main_loop(args, telegram_token, chat_id, evaluate_trade, check_confirmation, startup_message)
