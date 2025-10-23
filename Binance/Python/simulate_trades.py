@@ -95,6 +95,8 @@ def run_simulation(trades_file, historical_data_file, initial_balance, risk_per_
                     # --- LÓGICA DE TP PARCIAL ---
                     for tp_level in pos.get('partial_tps', []):
                         if candle['high'] >= tp_level:
+                            outcome, exit_price, close_reason = 'WIN', tp_level, 'TP_PARTIAL'
+                            break
 
             # Lógica para trades SHORT
             elif 'SHORT' in pos['type'].upper():
@@ -285,7 +287,6 @@ if __name__ == "__main__":
     parser.add_argument("--initial-balance", type=float, default=10000, help="Balance inicial de la cuenta para la simulación.")
     parser.add_argument("--risk-per-trade", type=float, default=0.01, help="Porcentaje del capital a arriesgar por operación (ej: 0.01 para 1%).")
     parser.add_argument("--max-open-trades", type=int, default=999, help="Número máximo de posiciones abiertas simultáneamente.")
-    parser.add_argument("--partial-tp-count", type=int, default=1, help="Número de Take Profits parciales a utilizar (1 = sin parciales).")
     parser.add_argument("--partial-tp-count", type=int, default=0, help="Número de Take Profits parciales a utilizar (0 = sin parciales, solo Trailing Stop).")
     parser.add_argument("--trailing-sl-breakeven", action='store_true', help="Activa el movimiento del Stop Loss a break-even después del primer TP parcial.")
     parser.add_argument("--trailing-sl-atr-mult", type=float, default=0.0, help="Multiplicador de ATR para el trailing stop dinámico (0 para desactivar).")

@@ -15,7 +15,7 @@ set -e
 
 SYMBOL=${1:-"BTCUSDT"}
 INTERVAL=${2:-"1h"}
-STRATEGY_SCRIPT=${3:-"patrones-velas-v1.py"} # Script de estrategia a probar
+STRATEGY_SCRIPT=${3:-"patrones-velas.py"} # Script de estrategia a probar
 
 # Parámetros de descarga de datos
 LIMIT=720 # Número de velas a descargar (aprox. 1 año de datos en 1h)

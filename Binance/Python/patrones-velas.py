@@ -14,16 +14,23 @@ def check_confirmation(df, state, args):
 
     message = ""
 
-    # --- CORRECCIÓN: Usar risk_tp_mult para consistencia con otros bots y common_utils ---
+    # --- CORRECCIÓN CRÍTICA: Registrar el trade si la confirmación es exitosa ---
+    # El log de backtest se pasa como argumento implícito en 'args.trades_log_file'
+    # durante el backtesting, pero lo hacemos explícito para mayor claridad.
+    log_file = args.trades_log_file.replace('.csv', '_backtest.csv') if args.backtest else args.trades_log_file
+
     if pattern == "hammer" and latest['close'] > previous['high']:
         entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         message = utils.format_risk_management_message(f"✅ Confirmación alcista para patrón {pattern.upper()}", entry, sl, tp, rr)
-        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_LONG_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
+        # Ahora SÍ registramos el trade, porque está confirmado.
+        utils.record_trade(log_file, args.symbol, f'CONFIRMED_LONG_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
     elif pattern == "shooting_star" and latest['close'] < previous['low']:
         entry, sl, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         message = utils.format_risk_management_message(f"✅ Confirmación bajista para patrón {pattern.upper()}", entry, sl, tp, rr)
-        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_SHORT_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
+        # Ahora SÍ registramos el trade, porque está confirmado.
+        utils.record_trade(log_file, args.symbol, f'CONFIRMED_SHORT_{pattern.upper()}', entry, sl, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
     else:
+        # Si no hay confirmación, no se registra nada y el estado se limpia.
         message = f"❌ Sin confirmación para el patrón {pattern.upper()}"
 
     utils.clear_state()
@@ -65,8 +72,8 @@ def evaluate_trade(df, args, log_file=None):
         entry, sl, tp, rr = utils.compute_risk_levels(pullback_entry, latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
-        if entry:
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'LONG_HAMMER', entry, sl, tp, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp'])
+        # NO registramos el trade aquí. Solo guardamos el estado para esperar la confirmación.
+        # if entry: utils.record_trade(...) # <--- LÍNEA ELIMINADA
         pending_state = {"pattern": "hammer", "price": latest['close']}
 
     if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier) and is_not_oversold:
@@ -85,8 +92,8 @@ def evaluate_trade(df, args, log_file=None):
         entry, sl, tp, rr = utils.compute_risk_levels(pullback_entry, latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, args.sl_buffer)
         formatted_signal = utils.format_risk_management_message(signal_text, entry, sl, tp, rr)
         signals.append(formatted_signal)
-        if entry:
-            utils.record_trade(args.trades_log_file if log_file is None else log_file, args.symbol, 'SHORT_SHOOTINGSTAR', entry, sl, tp, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp'])
+        # NO registramos el trade aquí. Solo guardamos el estado para esperar la confirmación.
+        # if entry: utils.record_trade(...) # <--- LÍNEA ELIMINADA
         pending_state = {"pattern": "shooting_star", "price": latest['close']}
 
     # --- NUEVO: Patrón Envolvente Alcista (Bullish Engulfing) ---
@@ -186,14 +193,18 @@ def run_backtest(args):
         sub_df = df.iloc[:i].copy()
         
         pending_state = utils.load_state()
-        signal_message = ""
+        signal_message = None
 
         if pending_state:
             signal_message = check_confirmation(sub_df, pending_state, args)
+            # check_confirmation ahora registra el trade si es exitoso.
+            # Si no es exitoso, limpia el estado y la siguiente iteración buscará un nuevo trade.
         else:
             signal_message = evaluate_trade(sub_df, args, backtest_log_file)
         
-        if signal_message and "⏳ Sin señales claras." not in signal_message and "⚠️ Volatilidad baja" not in signal_message:
+        # Loguear cualquier mensaje que no sea nulo o de espera/baja volatilidad.
+        # Esto incluye tanto las nuevas señales pendientes como las confirmaciones/fallos.
+        if signal_message and "⏳ Sin señales claras." not in signal_message and "⚠️ Volatilidad baja" not in signal_message and "Esperando vela de confirmación" not in signal_message:
             logging.info(f"[{i}] {signal_message}")
 
     # --- CORRECCIÓN CRÍTICA: Ordenar el log de backtest por fecha ---

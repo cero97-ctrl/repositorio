@@ -149,8 +149,15 @@ with tab1:
             # con el formato de las velas (que es UTC por defecto al convertir desde ms).
             # Esto alinea correctamente los marcadores en el gráfico.
             trades_df['timestamp'] = pd.to_datetime(trades_df['timestamp'], utc=True)
-            # Filtrar trades para el símbolo actual
-            symbol_trades = trades_df[trades_df['symbol'] == symbol].copy()
+
+            # --- CORRECCIÓN CRÍTICA: Filtrar trades por el rango de fechas visible ---
+            # Esto evita que trades antiguos compriman el gráfico.
+            visible_start_date = pd.to_datetime(start_date).tz_localize('UTC')
+            visible_end_date = pd.to_datetime(end_date + timedelta(days=1)).tz_localize('UTC')
+
+            symbol_trades = trades_df[(trades_df['symbol'] == symbol) & 
+                                      (trades_df['timestamp'] >= visible_start_date) & 
+                                      (trades_df['timestamp'] < visible_end_date)].copy()
     
             # Separar trades de compra (long) y venta (short)
             buy_trades = symbol_trades[symbol_trades['type'].str.contains('LONG', case=False)].copy()
