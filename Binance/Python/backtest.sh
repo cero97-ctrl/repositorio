@@ -18,7 +18,7 @@ INTERVAL=${2:-"1h"}
 STRATEGY_SCRIPT=${3:-"patrones-velas.py"} # Script de estrategia a probar
 
 # Parámetros de descarga de datos
-LIMIT=2000 # Número de velas a descargar
+LIMIT=2160 # Número de velas a descargar
 
 # Parámetros de simulación de cuenta
 INITIAL_BALANCE=1000
