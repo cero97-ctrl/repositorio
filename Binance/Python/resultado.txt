@@ -1,0 +1,556 @@
+--- CONFIGURACIÓN DEL BACKTEST ---
+Símbolo: BTCUSDT
+Intervalo: 1h
+Estrategia: patrones-velas-v1.py
+Balance Inicial: 1000
+Riesgo por Trade: 0.02
+Máx. Trades Abiertos: 1
+TPs Parciales: 0
+Trailing SL a Break-Even: Activado
+Trailing SL Dinámico (ATR): 2.0
+POC: 112840.16
+------------------------------------
+PASO 1: Descargando datos históricos para BTCUSDT...
+2025-10-23 12:18:34,125 - INFO - Iniciando descarga de hasta 720 velas para BTCUSDT en intervalo 1h...
+2025-10-23 12:18:34,126 - INFO - Petición para obtener 720 velas...
+2025-10-23 12:18:35,225 - INFO - ✅ Datos guardados exitosamente en '/home/cero/MEGA/VSCODE/Binance/Python/btcusdt_1h_data.csv'
+
+PASO 2: Ejecutando backtest de detección de señales con patrones-velas-v1.py...
+2025-10-23 12:18:36,970 - INFO - ==========================================
+2025-10-23 12:18:36,971 - INFO - Iniciando bot de Patrones de Velas con la siguiente configuración:
+2025-10-23 12:18:36,971 - INFO - Símbolo: BTCUSDT | Intervalo: 1h
+2025-10-23 12:18:36,971 - INFO - POC: 112840.16 | ATR Window: 14 | Bollinger Window: 20
+2025-10-23 12:18:36,971 - INFO - Volumen SMA Period: 20
+2025-10-23 12:18:36,971 - INFO - Risk Stop Mult: 1.5 | Risk TP Mult: 2.5 | SL Buffer: 0.002
+2025-10-23 12:18:36,971 - INFO - Trades Log File: trades_log.csv
+2025-10-23 12:18:36,972 - INFO - ==========================================
+2025-10-23 12:18:36,972 - INFO - Iniciando backtest de detección de señales desde: btcusdt_1h_data.csv
+2025-10-23 12:18:36,979 - INFO - Calculando indicadores técnicos...
+2025-10-23 12:18:37,013 - INFO - Indicadores calculados: EMAs, RSI, MACD, Volumen SMA, ATR, Bollinger Bands.
+2025-10-23 12:18:37,015 - INFO - Recorriendo velas para encontrar y registrar señales...
+2025-10-23 12:18:37,020 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,023 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,025 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,027 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,029 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,032 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,034 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,037 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,040 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,042 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,044 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,046 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,048 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,050 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,052 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,054 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,056 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,058 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,070 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_ENGULFING entry=111049.22 rr=2.5
+2025-10-23 12:18:37,072 - INFO - [221] 🕯️ Envolvente Bajista detectado
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$111049.22000000`
+- Stop Loss: `$111271.31844000`
+- Take Profit: `$110493.97390000`
+2025-10-23 12:18:37,115 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,117 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,120 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,124 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,126 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,129 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,132 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,134 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,148 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=115001.305 rr=2.5
+2025-10-23 12:18:37,150 - INFO - [248] 🕯️ Hammer detectado con alta volatilidad 🔥
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$115001.30500000`
+- Stop Loss: `$114771.30239000`
+- Take Profit: `$115576.31152500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,154 - INFO - [249] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:37,157 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,159 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,161 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,164 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,166 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,168 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,170 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,172 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,175 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,177 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,180 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,182 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,185 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,187 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,190 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,193 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,210 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_ENGULFING entry=111805.47 rr=2.5
+2025-10-23 12:18:37,214 - INFO - [270] 🕯️ Envolvente Alcista detectado
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$111805.47000000`
+- Stop Loss: `$111581.85906000`
+- Take Profit: `$112364.49735000`
+2025-10-23 12:18:37,223 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,225 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,227 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,230 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,232 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,234 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,239 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,274 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=111930.92499999999 rr=2.5
+2025-10-23 12:18:37,276 - INFO - [287] 🕯️ Hammer detectado con alta volatilidad 🔥
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$111930.92500000`
+- Stop Loss: `$111707.06315000`
+- Take Profit: `$112490.57962500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,278 - INFO - [288] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:37,283 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_ENGULFING entry=112089.565 rr=2.5
+2025-10-23 12:18:37,285 - INFO - [290] 🕯️ Envolvente Bajista detectado en ZONA DE RESISTENCIA POC ($112840.16) ⚠️
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$112089.56500000`
+- Stop Loss: `$112313.74413000`
+- Take Profit: `$111529.11717500`
+2025-10-23 12:18:37,287 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,288 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,290 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,292 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,293 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,295 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,298 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,343 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_ENGULFING entry=108556.345 rr=2.5
+2025-10-23 12:18:37,345 - INFO - [308] 🕯️ Envolvente Bajista detectado en ZONA DE RESISTENCIA POC ($112840.16) ⚠️ con volumen climático 📉
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$108556.34500000`
+- Stop Loss: `$108773.45769000`
+- Take Profit: `$108013.56327500`
+2025-10-23 12:18:37,406 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,408 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,411 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,413 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,415 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,419 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,421 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,424 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,427 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,430 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,432 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,435 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,438 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,440 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,442 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,445 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,447 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,450 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,452 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,454 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,456 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,458 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,460 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,462 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,464 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,466 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,468 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,469 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,471 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,481 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,486 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,488 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,490 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,491 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,493 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,495 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,497 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,499 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,501 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,502 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,504 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,506 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,508 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,509 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,511 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,514 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,516 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,517 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,519 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,521 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,523 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,525 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,527 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,531 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,534 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,537 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,539 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,541 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,544 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,546 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,549 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,574 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,576 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,578 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,581 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,583 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,586 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,590 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,593 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,595 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,598 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,601 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,603 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,605 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,607 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,608 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,610 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,611 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,613 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,615 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,616 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,618 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,619 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,621 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,622 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,624 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,626 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,627 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,629 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,631 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,633 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,634 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,637 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,639 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,642 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,644 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,648 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,653 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,655 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,657 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,660 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,663 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,666 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,670 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,672 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,674 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,678 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,680 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,711 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_ENGULFING entry=122283.85 rr=2.5
+2025-10-23 12:18:37,715 - INFO - [449] 🕯️ Envolvente Bajista detectado
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$122283.85000000`
+- Stop Loss: `$122528.41770000`
+- Take Profit: `$121672.43075000`
+2025-10-23 12:18:37,737 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,740 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,744 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,746 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,748 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,751 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,754 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,756 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,758 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,761 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,763 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,766 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,769 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,772 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,775 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,778 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,780 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,783 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,786 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,788 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,790 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,794 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,796 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,799 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,800 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,802 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,806 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=123076.515 rr=2.5
+2025-10-23 12:18:37,808 - INFO - [481] 🕯️ Shooting Star detectado con fuerte volatilidad ⚡ con volumen climático 📉
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$123076.51500000`
+- Stop Loss: `$123322.66803000`
+- Take Profit: `$122461.13242500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,810 - INFO - [482] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:37,831 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=120300.88 rr=2.5
+2025-10-23 12:18:37,841 - INFO - [486] 🕯️ Hammer detectado tocando banda inferior de Bollinger 📉 con alta volatilidad 🔥
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$120300.88000000`
+- Stop Loss: `$120060.27824000`
+- Take Profit: `$120902.38440000`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,843 - INFO - [487] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:37,857 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,859 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,861 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,863 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,864 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,866 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,868 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,869 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,871 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,872 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,874 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,877 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,885 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=119953.91 rr=2.5
+2025-10-23 12:18:37,888 - INFO - [505] 🕯️ Shooting Star detectado con fuerte volatilidad ⚡ con volumen climático 📉
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$119953.91000000`
+- Stop Loss: `$120193.81782000`
+- Take Profit: `$119354.14045000`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,890 - INFO - [506] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:37,896 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=119347.305 rr=2.5
+2025-10-23 12:18:37,898 - INFO - [508] 🕯️ Hammer detectado con alta volatilidad 🔥 con volumen climático 📈
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$119347.30500000`
+- Stop Loss: `$119108.61039000`
+- Take Profit: `$119944.04152500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,899 - INFO - [509] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:37,916 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,917 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,919 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,921 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,922 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,924 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,926 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,928 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,930 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,933 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,936 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,938 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,941 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,943 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,947 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=117759.01999999999 rr=2.5
+2025-10-23 12:18:37,949 - INFO - [529] 🕯️ Shooting Star detectado con fuerte volatilidad ⚡ con volumen climático 📉
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$117759.02000000`
+- Stop Loss: `$117994.53804000`
+- Take Profit: `$117170.22490000`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:37,951 - INFO - [530] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:37,953 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,962 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,964 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:37,966 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,000 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,003 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,006 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,008 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,010 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,027 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=113265.065 rr=2.5
+2025-10-23 12:18:38,029 - INFO - [555] 🕯️ Hammer detectado en ZONA DE SOPORTE POC ($112840.16) 🔥 con alta volatilidad 🔥
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$113265.06500000`
+- Stop Loss: `$113038.53487000`
+- Take Profit: `$113831.39032500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,031 - INFO - [556] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:38,033 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=113123.37 rr=2.5
+2025-10-23 12:18:38,036 - INFO - [557] 🕯️ Shooting Star detectado en ZONA DE RESISTENCIA POC ($112840.16) ⚠️ con fuerte volatilidad ⚡
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$113123.37000000`
+- Stop Loss: `$113349.61674000`
+- Take Profit: `$112557.75315000`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,038 - INFO - [558] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:38,040 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,042 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,044 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,046 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,048 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,050 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,052 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,054 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,058 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,060 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,063 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,066 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,068 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,071 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,074 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,076 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,079 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,082 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,085 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,087 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,090 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,103 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,105 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,108 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,110 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,112 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,115 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,117 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,119 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,122 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,124 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,127 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,130 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,133 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,138 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,148 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,151 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,154 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,156 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,159 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,162 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,165 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,168 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,170 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,173 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,176 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,179 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,182 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,184 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,187 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,189 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,192 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,195 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,199 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,202 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,206 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,209 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,211 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,215 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,218 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,221 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,224 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,226 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,228 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,231 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,234 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,236 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,239 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,242 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,245 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,247 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,250 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,252 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,255 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,257 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,260 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,262 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,265 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,268 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,272 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,275 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,278 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,281 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,285 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=110000.0 rr=2.5
+2025-10-23 12:18:38,288 - INFO - [647] 🕯️ Shooting Star detectado con fuerte volatilidad ⚡ con volumen climático 📉
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$110000.00000000`
+- Stop Loss: `$110220.00000000`
+- Take Profit: `$109450.00000000`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,290 - INFO - [648] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:38,346 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=109464.525 rr=2.5
+2025-10-23 12:18:38,348 - INFO - [662] 🕯️ Hammer detectado con alta volatilidad 🔥
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$109464.52500000`
+- Stop Loss: `$109245.59595000`
+- Take Profit: `$110011.84762500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,349 - INFO - [663] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:38,352 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_ENGULFING entry=109537.88 rr=2.5
+2025-10-23 12:18:38,354 - INFO - [664] 🕯️ Envolvente Alcista detectado
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$109537.88000000`
+- Stop Loss: `$109318.80424000`
+- Take Profit: `$110085.56940000`
+2025-10-23 12:18:38,389 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT LONG_HAMMER entry=111228.325 rr=2.5
+2025-10-23 12:18:38,391 - INFO - [674] 🕯️ Hammer detectado con alta volatilidad 🔥
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$111228.32500000`
+- Stop Loss: `$111005.86835000`
+- Take Profit: `$111784.46662500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,393 - INFO - [675] ❌ Sin confirmación para el patrón HAMMER
+2025-10-23 12:18:38,408 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=111689.965 rr=2.5
+2025-10-23 12:18:38,410 - INFO - [679] 🕯️ Shooting Star detectado con fuerte volatilidad ⚡
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$111689.96500000`
+- Stop Loss: `$111913.34493000`
+- Take Profit: `$111131.51517500`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,412 - INFO - [680] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:38,414 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_SHOOTINGSTAR entry=111860.28 rr=2.5
+2025-10-23 12:18:38,416 - INFO - [681] 🕯️ Shooting Star detectado con fuerte volatilidad ⚡
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$111860.28000000`
+- Stop Loss: `$112084.00056000`
+- Take Profit: `$111300.97860000`
+⏳ Esperando vela de confirmación en el próximo ciclo...
+2025-10-23 12:18:38,418 - INFO - [682] ❌ Sin confirmación para el patrón SHOOTING_STAR
+2025-10-23 12:18:38,430 - INFO - Trade registrado en trades_log_backtest.csv: BTCUSDT SHORT_ENGULFING entry=112099.32999999999 rr=2.5
+2025-10-23 12:18:38,432 - INFO - [685] 🕯️ Envolvente Bajista detectado en ZONA DE RESISTENCIA POC ($112840.16) ⚠️
+
+🎯 *Gestión de Riesgo (R:R 1:2.5)*
+- Entrada: `$112099.33000000`
+- Stop Loss: `$112323.52866000`
+- Take Profit: `$111538.83335000`
+2025-10-23 12:18:38,466 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,469 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,472 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,474 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,477 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,480 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,483 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,485 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,488 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,490 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,493 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,495 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,497 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,500 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,502 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,504 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,507 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,509 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,512 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,514 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,516 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,518 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,521 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,523 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,526 - INFO - ATR bajo: mercado sin volatilidad significativa, no se generan señales.
+2025-10-23 12:18:38,526 - INFO - Ordenando el archivo de log de backtest 'trades_log_backtest.csv' por fecha...
+2025-10-23 12:18:38,542 - INFO - 
+✅ Backtest de detección de señales completado. Se encontraron trades en 'trades_log_backtest.csv'.
+
+PASO 3: Simulando resultados de los trades...
+
+PASO 4: Iniciando el dashboard de visualización...
+Servidor del dashboard iniciado. Abriendo en Opera...
+
+  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.0.4:8501
+  External URL: http://38.74.253.13:8501
+
+  Stopping...
+
+Enviando señal de cierre de pestaña (Ctrl+W) a Opera...

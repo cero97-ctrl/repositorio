@@ -18,12 +18,15 @@ INTERVAL=${2:-"1h"}
 STRATEGY_SCRIPT=${3:-"patrones-velas-v1.py"} # Script de estrategia a probar
 
 # Parámetros de descarga de datos
-LIMIT=2160 # Número de velas a descargar
+LIMIT=720 # Número de velas a descargar (aprox. 1 año de datos en 1h)
 
 # Parámetros de simulación de cuenta
 INITIAL_BALANCE=1000
 RISK_PER_TRADE=0.02 # Arriesgar el 2% del capital por operación
 MAX_OPEN_TRADES=1 # Límite de operaciones abiertas simultáneamente
+PARTIAL_TP_COUNT=0 # Desactivamos los TPs parciales para usar solo Trailing Stop
+TRAILING_SL_BREAKEVEN="--trailing-sl-breakeven" # Activa el SL a break-even. Comentar para desactivar.
+TRAILING_SL_ATR_MULT=2.0 # Multiplicador de ATR para el Trailing Stop dinámico. 0 para desactivar.
 
 # Parámetros específicos de la estrategia (se pasarán como argumentos al script)
 # Asegúrate de que estos argumentos son aceptados por el script de estrategia.
@@ -41,6 +44,9 @@ echo "Estrategia: $STRATEGY_SCRIPT"
 echo "Balance Inicial: $INITIAL_BALANCE"
 echo "Riesgo por Trade: $RISK_PER_TRADE"
 echo "Máx. Trades Abiertos: $MAX_OPEN_TRADES"
+echo "TPs Parciales: $PARTIAL_TP_COUNT"
+echo "Trailing SL a Break-Even: ${TRAILING_SL_BREAKEVEN:+Activado}"
+echo "Trailing SL Dinámico (ATR): ${TRAILING_SL_ATR_MULT}"
 echo "POC: $POC_PRICE"
 echo "------------------------------------"
 
@@ -56,10 +62,11 @@ python "$STRATEGY_SCRIPT" \
     --backtest-file "$DATA_FILE" \
     --symbol "$SYMBOL" \
     --interval "$INTERVAL" \
-    --poc "$POC_PRICE"
+    --poc "$POC_PRICE" \
+    --limit "$LIMIT"
 
 echo -e "\nPASO 3: Simulando resultados de los trades..."
-python simulate_trades.py --trades-file "$TRADES_LOG_FILE" --data-file "$DATA_FILE" --initial-balance "$INITIAL_BALANCE" --risk-per-trade "$RISK_PER_TRADE" --max-open-trades "$MAX_OPEN_TRADES"
+python simulate_trades.py --trades-file "$TRADES_LOG_FILE" --data-file "$DATA_FILE" --initial-balance "$INITIAL_BALANCE" --risk-per-trade "$RISK_PER_TRADE" --max-open-trades "$MAX_OPEN_TRADES" --partial-tp-count "$PARTIAL_TP_COUNT" $TRAILING_SL_BREAKEVEN --trailing-sl-atr-mult "$TRAILING_SL_ATR_MULT"
 
 echo -e "\nPASO 4: Iniciando el dashboard de visualización..."
 
