@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\title{Plan de Trabajo: Auditoría de Seguridad Informática en Python}
+\author{Prof. CESAR RODRIGUEZ}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Objetivo General}
+Al final del semestre, los estudiantes habrán construido una suite de herramientas de auditoría en Python, cubriendo las fases claves de un test de penetración (pentesting).
+
+\section*{Consideraciones Generales}
+\begin{itemize}
+    \item \textbf{Evaluación:} Cada semana, se evaluará la funcionalidad, eficiencia, claridad del código y manejo de errores de cada estudiante. Al final del semestre, la calidad y robustez del programa final serán los criterios principales.
+    \item \textbf{Recursos:} Los estudiantes deben tener acceso a las librerías necesarias (python-whois, dnspython, socket, etc.) y a documentación relevante.
+    \item \textbf{Flexibilidad:} Se Permitirá cierta flexibilidad en la elección de temas, siempre que se ajusten a los objetivos generales del curso.
+    \item \textbf{Colaboración:} Cada estudiante trabajará en un código diferente, fomentando de esa manera la discusión y el intercambio de ideas entre ellos.
+    \item \textbf{Texto Guía} El libro por el que guiarán para sus trabajos esta disponible en mi cuenta MEGA.
+\end{itemize}
+
+\section*{Planificación Semanal}
+Cada semana, cada estudiante elegirá un subtema diferente dentro del tema general y desarrollará un código en Python relacionado.
+
+\subsection*{Parte I: Recopilación de Información y Escaneo (Semanas 1-4)}
+\textit{Referencia del Libro:} Capítulos 1, 2 y 3.
+
+\subsubsection*{Semana 1: Recopilación de Información Pasiva (DNS)}
+\textbf{Tema:} Obtener información de un dominio sin enviar paquetes directamente (más allá de las consultas DNS).
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Script para obtener registros \textbf{A} (IPs) y \textbf{AAAA} (IPv6) de un dominio.
+    \item \textbf{Estudiante 2:} Script para obtener registros \textbf{MX} (servidores de correo) y \textbf{NS} (servidores de nombres).
+    \item \textbf{Estudiante 3:} Script para obtener registros \textbf{TXT} (información descriptiva, SPF) y \textbf{SOA} (inicio de autoridad).
+\end{itemize}
+
+\subsubsection*{Semana 2: Recopilación de Información Pasiva (WHOIS y Búsqueda Web)}
+\textbf{Tema:} Investigar la huella digital de la organización.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Script que realiza una consulta \textbf{WHOIS} para obtener datos del registrante (nombre, organización, fechas de registro/expiración).
+    \item \textbf{Estudiante 2:} Script que utiliza "Google Dorks" para encontrar subdominios. Debe buscar patrones como \texttt{site:dominio.com -www} y \texttt{inurl:dominio.com}.
+    \item \textbf{Estudiante 3:} Script que busca en Google archivos sensibles o de configuración expuestos para un dominio, como \texttt{site:dominio.com filetype:log} o \texttt{filetype:ini}.
+\end{itemize}
+
+\subsubsection*{Semana 3: Descubrimiento de Hosts Activos}
+\textbf{Tema:} Determinar qué hosts en un rango de IPs están "vivos".
+\begin{itemize}
+    \item \textbf{Estudiante 1:} "Ping Sweep" con \textbf{ICMP Echo Request}. El script debe tomar un rango de IPs y reportar cuáles responden a un ping tradicional.
+    \item \textbf{Estudiante 2:} Escaneo de "Ping" con \textbf{TCP SYN} a un puerto común (ej. 80 o 443). El script debe reportar hosts que responden con SYN/ACK (abierto) o RST/ACK (cerrado), indicando que están activos.
+    \item \textbf{Estudiante 3:} Escaneo de "Ping" con \textbf{TCP ACK} a un puerto común. El script debe reportar hosts que responden con un paquete RST, lo que usualmente indica que el host está activo y no detrás de un firewall con estado simple.
+\end{itemize}
+
+\subsubsection*{Semana 4: Escaneo de Puertos TCP}
+\textbf{Tema:} Identificar servicios TCP abiertos en un host.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Escáner de puertos con \textbf{TCP Connect()}. Es el más simple y ruidoso, pero fundamental para entender el proceso.
+    \item \textbf{Estudiante 2:} Escáner de puertos con \textbf{TCP SYN (Half-open)}. Más sigiloso y rápido. Requiere la creación de sockets raw (en Linux/macOS) o el uso de librerías como Scapy.
+    \item \textbf{Estudiante 3:} Escáner de puertos \textbf{UDP}. Más lento y menos fiable, pero crucial para encontrar servicios como DNS, SNMP o VoIP.
+\end{itemize}
+
+\subsection*{Parte II: Enumeración y Ataques a Servicios (Semanas 5-7)}
+\textit{Referencia del Libro:} Capítulos 3, 4, 5 y 6.
+
+\subsubsection*{Semana 5: Enumeración de Servicios (Banner Grabbing)}
+\textbf{Tema:} Obtener la versión y tipo de software que corre en los puertos abiertos.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} "Banner grabber" para servicios de texto plano como \textbf{FTP (puerto 21)} y \textbf{SMTP (puerto 25)}.
+    \item \textbf{Estudiante 2:} "Banner grabber" para \textbf{SSH (puerto 22)}. Debe conectarse y leer la cadena de identificación inicial.
+    \item \textbf{Estudiante 3:} "Banner grabber" para \textbf{HTTP/HTTPS (puertos 80/443)}. Debe enviar una petición \texttt{HEAD / HTTP/1.0} y analizar la cabecera \texttt{Server:} en la respuesta.
+\end{itemize}
+
+\subsubsection*{Semana 6: Enumeración y Ataques a NetBIOS/SMB}
+\textbf{Tema:} Investigar los servicios de compartición de archivos de Windows.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Script que enumera recursos compartidos (shares) en un objetivo Windows usando una "sesión nula" (null session).
+    \item \textbf{Estudiante 2:} Script que intenta enumerar nombres de usuario a través del servicio SMB (usando técnicas de sondeo de SID).
+    \item \textbf{Estudiante 3:} Script para un ataque de diccionario de fuerza bruta contra el login de SMB (puerto 445) usando una lista de usuarios y contraseñas.
+\end{itemize}
+
+\subsubsection*{Semana 7: Ataques a Servicios de Autenticación}
+\textbf{Tema:} Realizar ataques de fuerza bruta contra otros servicios comunes.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Ataque de diccionario de fuerza bruta contra \textbf{FTP}.
+    \item \textbf{Estudiante 2:} Ataque de diccionario de fuerza bruta contra \textbf{SSH}.
+    \item \textbf{Estudiante 3:} Ataque de diccionario de fuerza bruta contra un formulario de login \textbf{HTTP (POST request)}.
+\end{itemize}
+
+\subsection*{Parte III: Hackeo de Aplicaciones Web y Reporte (Semanas 8-10)}
+\textit{Referencia del Libro:} Capítulos 11 y 12.
+
+\subsubsection*{Semana 8: Rastreo y Mapeo de Aplicaciones Web}
+\textbf{Tema:} Descubrir la estructura y contenido de un sitio web.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} "Spider" o "Crawler" que sigue todos los enlaces de un sitio a partir de una URL inicial para mapear su estructura.
+    \item \textbf{Estudiante 2:} "Directory Brute-forcer" que busca directorios y archivos comunes (\texttt{/admin}, \texttt{/backup}, \texttt{robots.txt}, \texttt{sitemap.xml}, etc.) usando una lista de palabras.
+    \item \textbf{Estudiante 3:} Script que extrae todos los comentarios HTML, direcciones de correo y URLs de JavaScript de una página para buscar información sensible.
+\end{itemize}
+
+\subsubsection*{Semana 9: Búsqueda de Vulnerabilidades Web Comunes}
+\textbf{Tema:} Identificar fallos de seguridad comunes en la lógica de la aplicación.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Escáner básico de \textbf{Inyección SQL (SQLi)}. Debe probar a inyectar caracteres como \texttt{'} y combinaciones como \texttt{' OR 1=1--} en los parámetros de un formulario.
+    \item \textbf{Estudiante 2:} Escáner básico de \textbf{Cross-Site Scripting (XSS) Reflejado}. Debe probar a inyectar \texttt{<script>alert('XSS')</script>} en los parámetros de la URL y verificar si se refleja en la respuesta HTML.
+    \item \textbf{Estudiante 3:} Escáner de \textbf{Inclusión de Ficheros (LFI/RFI)}. Debe probar a manipular parámetros que incluyan archivos (ej. \texttt{?page=main.php}) para intentar leer \texttt{/etc/passwd} o incluir una URL externa.
+\end{itemize}
+
+\subsubsection*{Semana 10: Integración y Generación de Reportes}
+\textbf{Tema:} Unificar el trabajo y presentar los resultados de forma profesional.
+\begin{itemize}
+    \item \textbf{Estudiante 1:} Desarrollar el \textbf{módulo principal (\texttt{main\_auditor.py})} que integre las herramientas de sus compañeros, gestionando la entrada del objetivo y los argumentos para llamar a cada módulo.
+    \item \textbf{Estudiante 2:} Crear un módulo de \textbf{generación de reportes en formato HTML}. Debe tomar los resultados de los otros módulos (ej. en JSON o diccionarios de Python) y crear un informe web claro y organizado.
+    \item \textbf{Estudiante 3:} Crear un módulo de \textbf{generación de reportes en formato CSV y TXT}. Una alternativa más simple para exportar los datos de forma estructurada y legible.
+\end{itemize}
+
+Este plan ofrece una progresión lógica, aumenta la complejidad gradualmente y asegura que cada estudiante sea evaluado por su propio trabajo, mientras contribuye a un objetivo común.
+
+\end{document}
+
