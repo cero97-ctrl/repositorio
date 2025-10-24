@@ -25,7 +25,7 @@ INTERVAL=${2:-"1h"}
 STRATEGY_SCRIPT=${3:-"range-breakout-v1.py"} # Script de estrategia a probar
 
 # Parámetros de descarga de datos
-LIMIT=1440
+LIMIT=8640
 
 # Parámetros de simulación de cuenta
 INITIAL_BALANCE=1000
