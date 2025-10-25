@@ -1,0 +1,6 @@
+{
+  "seq_length": 30,
+  "model_file": "model/btc_forecast_model.keras",
+  "scaler_file": "model/scaler.pkl",
+  "saved_at": "2025-10-25T13:13:27.252977"
+}
