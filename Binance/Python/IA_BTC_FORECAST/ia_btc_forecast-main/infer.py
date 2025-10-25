@@ -16,8 +16,10 @@ from keras._tf_keras.keras.models import load_model
 # Config
 MODEL_PATH = "model/btc_forecast_model.keras"
 SCALER_PATH = "model/scaler.pkl"
+CONFIG_PATH = "model/config.json"
 DATA_PATH = "data/prices.csv"
-SEQ_LENGTH = 30
+# Default fallback (will try to infer from model first)
+SEQ_LENGTH = None
 
 if not os.path.exists(MODEL_PATH) or not os.path.exists(SCALER_PATH):
     raise SystemExit("Modelo o scaler no encontrados. Ejecuta primero model_forecast.py para entrenar y guardar el modelo.")
@@ -25,6 +27,32 @@ if not os.path.exists(MODEL_PATH) or not os.path.exists(SCALER_PATH):
 # Cargar cosas
 model = load_model(MODEL_PATH)
 scaler = joblib.load(SCALER_PATH)
+
+# Intentar inferir seq_length desde la forma de entrada del modelo
+input_shape = model.input_shape
+seq_len = None
+if isinstance(input_shape, (list, tuple)):
+    # model.input_shape puede ser (None, seq, features) o lista para multi-input
+    if isinstance(input_shape[0], tuple):
+        input_shape = input_shape[0]
+try:
+    # input_shape típicamente: (None, seq_length, n_features)
+    seq_len = int(input_shape[1]) if input_shape and len(input_shape) > 1 else None
+except Exception:
+    seq_len = None
+
+# Si no se pudo inferir, intentar leer model/config.json
+if seq_len is None:
+    if os.path.exists(CONFIG_PATH):
+        import json
+        with open(CONFIG_PATH, "r") as f:
+            meta = json.load(f)
+            seq_len = int(meta.get("seq_length")) if meta.get("seq_length") is not None else None
+
+if seq_len is None:
+    raise SystemExit("No se pudo determinar 'seq_length' (ni desde el modelo ni desde model/config.json).")
+
+SEQ_LENGTH = seq_len
 
 prices = pd.read_csv(DATA_PATH)
 if "price" not in prices.columns:

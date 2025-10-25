@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import joblib
+import json
 from sklearn.preprocessing import MinMaxScaler
 from keras._tf_keras.keras.models import Sequential
 from keras._tf_keras.keras.layers import Dense, LSTM, Input
@@ -64,3 +65,14 @@ model.save("model/btc_forecast_model.keras")
 joblib.dump(scaler, "model/scaler.pkl")
 print("Modelo guardado en: model/btc_forecast_model.keras")
 print("Scaler guardado en: model/scaler.pkl")
+
+# Guardar metadatos para inferencia (seq_length, paths, fecha)
+meta = {
+    "seq_length": seq_length,
+    "model_file": "model/btc_forecast_model.keras",
+    "scaler_file": "model/scaler.pkl",
+    "saved_at": pd.Timestamp.now().isoformat()
+}
+with open("model/config.json", "w") as f:
+    json.dump(meta, f, indent=2)
+print("Metadata guardada en: model/config.json")
