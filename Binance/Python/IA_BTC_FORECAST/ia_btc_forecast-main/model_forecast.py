@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+import joblib
 from sklearn.preprocessing import MinMaxScaler
 from keras._tf_keras.keras.models import Sequential
 from keras._tf_keras.keras.layers import Dense, LSTM, Input
@@ -55,3 +57,10 @@ plt.xlabel('Fecha')
 plt.ylabel('Precio en USD')
 plt.legend()
 plt.show()
+
+# Guardar el modelo y el scaler para inferencia posterior
+os.makedirs("model", exist_ok=True)
+model.save("model/btc_forecast_model.keras")
+joblib.dump(scaler, "model/scaler.pkl")
+print("Modelo guardado en: model/btc_forecast_model.keras")
+print("Scaler guardado en: model/scaler.pkl")
