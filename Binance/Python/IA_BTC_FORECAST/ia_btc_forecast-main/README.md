@@ -66,3 +66,46 @@ conda install -y -c conda-forge tensorflow numpy
 ---
 
 Generado el: 2025-10-25
+
+## Cómo retomar el proyecto
+
+Si cierras tu sesión o apagas la máquina, puedes retomar el trabajo con estos pasos rápidos:
+
+1. Abrir el directorio del proyecto:
+
+```bash
+cd /home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/ia_btc_forecast-main
+```
+
+2. Activar el entorno conda `IA` (si no está creado, crear a partir de `environment.yml`):
+
+```bash
+conda activate IA || conda env create -f environment.yml && conda activate IA
+```
+
+3. Ejecutar el pipeline completo (recolección + entrenamiento):
+
+```bash
+./run_all.sh
+# o
+make run
+```
+
+4. Hacer inferencia usando el modelo guardado:
+
+```bash
+python infer.py
+```
+
+5. Logs y artefactos:
+
+- Los logs por defecto se guardan en `run_all.log` si usas `run_all.sh`.
+- El modelo y metadatos se guardan en `model/` (`btc_forecast_model.keras`, `scaler.pkl`, `config.json`).
+
+Consejo: si vas a mover el repo a otra máquina, exporta el entorno para reproducibilidad:
+
+```bash
+conda env export --name IA --no-builds > environment.yml
+pip freeze > requirements_freeze.txt   # opcional
+```
+
