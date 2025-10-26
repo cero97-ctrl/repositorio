@@ -1,4 +1,0 @@
-cd /home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/ia_btc_forecast-main
-conda activate IA        # o crear desde environment.yml si hace falta
-./run_all.sh             # corre recolección + entrenamiento (genera run_all.log)
-python infer.py          # ejemplo de inferencia con el modelo guardado

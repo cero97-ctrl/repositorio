@@ -1,0 +1,207 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\geometry{a4paper, margin=1in}
+
+% --- Configuración de estilo para el código Python ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{Tarea 1: Estructura del Proyecto y Módulo DNS}
+\author{Prof. CESAR RODRIGUEZ}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introducción al Proyecto}
+
+\textbf{Proyecto Semestral del Curso de Seguridad Informática}. A lo largo de las próximas 10 semanas, construiremos una herramienta de auditoría de seguridad en Python. El proyecto está estructurado en dos archivos principales que nos permitirán trabajar de forma modular y organizada.
+
+\begin{itemize}
+    \item \textbf{\texttt{auditoria.py}}: Será el punto de entrada de nuestro programa. Se encargará de gestionar los argumentos de la línea de comandos y de llamar a las funciones específicas que realizarán el trabajo.
+    \item \textbf{\texttt{modulos.py}}: Será nuestra caja de herramientas. Contendrá todas las funciones que implementan las diferentes técnicas de auditoría (reconocimiento, escaneo, etc.).
+\end{itemize}
+
+A continuación se presenta el código base para ambos archivos.
+
+\section{Archivo Principal: \texttt{auditoria.py}}
+\subsection*{Explicación}
+Este script es el orquestador de nuestra herramienta. Utiliza la librería \texttt{argparse} para crear una interfaz de línea de comandos profesional. Su función principal es interpretar qué módulos de auditoría desea ejecutar el usuario (por ejemplo, \texttt{--dns}, \texttt{--scan}) y llamar a las funciones correspondientes definidas en el archivo \texttt{modulos.py}, pasándoles el objetivo a auditar.
+
+\subsection*{Código Fuente}
+\begin{lstlisting}[language=Python, caption={auditoria.py}]
+# auditoria.py
+import argparse
+import modulos  # Importamos nuestro archivo de modulos
+
+def main():
+    # --- Configuracion de Argumentos ---
+    parser = argparse.ArgumentParser(
+        description="Herramienta de Auditoria de Seguridad Informatica.",
+        epilog="Ejemplo de uso: python auditoria.py example.com --dns --scan '1-1024'"
+    )
+    parser.add_argument("target", help="El objetivo (dominio o IP) a auditar.")
+    
+    # Argumentos para seleccionar los modulos a ejecutar
+    parser.add_argument(
+        "--dns", 
+        action="store_true", 
+        help="Ejecuta el modulo de reconocimiento DNS y WHOIS."
+    )
+    parser.add_argument(
+        "--scan", 
+        metavar="PUERTOS", 
+        help="Ejecuta el escaner de puertos. E.g., '21,22,80' o '1-1024'."
+    )
+
+    args = parser.parse_args()
+    target = args.target
+
+    print(f"[*] Iniciando auditoria para el objetivo: {target}\n")
+
+    # --- Logica para llamar a los modulos ---
+    if args.dns:
+        print("\n" + "="*20 + " MODULO: RECONOCIMIENTO DNS Y WHOIS " + "="*20)
+        modulos.get_dns_info(target)
+        print("="*65)
+
+    if args.scan:
+        print("\n" + "="*20 + " MODULO: ESCANER DE PUERTOS " + "="*25)
+        open_ports = modulos.scan_ports(target, args.scan)
+        print(f"\n[+] Escaneo de puertos finalizado. Se encontraron {len(open_ports)} puertos abiertos.")
+        print("="*65)
+
+    print("\n[*] Auditoria finalizada.")
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\section{Archivo de Módulos: \texttt{modulos.py}}
+\subsection*{Explicación}
+Este archivo es el corazón funcional de nuestro proyecto. Aquí residirán todas las funciones que realizan las tareas de auditoría. Inicialmente, contiene una función genérica para el reconocimiento DNS y otra para el escaneo de puertos. A lo largo del semestre, cada estudiante añadirá sus propias funciones especializadas a este archivo, expandiendo las capacidades de nuestra herramienta.
+
+\subsection*{Código Fuente}
+\begin{lstlisting}[language=Python, caption={modulos.py}]
+# modulos.py
+import socket
+import whois
+import dns.resolver
+from concurrent.futures import ThreadPoolExecutor
+
+# ==============================================================================
+# MODULO 1: RECONOCIMIENTO DNS Y WHOIS (BASE)
+# ==============================================================================
+def get_dns_info(domain):
+    """
+    Realiza consultas WHOIS y DNS para un dominio dado y muestra la informacion.
+    """
+    print(f"\n[+] Obteniendo informacion WHOIS para: {domain}")
+    try:
+        w = whois.whois(domain)
+        print("  [-] Registrante:", w.registrar)
+        print("  [-] Servidores de Nombres:", w.name_servers)
+    except Exception as e:
+        print(f"  [!] No se pudo obtener informacion WHOIS: {e}")
+
+    print(f"\n[+] Realizando consultas DNS para: {domain}")
+    
+    record_types = ['A', 'AAAA', 'MX', 'NS', 'TXT', 'SOA']
+    for record_type in record_types:
+        try:
+            answers = dns.resolver.resolve(domain, record_type)
+            print(f"  [-] Registros {record_type}:")
+            for rdata in answers:
+                print(f"    {rdata.to_text()}")
+        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
+            print(f"  [!] No se encontraron registros {record_type}.")
+        except Exception as e:
+            print(f"  [!] Error consultando registros {record_type}: {e}")
+
+# ==============================================================================
+# MODULO 2: ESCANER DE PUERTOS (BASE)
+# (Este modulo se usara en tareas futuras)
+# ==============================================================================
+def scan_ports(target, port_spec):
+    """
+    Escanea los puertos especificados en el host objetivo.
+    (Implementacion pendiente para futuras tareas)
+    """
+    print(f"[!] El modulo de escaneo de puertos para '{port_spec}' aun no esta implementado.")
+    return []
+
+\end{lstlisting}
+
+\newpage
+
+\section{Tarea para la Semana 1: Recopilación de Información Pasiva (DNS)}
+\textbf{Tema General:} Obtener información de un dominio sin enviar paquetes directamente (más allá de las consultas DNS).
+
+\subsection*{Objetivo Común}
+El objetivo de esta semana es que cada estudiante tome la función base \texttt{get\_dns\_info} del archivo \texttt{modulos.py} y la descomponga en funciones más pequeñas y especializadas. Cada estudiante se centrará en un conjunto diferente de registros DNS.
+
+\subsection*{Instrucciones para el Estudiante 1}
+\begin{itemize}
+    \item \textbf{Tarea:} Crear un script para obtener los registros \textbf{A} (direcciones IP) y \textbf{AAAA} (direcciones IPv6) de un dominio.
+    \item \textbf{Pasos:}
+    \begin{enumerate}
+        \item En \texttt{modulos.py}, crea una nueva función llamada \texttt{get\_a\_records(domain)}.
+        \item Adapta el código del bucle de la función \texttt{get\_dns\_info} para que tu nueva función consulte únicamente los tipos de registro 'A' y 'AAAA'.
+        \item En \texttt{auditoria.py}, añade un nuevo argumento de línea de comandos, por ejemplo \texttt{--dns-a}, que al ser invocado, llame a tu nueva función \texttt{get\_a\_records}.
+    \end{enumerate}
+\end{itemize}
+
+\subsection*{Instrucciones para el Estudiante 2}
+\begin{itemize}
+    \item \textbf{Tarea:} Crear un script para obtener los registros \textbf{MX} (servidores de correo) y \textbf{NS} (servidores de nombres) de un dominio.
+    \item \textbf{Pasos:}
+    \begin{enumerate}
+        \item En \texttt{modulos.py}, crea una nueva función llamada \texttt{get\_mx\_ns\_records(domain)}.
+        \item Adapta el código del bucle de la función \texttt{get\_dns\_info} para que tu nueva función consulte únicamente los tipos de registro 'MX' y 'NS'.
+        \item En \texttt{auditoria.py}, añade un nuevo argumento de línea de comandos, por ejemplo \texttt{--dns-mxns}, que al ser invocado, llame a tu nueva función \texttt{get\_mx\_ns\_records}.
+    \end{enumerate}
+\end{itemize}
+
+\subsection*{Instrucciones para el Estudiante 3}
+\begin{itemize}
+    \item \textbf{Tarea:} Crear un script para obtener los registros \textbf{TXT} (información descriptiva, como SPF) y \textbf{SOA} (inicio de autoridad) de un dominio.
+    \item \textbf{Pasos:}
+    \begin{enumerate}
+        \item En \texttt{modulos.py}, crea una nueva función llamada \texttt{get\_txt\_soa\_records(domain)}.
+        \item Adapta el código del bucle de la función \texttt{get\_dns\_info} para que tu nueva función consulte únicamente los tipos de registro 'TXT' y 'SOA'.
+        \item En \texttt{auditoria.py}, añade un nuevo argumento de línea de comandos, por ejemplo \texttt{--dns-txtsoa}, que al ser invocado, llame a tu nueva función \texttt{get\_txt\_soa\_records}.
+    \end{enumerate}
+\end{itemize}
+
+\subsection*{Nota Final}
+Al finalizar la semana, el archivo \texttt{auditoria.py} debería poder invocar las funciones especializadas de cada estudiante. El objetivo es que aprendan a crear funciones modulares y a integrarlas en una aplicación principal mediante argumentos de línea de comandos.
+
+\end{document}
