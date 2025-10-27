@@ -5,18 +5,31 @@
 \contentsline {subsection}{\numberline {1.3}Requisitos de Registro}{2}{subsection.1.3}%
 \contentsline {section}{\numberline {2}Integración del Proyecto con Colab y LaTeX}{2}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Subir el proyecto a Colab usando Git}{2}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Creación de Guía en LaTeX}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.2}Creación de Guía en LaTeX}{3}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Corrección de Error de Compilación en LaTeX}{3}{subsection.2.3}%
 \contentsline {section}{\numberline {3}Desarrollo y Herramientas}{3}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Revisión y Mejora del script \texttt {commit.sh}}{3}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Capacidades de Asistencia en IA con TensorFlow}{3}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Creación de esta Bitácora}{3}{section.4}%
+\contentsline {subsection}{\numberline {3.2}Capacidades de Asistencia en IA con TensorFlow}{4}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Creación de esta Bitácora}{4}{section.4}%
 \contentsline {section}{\numberline {5}Análisis de la Arquitectura del Modelo}{4}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Explicación Detallada de Capas LSTM y Dense}{4}{subsection.5.1}%
 \contentsline {subsubsection}{\numberline {5.1.1}La Capa \texttt {LSTM} (Long Short-Term Memory)}{4}{subsubsection.5.1.1}%
-\contentsline {paragraph}{¿Cómo funciona? (Analogía)}{4}{section*.2}%
-\contentsline {paragraph}{Parámetros Claves en tu Modelo}{4}{section*.3}%
-\contentsline {subsubsection}{\numberline {5.1.2}La Capa \texttt {Dense}}{5}{subsubsection.5.1.2}%
-\contentsline {paragraph}{¿Cómo funciona?}{5}{section*.4}%
-\contentsline {paragraph}{Su Rol en tu Modelo}{5}{section*.5}%
-\contentsline {subsubsection}{\numberline {5.1.3}Resumen del Flujo de Información}{5}{subsubsection.5.1.3}%
+\contentsline {paragraph}{¿Cómo funciona? (Analogía)}{5}{section*.2}%
+\contentsline {paragraph}{Parámetros Claves en tu Modelo}{5}{section*.3}%
+\contentsline {subsubsection}{\numberline {5.1.2}La Capa \texttt {Dense}}{6}{subsubsection.5.1.2}%
+\contentsline {paragraph}{¿Cómo funciona?}{6}{section*.4}%
+\contentsline {paragraph}{Su Rol en tu Modelo}{6}{section*.5}%
+\contentsline {subsubsection}{\numberline {5.1.3}Resumen del Flujo de Información}{6}{subsubsection.5.1.3}%
+\contentsline {section}{\numberline {6}Flujo de Trabajo en Google Colab}{6}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Inicio de un Nuevo Notebook}{6}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Clonado de Repositorios (Público vs. Privado)}{7}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Error Común: URL de Navegación vs. URL de Clonado}{8}{subsection.6.3}%
+\contentsline {paragraph}{La Solución}{8}{section*.6}%
+\contentsline {subsection}{\numberline {6.4}Visualización del Contenido del Repositorio}{8}{subsection.6.4}%
+\contentsline {paragraph}{Pasos para ver el contenido}{8}{section*.7}%
+\contentsline {paragraph}{Flujo de trabajo alternativo}{9}{section*.8}%
+\contentsline {subsection}{\numberline {6.5}Activación y Verificación de GPU}{9}{subsection.6.5}%
+\contentsline {subsubsection}{\numberline {6.5.1}Paso 1: Activar la GPU}{9}{subsubsection.6.5.1}%
+\contentsline {subsubsection}{\numberline {6.5.2}Paso 2: Verificar que la GPU está activa}{9}{subsubsection.6.5.2}%
+\contentsline {paragraph}{Método 1: Con un comando de shell}{9}{section*.9}%
+\contentsline {paragraph}{Método 2: Con TensorFlow}{9}{section*.10}%

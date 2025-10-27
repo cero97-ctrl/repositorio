@@ -54,15 +54,14 @@
 \lstset{style=mystyle}
 
 % --- Comandos para diálogo ---
-\newcommand{\usuario}[1]{\par\noindent\textbf{Usuario:} \textit{#1}\par}
-\newcommand{\gemini}[1]{\par\noindent\textbf{Gemini:} #1\par}
-
+\newenvironment{usuario}{\par\noindent\textbf{Usuario:}\itshape\par\ignorespaces}{\par}
+\newenvironment{gemini}{\par\noindent\textbf{Gemini:}\par\ignorespaces}{\par}
 
 % --- DOCUMENTO ---
 \begin{document}
 
 \title{Manual y Bitácora de Conversaciones \\ Proyecto IA\_BTC\_FORECAST}
-\author{CERO \& Gemini Code Assist}
+\author{ceroiglesias \& Gemini Code Assist}
 \date{\today}
 \maketitle
 
@@ -77,68 +76,105 @@
 
 \subsection{Conocimiento sobre la plataforma}
 
-\usuario{Gemini, ¿conoces una plataforma llamada "Google Colab"?}
+\begin{usuario}
+Gemini, ¿conoces una plataforma llamada "Google Colab"?
+\end{usuario}
 
-\gemini{
+\begin{gemini}
 Sí, por supuesto. Google Colaboratory, o "Colab", es un servicio en la nube gratuito de Google que permite escribir y ejecutar código Python en el navegador. Es un entorno de Jupyter Notebook sin configuración, con acceso a hardware gratuito (GPUs y TPUs), ideal para Machine Learning.
-}
+\end{gemini}
 
 \subsection{Soporte de Lenguajes}
 
-\usuario{¿Esa plataforma solo sirve para programar en Python?}
+\begin{usuario}
+¿Esa plataforma solo sirve para programar en Python?
+\end{usuario}
 
-\gemini{
+\begin{gemini}
 Principalmente sí, está optimizado para Python. Sin embargo, también se pueden ejecutar comandos de shell (usando \texttt{`!`}) y, con algo de configuración, se pueden instalar kernels para otros lenguajes como R o Julia.
-}
+\end{gemini}
 
 \subsection{Requisitos de Registro}
 
-\usuario{¿Para usar esa plataforma hay que registrarse en la misma?}
+\begin{usuario}
+¿Para usar esa plataforma hay que registrarse en la misma?
+\end{usuario}
 
-\gemini{
+\begin{gemini}
 Sí, pero no es un registro separado. Solo necesitas una cuenta de Google. Si ya usas Gmail o Google Drive, puedes usar esa misma cuenta. Tus notebooks se guardan directamente en tu Google Drive.
-}
+\end{gemini}
 
 \section{Integración del Proyecto con Colab y LaTeX}
 
 \subsection{Subir el proyecto a Colab usando Git}
 
-\usuario{¿Cómo puedo subir mi proyecto \texttt{IA\_BTC\_FORECAST} a Google Colab usando Git?}
+\begin{usuario}
+¿Cómo puedo subir mi proyecto \texttt{IA\_BTC\_FORECAST} a Google Colab usando Git?
+\end{usuario}
 
-
-\gemini{
+\begin{gemini}
 El proceso es sencillo:
 \begin{enumerate}
-    \item \textbf{Clonar el repositorio:} En una celda de Colab, ejecuta \texttt{!git clone https://github.com/ceroiglesias/IA\_BTC\_FORECAST.git}.
-    \item \textbf{Cambiar de directorio:} Usa \texttt{\%cd IA\_BTC\_FORECAST}.
-    \item \textbf{Instalar dependencias:} Ejecuta \texttt{!pip install -r requirements.txt} o instala los paquetes necesarios manualmente.
-    \item \textbf{Ejecutar scripts:} Llama a tus scripts con \texttt{!python nombre\_script.py}.
+    \item Clonar el repositorio: En una celda de Colab, ejecuta:
+    
+    \begin{lstlisting}[language=bash]
+        !git clone https://github.com/ceroiglesias/IA_BTC_FORECAST.git
+    \end{lstlisting}
+
+    \item Cambiar de directorio: Usa el comando mágico:
+    \begin{lstlisting}[language=bash]
+%cd IA_BTC_FORECAST
+    \end{lstlisting}
+    \item Instalar dependencias: Ejecuta:
+    \begin{lstlisting}[language=bash]
+!pip install -r requirements.txt
+    \end{lstlisting}
+    \item Ejecutar scripts: Llama a tus scripts con:
+    \begin{lstlisting}[language=bash]
+!python nombre_script.py
+    \end{lstlisting}
 \end{enumerate}
-}
+\end{gemini}
 
 \subsection{Creación de Guía en LaTeX}
 
-\usuario{¿Podrías vaciarme toda esta información que me acabas de dar en un archivo latex?}
+\begin{usuario}
+¿Podrías vaciarme toda esta información que me acabas 
+de dar en un archivo latex?
+\end{usuario}
 
-\gemini{
-Claro. Generé un documento \texttt{.tex} completo con toda la información sobre Google Colab, sus características y la guía para subir tu proyecto. El archivo incluye un preámbulo bien configurado para formatear el texto y los bloques de código.
-}
+\begin{gemini}
+Claro. Generé un documento \texttt{.tex} completo con toda la información sobre Google Colab, sus características y la guía 
+para subir tu proyecto. El archivo incluye un preámbulo bien configurado para formatear el texto y los bloques de código.
+\end{gemini}
 
 \subsection{Corrección de Error de Compilación en LaTeX}
 
-\usuario{Tenemos un error al compilar el archivo latex. [Se adjunta log de error].}
+\begin{usuario}
+Tenemos un error al compilar el archivo latex. [Se adjunta log 
+de error].
+\end{usuario}
 
-\gemini{
-El error \texttt{Invalid UTF-8 byte sequence} se debe a que el paquete \texttt{listings} no está interpretando correctamente los caracteres con tilde dentro de los comentarios del código. La solución es añadir la opción \texttt{literate} a la configuración de \texttt{lstdefinestyle} para que LaTeX reemplace los caracteres especiales (como 'ó', 'á', 'ñ') por sus comandos correspondientes (como \texttt{\{\'o\}}, \texttt{\{\'a\}}, \texttt{\{\~n\}}).
-}
+\begin{gemini}
+El error \texttt{Invalid UTF-8 byte sequence} se debe a que el 
+paquete \texttt{listings} no está interpretando correctamente 
+los caracteres con tilde dentro de los comentarios del código. 
+La solución es añadir la opción \texttt{literate} a la 
+configuración de \texttt{lstdefinestyle} para que LaTeX 
+reemplace los caracteres especiales (como 'ó', 'á', 'ñ') por 
+sus comandos correspondientes 
+(como \texttt{\{\'o\}}, \texttt{\{\'a\}}, \texttt{\{\~n\}}).
+\end{gemini}
 
 \section{Desarrollo y Herramientas}
 
 \subsection{Revisión y Mejora del script \texttt{commit.sh}}
 
-\usuario{Revisa el script "commit.sh" que te muestro en el contexto.}
+\begin{usuario}
+Revisa el script "commit.sh" que te muestro en el contexto.
+\end{usuario}
 
-\gemini{
+\begin{gemini}
 El script es excelente. Propuse algunas mejoras para aumentar su robustez y claridad:
 \begin{itemize}
     \item Usar un "here document" para la función de ayuda, haciéndola más mantenible.
@@ -147,41 +183,46 @@ El script es excelente. Propuse algunas mejoras para aumentar su robustez y clar
     \item Comprobar si hay cambios pendientes antes de intentar hacer el commit para evitar errores.
 \end{itemize}
 Se proporcionó una versión refactorizada del script con estos cambios.
-}
+\end{gemini}
 
 \subsection{Capacidades de Asistencia en IA con TensorFlow}
 
-\usuario{¿Estás en capacidad de ayudarme a desarrollar un script IA en python que utilize la librería Tensor Flow?}
+\begin{usuario}¿Estás en capacidad de ayudarme a desarrollar un 
+script IA en python que utilize la librería Tensor Flow?
+\end{usuario}
 
-\gemini{
+\begin{gemini}
 ¡Por supuesto que sí! Es una de mis especialidades. Puedo ayudarte a escribir código desde cero, explicar conceptos de TensorFlow/Keras, depurar tus scripts o trabajar contigo para optimizar tu modelo \texttt{IA\_BTC\_FORECAST}.
-}
+\end{gemini}
 
 \section{Creación de esta Bitácora}
 
 \usuario{Perfecto Gemini, pero para no perder esta y futuras converzaciones quiero que crees un archivo en formato latex con esta converzación y luego guardalo en el directorio "/home/cero/MEGA/VSCODE/Binance/Python/IA\_BTC\_FORECAST/Documentacion" con el nombre de "manual.tex. Mas adelante, cuando te pida que guardes una converzación, la anexas a ese archivo (manual.text) en formato latex.}
 
-\gemini{
+\begin{gemini}
 ¡Excelente idea! He creado este documento, \texttt{manual.tex}, en la ruta especificada. 
 Contiene un resumen de nuestra conversación hasta la fecha. A partir de ahora, cuando me 
 lo indiques, añadiré nuestras nuevas interacciones a este mismo archivo para mantener un 
 registro completo.
-}
+\end{gemini}
 
 \section{Análisis de la Arquitectura del Modelo}
 
 \subsection{Explicación Detallada de Capas LSTM y Dense}
 
-\usuario{Ya compilé el archivo manual.tex sin errores. Ahora explícame en detalle las 
-capas \texttt{LSTM} y \texttt{Dense} de mi modelo actual.}
+\begin{usuario}Ya compilé el archivo manual.tex sin errores. 
+Ahora explícame en detalle las capas \texttt{LSTM} y 
+\texttt{Dense} de mi modelo actual.
+\end{usuario}
 
-\gemini{
-    ¡Genial que el archivo \texttt{manual.tex} haya compilado correctamente! Ahora tenemos 
-una excelente bitácora para nuestro trabajo.
+\begin{gemini}
+    ¡Genial que el archivo \texttt{manual.tex} haya compilado 
+    correctamente! Ahora tenemos una excelente bitácora para 
+    nuestro trabajo.
 
-Vamos a sumergirnos en el corazón de tu modelo de predicción. Las capas \texttt{LSTM} y 
-\texttt{Dense} son los ladrillos fundamentales con los que estás construyendo tu red 
-neuronal.
+Vamos a sumergirnos en el corazón de tu modelo de predicción. 
+Las capas \texttt{LSTM} y \texttt{Dense} son los ladrillos 
+fundamentales con los que estás construyendo tu red neuronal.
 
 \subsubsection{La Capa \texttt{LSTM} (Long Short-Term Memory)}
 
@@ -209,7 +250,7 @@ Imagina que estás leyendo una novela. Para entender la trama, no solo lees la p
     "inidades de memoria". Cada una de estas unidades mantiene su propio 
     "cuaderno de notas" (su propio estado de celdas y estado oculto) para aprender
     un patrón o aspecto diferente de los datos. Más unidades pueden capturar patrones
-    mas complejos pero también aumentan el riesgo de sobreajuste (memorizar los
+    más complejos pero también aumentan el riesgo de sobreajuste (memorizar los
     datos de entrenamiento en lugar de aprender a generalizar).
     \item \texttt{return\_sequences=True}: Este es un parámetro vital cuando apilas 
     varias capas LSTM. Le dice a la capa: "No me des solo tu conclusión final después de 
@@ -218,7 +259,7 @@ Imagina que estás leyendo una novela. Para entender la trama, no solo lees la p
     construyendo sobre los patrones que la capa anterior encontró. Si fuera la última capa 
     LSTM antes de una capa \texttt{Dense}, normalmente se pondría en \texttt{False}.
     \item \texttt{input\_shape=(X\_train.shape[1], 1)}: Esto es solo para la primera capa. 
-    Le dice al modelo cómo es una muestra de entrada . En tu caso, es \texttt{(60, 1)}, lo que 
+    Le dice al modelo cómo es una muestra de entrada. En tu caso, es \texttt{(60, 1)}, lo que 
     significa que cada muestra es una secuencia de 60 pasos de tiempo (días) con 1 característica 
     por paso (el precio de cierre).
 \end{itemize}
@@ -254,6 +295,207 @@ En tu arquitectura, las capas \texttt{Dense} cumplen dos funciones:
 \end{enumerate}
 Espero que esta explicación detallada te ayude a entender mejor cómo "piensa" tu modelo. ¡
 Es una arquitectura muy potente para el problema que estás resolviendo!
-}
+\end{gemini}
+
+\section{Flujo de Trabajo en Google Colab}
+
+\subsection{Inicio de un Nuevo Notebook}
+
+\begin{usuario}
+Una vez que se entra a "Google Colab" hay que 
+iniciar un nuevo notebook. Cierto?
+\end{usuario}
+
+\begin{gemini}
+¡Correcto! Una vez que entras a Google Colab, lo más común es 
+iniciar un nuevo notebook para empezar a trabajar.
+
+Cuando visitas \href{https://colab.research.google.com}{colab.research.google.com}, generalmente te aparece una ventana emergente que te da varias opciones:
+\begin{itemize}
+    \item \textbf{Crear un notebook nuevo:} La opción más directa para un proyecto desde cero.
+    \item \textbf{Abrir un notebook reciente:} Para continuar con tu trabajo.
+    \item \textbf{Abrir desde Google Drive:} Si tienes notebooks guardados allí.
+    \item \textbf{Abrir desde GitHub:} Puedes pegar la URL de un repositorio o un notebook específico.
+    \item \textbf{Subir un archivo:} Si tienes un archivo \texttt{.ipynb} en tu ordenador.
+\end{itemize}
+
+Para nuestro proyecto \texttt{IA\_BTC\_FORECAST}, el flujo de trabajo ideal es exactamente ese:
+\begin{enumerate}
+    \item Iniciar un notebook nuevo.
+    \item En la primera celda, clonar tu repositorio de GitHub con:
+    \begin{lstlisting}[language=bash] !git clone ...
+    \end{lstlisting}
+\end{enumerate}
+
+De esta manera, mantienes un entorno limpio y reproducible cada vez que trabajas.
+\end{gemini}
+
+
+\subsection{Clonado de Repositorios (Público vs. Privado)}
+
+\begin{usuario}
+Creo que para clonar un repositorio de github, antes hay que 
+hacerlo público?
+\end{usuario}
+
+\begin{gemini}
+¡Esa es una excelente pregunta! No, no es estrictamente 
+necesario. Puedes clonar tanto repositorios públicos como 
+privados, pero el procedimiento es diferente:
+
+\begin{enumerate}
+    \item \textbf{Repositorios Públicos:}
+    \begin{itemize}
+        \item Cualquiera puede clonarlos sin necesidad de autenticarse.
+        \item Este es el caso de tu proyecto \texttt{IA\_BTC\_FORECAST}, por eso el comando:
+        \begin{lstlisting}[language=bash] !git clone https://...
+        \end{lstlisting}
+        funciona directamente en Colab.
+    \end{itemize}
+
+    \item \textbf{Repositorios Privados:}
+    \begin{itemize}
+        \item Necesitas tener permisos de acceso y debes autenticarte.
+        \item Las formas más comunes son usando un \textbf{Token de Acceso Personal (PAT)} con la URL HTTPS, o configurando una 
+        \textbf{clave SSH}.
+        \item Por ejemplo, para clonar usando un PAT, la URL se vería así:
+        \begin{lstlisting}[language=bash]
+!git clone https://<TOKEN>@github.com/usuario/repositorio.git
+        \end{lstlisting}
+        \item Alternativamente, puedes configurar una clave SSH en Colab, pero esto es un poco más avanzado y requiere pasos 
+        adicionales.
+    \end{itemize}
+\end{enumerate}
+
+En resumen, para tu proyecto actual no tienes que preocuparte porque es público. Pero si en el futuro trabajas con un repositorio privado, solo necesitarás autenticarte para poder clonarlo.
+\end{gemini}
+
+\subsection{Error Común: URL de Navegación vs. URL de Clonado}
+
+\begin{usuario}
+Le doy el siguiente camino: 
+https://github.com/cero97-ctrl/repositorio/tree/main/Binance/Python. 
+Pero me dice que no encuentra el repositorio.
+\end{usuario}
+
+
+\begin{gemini}
+¡Entiendo perfectamente el problema! Es un error muy común. La 
+URL que estás usando es la URL de \textbf{navegar} por una 
+subcarpeta en la web de GitHub, no para clonar.
+
+El comando \texttt{git clone} necesita la URL principal del 
+repositorio, que siempre descarga el proyecto completo.
+
+\paragraph{La Solución}
+\begin{enumerate}
+    \item \textbf{Usa la URL correcta para clonar.} Para tu repositorio, es:
+    \begin{lstlisting}[language=bash]
+https://github.com/cero97-ctrl/repositorio.git
+    \end{lstlisting}
+    \item \textbf{Clona el repositorio completo:}
+    \begin{lstlisting}[language=bash]
+!git clone https://github.com/cero97-ctrl/repositorio.git
+    \end{lstlisting}
+    \item \textbf{Navega a la carpeta deseada:} Una vez clonado, puedes moverte a la 
+    subcarpeta que necesitas:
+\end{enumerate}
+\begin{lstlisting}[language=Python]
+import os
+os.chdir('repositorio/Binance/Python')
+\end{lstlisting}
+\end{gemini}
+
+\subsection{Visualización del Contenido del Repositorio}
+
+\begin{usuario}
+¿Cómo muestro el contenido del repositorio?
+\end{usuario}
+
+\begin{gemini}
+    ¡Claro! Una vez que has clonado el repositorio, este se descarga en una nueva carpeta. 
+    Para ver su contenido desde Colab, puedes usar el comando \texttt{ls} de Linux, 
+    prefijado con un signo de exclamación (\texttt{!}).
+
+    \paragraph{Pasos para ver el contenido}
+    \begin{enumerate}
+        \item \textbf{Clona el repositorio (si no lo has hecho ya):}
+        \begin{lstlisting}[language=bash]
+            !git clone https://github.com/cero97-ctrl/repositorio.git
+        \end{lstlisting}
+        \item \textbf{Lista el contenido de la nueva carpeta:}
+        \begin{lstlisting}[language=bash]
+            !ls repositorio
+        \end{lstlisting}
+        \item \textbf{Para una vista más detallada} (con permisos, tamaños y archivos ocultos):
+        \begin{lstlisting}[language=bash]
+!ls -lha repositorio
+        \end{lstlisting}
+    \end{enumerate}
+
+    \paragraph{Flujo de trabajo alternativo}
+        También puedes 'entrar' en el directorio del repositorio con:
+        \begin{lstlisting}[language=bash] 
+            %cd repositorio
+        \end{lstlisting}
+        y luego ejecutar \texttt{!ls -lha} para listar el contenido del directorio actual. Esto es útil si vas a ejecutar varios 
+        comandos dentro de esa carpeta.
+\end{gemini}
+
+
+\subsection{Activación y Verificación de GPU}
+
+\begin{usuario}
+¿Cómo puedo activar y verificar el uso de la GPU en este 
+notebook de Colab?
+\end{usuario}
+
+\begin{gemini}
+¡Claro! Activar la GPU en Colab es uno de sus puntos más 
+fuertes y es muy sencillo. 
+Aquí te explico cómo hacerlo y cómo comprobar que está 
+funcionando
+
+\subsubsection{Paso 1: Activar la GPU}
+El entorno de ejecución de Colab usa una CPU por defecto. Para cambiar a una GPU, sigue 
+estos pasos:
+\begin{enumerate}
+    \item Ve al menú superior y haz clic en \textbf{Entorno de ejecución} (Runtime).
+    \item En el menú desplegable, selecciona \textbf{Cambiar tipo de entorno de ejecución} 
+    (Change runtime type).
+    \item Se abrirá una ventana. Busca el menú desplegable llamado 
+    \textbf{Acelerador por hardware} (Hardware accelerator).
+    \item Selecciona \textbf{T4 GPU} (o la opción de GPU que aparezca).
+    \item Haz clic en \textbf{Guardar} (Save).
+\end{enumerate}
+\textbf{Importante:} Este cambio reiniciará tu entorno de ejecución, por lo que tendrás que 
+volver a ejecutar las celdas anteriores (como la de clonar el repositorio o instalar 
+dependencias).
+
+\subsubsection{Paso 2: Verificar que la GPU está activa}
+Una vez que el entorno se haya reiniciado, puedes verificar que la GPU está disponible de 
+dos maneras muy sencillas.
+
+\paragraph{Método 1: Con un comando de shell}
+Este es el método más rápido y común. Ejecuta la siguiente celda:
+\begin{lstlisting}[language=bash]
+!nvidia-smi
+\end{lstlisting}
+Si la GPU está activa, verás una tabla con información detallada sobre la GPU asignada 
+(generalmente una Tesla T4). Si obtienes un error como \texttt{nvidia-smi: command not found}, 
+significa que la GPU no está activada.
+
+\paragraph{Método 2: Con TensorFlow}
+También puedes pedirle a TensorFlow que liste los dispositivos GPU que detecta. Ejecuta
+esta celda:
+\begin{lstlisting}[language=Python]
+import tensorflow as tf
+print(tf.config.list_physical_devices('GPU'))
+\end{lstlisting}
+Si la GPU está funcionando, la salida será una lista que contiene información sobre el 
+dispositivo GPU, algo como: \texttt{[PhysicalDevice(name='/physical\_device:GPU:0', 
+device\_type='GPU')]}. Si la lista está vacía (\texttt{[]}), TensorFlow no está detectando 
+la GPU.
+\end{gemini}
 
 \end{document}
