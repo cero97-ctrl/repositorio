@@ -13,6 +13,7 @@ import argparse
 from datetime import datetime
 import common_utils as utils
 
+
 # -----------------------------
 # CONFIRMACIÓN
 # -----------------------------
@@ -28,32 +29,55 @@ def check_confirmation(df, state, args):
     # Ensure we are confirming the *next* candle after the signal
     if signal_time_str:
         signal_time = pd.to_datetime(signal_time_str)
-        if pd.to_datetime(latest['timestamp'], unit='ms') <= signal_time:
-            return f"⏳ Esperando vela de confirmación para el patrón {pattern.upper()}..."
-    
-    sl_buffer_val = getattr(args, 'sl_buffer', 0.0)
+        if pd.to_datetime(latest["timestamp"], unit="ms") <= signal_time:
+            return (
+                f"⏳ Esperando vela de confirmación para el patrón {pattern.upper()}..."
+            )
 
-    if pattern == "hammer" and latest['close'] > previous['high']:
-        trade_type = 'long'
+    sl_buffer_val = getattr(args, "sl_buffer", 0.0)
+
+    if pattern == "hammer" and latest["close"] > previous["high"]:
+        trade_type = "long"
         signal_text = f"✅ Confirmación alcista para patrón {pattern.upper()}"
-    elif pattern == "shooting_star" and latest['close'] < previous['low']:
-        trade_type = 'short'
+    elif pattern == "shooting_star" and latest["close"] < previous["low"]:
+        trade_type = "short"
         signal_text = f"✅ Confirmación bajista para patrón {pattern.upper()}"
-    elif pattern == "wyckoff_spring" and latest['close'] > previous['high']:
-        trade_type = 'long'
+    elif pattern == "wyckoff_spring" and latest["close"] > previous["high"]:
+        trade_type = "long"
         signal_text = f"✅ Confirmación alcista para SPRING"
-    elif pattern == "wyckoff_upthrust" and latest['close'] < previous['low']:
-        trade_type = 'short'
+    elif pattern == "wyckoff_upthrust" and latest["close"] < previous["low"]:
+        trade_type = "short"
         signal_text = f"✅ Confirmación bajista para UPTHRUST"
     else:
         message = f"❌ Sin confirmación para el patrón {pattern.upper()}"
 
-    utils.clear_state() # Clear state regardless of confirmation outcome
+    utils.clear_state()  # Clear state regardless of confirmation outcome
     if trade_type:
-        entry_price, stop, tp, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], trade_type, args.risk_stop_mult, args.risk_tp_mult, sl_buffer_val)
-        message = utils.format_risk_management_message(signal_text, entry_price, stop, tp, rr)
-        utils.record_trade(args.trades_log_file, args.symbol, f'CONFIRMED_{trade_type.upper()}_{pattern.upper()}', entry_price, stop, tp, latest['ATR'], rr, notes=f'confirmation_for_{pattern}', timestamp=latest['timestamp'])
+        entry_price, stop, tp, rr = utils.compute_risk_levels(
+            latest["close"],
+            latest["ATR"],
+            trade_type,
+            args.risk_stop_mult,
+            args.risk_tp_mult,
+            sl_buffer_val,
+        )
+        message = utils.format_risk_management_message(
+            signal_text, entry_price, stop, tp, rr
+        )
+        utils.record_trade(
+            args.trades_log_file,
+            args.symbol,
+            f"CONFIRMED_{trade_type.upper()}_{pattern.upper()}",
+            entry_price,
+            stop,
+            tp,
+            latest["ATR"],
+            rr,
+            notes=f"confirmation_for_{pattern}",
+            timestamp=latest["timestamp"],
+        )
     return message
+
 
 # -----------------------------
 # MÓDULO WYCKOFF (LTF events) + MTF HTF confirmation
@@ -62,31 +86,55 @@ def detect_wyckoff_event(df, args, sl_buffer_val):
     latest = df.iloc[-1]
     previous = df.iloc[-2]
 
-    vol_ok = latest['volume'] > latest['volume_sma'] * args.wyckoff_volume_mult
+    vol_ok = latest["volume"] > latest["volume_sma"] * args.wyckoff_volume_mult
     atr_mean = utils.get_atr_mean_for_volatility(df)
     atr_ok = False
-    if pd.notna(latest['ATR']) and pd.notna(atr_mean) and atr_mean > 0:
-        atr_ok = latest['ATR'] > atr_mean * args.wyckoff_atr_thresh
+    if pd.notna(latest["ATR"]) and pd.notna(atr_mean) and atr_mean > 0:
+        atr_ok = latest["ATR"] > atr_mean * args.wyckoff_atr_thresh
 
     # SPRING
-    if latest['low'] < previous['low'] and latest['close'] > previous['close'] and vol_ok and atr_ok:
-        entry = latest['close']
-        entry_price, stop, tp, rr = utils.compute_risk_levels(entry, latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, sl_buffer_val)
+    if (
+        latest["low"] < previous["low"]
+        and latest["close"] > previous["close"]
+        and vol_ok
+        and atr_ok
+    ):
+        entry = latest["close"]
+        entry_price, stop, tp, rr = utils.compute_risk_levels(
+            entry,
+            latest["ATR"],
+            "long",
+            args.risk_stop_mult,
+            args.risk_tp_mult,
+            sl_buffer_val,
+        )
         msg = f"🌱 SPRING detectado | Entrada: {entry_price:.8f} | ATR: {latest['ATR']:.8f}\n"
         msg += f"- Volumen >= {args.wyckoff_volume_mult}×SMA volumen | ATR >= {args.wyckoff_atr_thresh}×ATR_mean\n"
         if stop and tp:
             msg = utils.format_risk_management_message(msg, entry_price, stop, tp, rr)
-        return 'SPRING', msg, entry_price, stop, tp, latest['ATR'], rr
+        return "SPRING", msg, entry_price, stop, tp, latest["ATR"], rr
 
     # UPTHRUST
-    if latest['high'] > previous['high'] and latest['close'] < previous['close'] and vol_ok and atr_ok:
-        entry = latest['close']
-        entry_price, stop, tp, rr = utils.compute_risk_levels(entry, latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, sl_buffer_val)
+    if (
+        latest["high"] > previous["high"]
+        and latest["close"] < previous["close"]
+        and vol_ok
+        and atr_ok
+    ):
+        entry = latest["close"]
+        entry_price, stop, tp, rr = utils.compute_risk_levels(
+            entry,
+            latest["ATR"],
+            "short",
+            args.risk_stop_mult,
+            args.risk_tp_mult,
+            sl_buffer_val,
+        )
         msg = f"🏔️ UPTHRUST detectado | Entrada: {entry_price:.8f} | ATR: {latest['ATR']:.8f}\n"
         msg += f"- Volumen >= {args.wyckoff_volume_mult}×SMA volumen | ATR >= {args.wyckoff_atr_thresh}×ATR_mean\n"
         if stop and tp:
             msg = utils.format_risk_management_message(msg, entry_price, stop, tp, rr)
-        return 'UPTHRUST', msg, entry_price, stop, tp, latest['ATR'], rr
+        return "UPTHRUST", msg, entry_price, stop, tp, latest["ATR"], rr
 
     return None, None, None, None, None, None, None
 
@@ -95,51 +143,52 @@ def detect_htf_phase(df_htf, args):
     """
     MEJORA 1: Detección de fase HTF mejorada con análisis de volumen.
     """
-    if df_htf.empty or len(df_htf) < 50: # Necesitamos más datos para el análisis
-        return 'range_unknown'
+    if df_htf.empty or len(df_htf) < 50:  # Necesitamos más datos para el análisis
+        return "range_unknown"
 
     latest = df_htf.iloc[-1]
-    
+
     # 1. Determinar tendencia con EMAs
-    is_uptrend = latest['EMA_50'] > latest['EMA_200']
-    is_downtrend = latest['EMA_50'] < latest['EMA_200']
+    is_uptrend = latest["EMA_50"] > latest["EMA_200"]
+    is_downtrend = latest["EMA_50"] < latest["EMA_200"]
 
     # 2. Analizar el dominio del volumen en las últimas 30 velas
     recent_df = df_htf.tail(30)
-    up_candles = recent_df[recent_df['close'] > recent_df['open']]
-    down_candles = recent_df[recent_df['close'] <= recent_df['open']]
-    
-    avg_up_volume = up_candles['volume'].mean() if not up_candles.empty else 0
-    avg_down_volume = down_candles['volume'].mean() if not down_candles.empty else 0
-    
-    vol_mult = getattr(args, 'htf_vol_mult', 1.2)
+    up_candles = recent_df[recent_df["close"] > recent_df["open"]]
+    down_candles = recent_df[recent_df["close"] <= recent_df["open"]]
+
+    avg_up_volume = up_candles["volume"].mean() if not up_candles.empty else 0
+    avg_down_volume = down_candles["volume"].mean() if not down_candles.empty else 0
+
+    vol_mult = getattr(args, "htf_vol_mult", 1.2)
 
     # 3. Combinar la lógica de tendencia y volumen
     if is_uptrend:
         # Si estamos en tendencia alcista y el volumen de compra domina, es un markup saludable.
         if avg_up_volume > avg_down_volume * vol_mult:
-            return 'markup'
+            return "markup"
         # Si estamos en tendencia alcista pero el volumen de venta empieza a aumentar, podría ser una señal temprana de distribución.
         else:
-            return 'potential_distribution'
-            
+            return "potential_distribution"
+
     elif is_downtrend:
         # Si estamos en tendencia bajista y el volumen de venta domina, es un markdown saludable.
         if avg_down_volume > avg_up_volume * vol_mult:
-            return 'markdown'
+            return "markdown"
         # Si estamos en tendencia bajista pero el volumen de venta se está secando, podría ser acumulación.
         else:
-            return 'potential_accumulation'
-            
-    else: # Rango (EMAs muy juntas o cruzándose)
+            return "potential_accumulation"
+
+    else:  # Rango (EMAs muy juntas o cruzándose)
         # En un rango, si el volumen de compra es mayor, sugiere acumulación.
         if avg_up_volume > avg_down_volume:
-            return 'accumulation'
+            return "accumulation"
         # Si el volumen de venta es mayor, sugiere distribución.
         else:
-            return 'distribution'
+            return "distribution"
 
-    return 'range_unknown'
+    return "range_unknown"
+
 
 # -----------------------------
 # EVALUACIÓN DE SEÑALES (principal)
@@ -151,100 +200,230 @@ def evaluate_trade(df, args, log_file=None):
     pending_state = None
 
     atr_mean = utils.get_atr_mean_for_volatility(df)
-    if pd.isna(latest['ATR']) or pd.isna(atr_mean) or latest['ATR'] < atr_mean:
-        logging.info("ATR bajo: mercado sin volatilidad significativa, no se generan señales.")
+    if pd.isna(latest["ATR"]) or pd.isna(atr_mean) or latest["ATR"] < atr_mean:
+        logging.info(
+            "ATR bajo: mercado sin volatilidad significativa, no se generan señales."
+        )
         return "⚠️ Volatilidad baja (ATR bajo). No se recomienda operar ahora."
 
     poc_zone = utils.check_poc_zone(latest, args.poc)
-    sl_buffer_val = getattr(args, 'sl_buffer', 0.0)
+    sl_buffer_val = getattr(args, "sl_buffer", 0.0)
 
     # Detect Wyckoff event in LTF
-    ev_type, ev_msg, entry_wyckoff, stop_wyckoff, tp_wyckoff, ev_atr, ev_rr = detect_wyckoff_event(df, args, sl_buffer_val)
+    ev_type, ev_msg, entry_wyckoff, stop_wyckoff, tp_wyckoff, ev_atr, ev_rr = (
+        detect_wyckoff_event(df, args, sl_buffer_val)
+    )
 
     # HTF confirmation when professional mode active
     htf_phase = None
     if args.wyckoff_professional:
         df_htf = utils.get_klines(args.symbol, args.htf_interval, args.htf_limit)
         if df_htf.empty:
-            logging.warning("No se pudieron obtener datos HTF para confirmación Wyckoff profesional.")
+            logging.warning(
+                "No se pudieron obtener datos HTF para confirmación Wyckoff profesional."
+            )
         else:
-            df_htf = utils.calculate_indicators(df_htf, args.volume_sma_period, args.atr_window, getattr(args, 'bollinger_window', 20))
+            df_htf = utils.calculate_indicators(
+                df_htf,
+                args.volume_sma_period,
+                args.atr_window,
+                getattr(args, "bollinger_window", 20),
+            )
             htf_phase = detect_htf_phase(df_htf, args)
             logging.info(f"Fase HTF detectada (con análisis de volumen): {htf_phase}")
 
     # Fases HTF válidas para operaciones LONG
-    valid_long_phases = ('markup', 'accumulation', 'potential_accumulation')
+    valid_long_phases = ("markup", "accumulation", "potential_accumulation")
     # Fases HTF válidas para operaciones SHORT
-    valid_short_phases = ('markdown', 'distribution', 'potential_distribution')
+    valid_short_phases = ("markdown", "distribution", "potential_distribution")
 
     # Hammer
-    if utils.is_hammer(latest['open'], latest['close'], latest['high'], latest['low'], args.hammer_multiplier):
-        entry_p, sl, tp_p, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'long', args.risk_stop_mult, args.risk_tp_mult, sl_buffer_val)
+    if utils.is_hammer(
+        latest["open"],
+        latest["close"],
+        latest["high"],
+        latest["low"],
+        args.hammer_multiplier,
+    ):
+        entry_p, sl, tp_p, rr = utils.compute_risk_levels(
+            latest["close"],
+            latest["ATR"],
+            "long",
+            args.risk_stop_mult,
+            args.risk_tp_mult,
+            sl_buffer_val,
+        )
         signal_text = f"🕯️ Martillo detectado | Entrada: {entry_p:.8f} | ATR: {latest['ATR']:.8f}\n"
         if poc_zone:
             signal_text += f"- En ZONA DE SOPORTE POC (${args.poc:.2f}) 🔥\n"
-        if latest['ATR'] > atr_mean:
+        if latest["ATR"] > atr_mean:
             signal_text += "- Alta volatilidad 🔥\n"
         if sl and tp_p:
-            signal_text = utils.format_risk_management_message(signal_text, entry_p, sl, tp_p, rr)
+            signal_text = utils.format_risk_management_message(
+                signal_text, entry_p, sl, tp_p, rr
+            )
         if args.wyckoff_professional:
             if htf_phase in valid_long_phases:
                 signals.append(signal_text)
-                utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'LONG', entry_p, sl, tp_p, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp'])
+                utils.record_trade(
+                    log_file if log_file else args.trades_log_file,
+                    args.symbol,
+                    "LONG",
+                    entry_p,
+                    sl,
+                    tp_p,
+                    latest["ATR"],
+                    rr,
+                    notes="hammer",
+                    timestamp=latest["timestamp"],
+                )
                 pending_state = {"pattern": "hammer", "price": entry_p}
             else:
-                logging.info(f"Martillo detectado pero HTF no compatible ({htf_phase}), descartado en modo profesional.")
+                logging.info(
+                    f"Martillo detectado pero HTF no compatible ({htf_phase}), descartado en modo profesional."
+                )
         else:
             signals.append(signal_text)
-            utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'LONG', entry_p, sl, tp_p, latest['ATR'], rr, notes='hammer', timestamp=latest['timestamp'])
+            utils.record_trade(
+                log_file if log_file else args.trades_log_file,
+                args.symbol,
+                "LONG",
+                entry_p,
+                sl,
+                tp_p,
+                latest["ATR"],
+                rr,
+                notes="hammer",
+                timestamp=latest["timestamp"],
+            )
             pending_state = {"pattern": "hammer", "price": entry_p}
 
     # Shooting star
-    if utils.is_shooting_star(latest['open'], latest['close'], latest['high'], latest['low'], args.shooting_star_multiplier):
-        entry_p, sl, tp_p, rr = utils.compute_risk_levels(latest['close'], latest['ATR'], 'short', args.risk_stop_mult, args.risk_tp_mult, sl_buffer_val)
+    if utils.is_shooting_star(
+        latest["open"],
+        latest["close"],
+        latest["high"],
+        latest["low"],
+        args.shooting_star_multiplier,
+    ):
+        entry_p, sl, tp_p, rr = utils.compute_risk_levels(
+            latest["close"],
+            latest["ATR"],
+            "short",
+            args.risk_stop_mult,
+            args.risk_tp_mult,
+            sl_buffer_val,
+        )
         signal_text = f"🕯️ Estrella Fugaz detectada | Entrada: {entry_p:.8f} | ATR: {latest['ATR']:.8f}\n"
         if poc_zone:
             signal_text += f"- En ZONA DE RESISTENCIA POC (${args.poc:.2f}) ⚠️\n"
-        if latest['ATR'] > atr_mean:
+        if latest["ATR"] > atr_mean:
             signal_text += "- Alta volatilidad ⚡\n"
         if sl and tp_p:
-            signal_text = utils.format_risk_management_message(signal_text, entry_p, sl, tp_p, rr)
+            signal_text = utils.format_risk_management_message(
+                signal_text, entry_p, sl, tp_p, rr
+            )
         if args.wyckoff_professional:
             if htf_phase in valid_short_phases:
                 signals.append(signal_text)
-                utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'SHORT', entry_p, sl, tp_p, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp'])
+                utils.record_trade(
+                    log_file if log_file else args.trades_log_file,
+                    args.symbol,
+                    "SHORT",
+                    entry_p,
+                    sl,
+                    tp_p,
+                    latest["ATR"],
+                    rr,
+                    notes="shooting_star",
+                    timestamp=latest["timestamp"],
+                )
                 pending_state = {"pattern": "shooting_star", "price": entry_p}
             else:
-                logging.info(f"Estrella Fugaz detectada pero HTF no compatible ({htf_phase}), descartado en modo profesional.")
+                logging.info(
+                    f"Estrella Fugaz detectada pero HTF no compatible ({htf_phase}), descartado en modo profesional."
+                )
         else:
             signals.append(signal_text)
-            utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'SHORT', entry_p, sl, tp_p, latest['ATR'], rr, notes='shooting_star', timestamp=latest['timestamp'])
+            utils.record_trade(
+                log_file if log_file else args.trades_log_file,
+                args.symbol,
+                "SHORT",
+                entry_p,
+                sl,
+                tp_p,
+                latest["ATR"],
+                rr,
+                notes="shooting_star",
+                timestamp=latest["timestamp"],
+            )
             pending_state = {"pattern": "shooting_star", "price": entry_p}
 
     # Wyckoff LTF events
     if ev_type:
         if args.wyckoff_professional:
-            if ev_type == 'SPRING' and htf_phase in valid_long_phases:
+            if ev_type == "SPRING" and htf_phase in valid_long_phases:
                 signals.append(ev_msg)
-                utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'LONG_WYCKOFF', entry_wyckoff, stop_wyckoff, tp_wyckoff, ev_atr, ev_rr, notes='wyckoff_spring', timestamp=latest['timestamp'])
+                utils.record_trade(
+                    log_file if log_file else args.trades_log_file,
+                    args.symbol,
+                    "LONG_WYCKOFF",
+                    entry_wyckoff,
+                    stop_wyckoff,
+                    tp_wyckoff,
+                    ev_atr,
+                    ev_rr,
+                    notes="wyckoff_spring",
+                    timestamp=latest["timestamp"],
+                )
                 pending_state = {"pattern": "wyckoff_spring", "price": entry_wyckoff}
-            elif ev_type == 'UPTHRUST' and htf_phase in valid_short_phases:
+            elif ev_type == "UPTHRUST" and htf_phase in valid_short_phases:
                 signals.append(ev_msg)
-                utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, 'SHORT_WYCKOFF', entry_wyckoff, stop_wyckoff, tp_wyckoff, ev_atr, ev_rr, notes='wyckoff_upthrust', timestamp=latest['timestamp'])
+                utils.record_trade(
+                    log_file if log_file else args.trades_log_file,
+                    args.symbol,
+                    "SHORT_WYCKOFF",
+                    entry_wyckoff,
+                    stop_wyckoff,
+                    tp_wyckoff,
+                    ev_atr,
+                    ev_rr,
+                    notes="wyckoff_upthrust",
+                    timestamp=latest["timestamp"],
+                )
                 pending_state = {"pattern": "wyckoff_upthrust", "price": entry_wyckoff}
             else:
-                logging.info(f"Wyckoff event {ev_type} detectado pero HTF no compatible ({htf_phase}), descartado en modo profesional.")
+                logging.info(
+                    f"Wyckoff event {ev_type} detectado pero HTF no compatible ({htf_phase}), descartado en modo profesional."
+                )
         else:
             signals.append(ev_msg)
-            utils.record_trade(log_file if log_file else args.trades_log_file, args.symbol, f'{ev_type}_WYCKOFF', entry_wyckoff, stop_wyckoff, tp_wyckoff, ev_atr, ev_rr, notes='wyckoff_event', timestamp=latest['timestamp'])
-            pending_state = {"pattern": f'wyckoff_{ev_type.lower()}', "price": entry_wyckoff}
+            utils.record_trade(
+                log_file if log_file else args.trades_log_file,
+                args.symbol,
+                f"{ev_type}_WYCKOFF",
+                entry_wyckoff,
+                stop_wyckoff,
+                tp_wyckoff,
+                ev_atr,
+                ev_rr,
+                notes="wyckoff_event",
+                timestamp=latest["timestamp"],
+            )
+            pending_state = {
+                "pattern": f"wyckoff_{ev_type.lower()}",
+                "price": entry_wyckoff,
+            }
 
     if pending_state:
-        pending_state["signal_time"] = pd.to_datetime(latest['timestamp'], unit='ms').isoformat()
+        pending_state["signal_time"] = pd.to_datetime(
+            latest["timestamp"], unit="ms"
+        ).isoformat()
         utils.save_state(pending_state)
         signals.append("⏳ Esperando vela de confirmación en el próximo ciclo...")
 
     return "\n".join(signals) if signals else "⏳ Sin señales claras."
+
 
 # -----------------------------
 # BACKTEST
@@ -253,24 +432,33 @@ def run_backtest(args):
     logging.info(f"Iniciando backtest con datos: {args.backtest_file}")
     try:
         df = pd.read_csv(args.backtest_file)
-        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
     except Exception as e:
         logging.error(f"Error al cargar CSV: {e}")
         return
 
-    if not {'timestamp', 'open', 'high', 'low', 'close', 'volume'}.issubset(df.columns):
-        logging.error("El CSV debe contener columnas: timestamp, open, high, low, close, volume")
+    if not {"timestamp", "open", "high", "low", "close", "volume"}.issubset(df.columns):
+        logging.error(
+            "El CSV debe contener columnas: timestamp, open, high, low, close, volume"
+        )
         return
 
     # --- CORRECCIÓN: Respetar el límite de velas para el backtest ---
     if args.limit > 0 and len(df) > args.limit:
-        logging.info(f"El archivo de datos tiene {len(df)} velas. Usando las últimas {args.limit} para el backtest.")
+        logging.info(
+            f"El archivo de datos tiene {len(df)} velas. Usando las últimas {args.limit} para el backtest."
+        )
         df = df.tail(args.limit).reset_index(drop=True)
 
-    df = utils.calculate_indicators(df, args.volume_sma_period, args.atr_window, getattr(args, 'bollinger_window', 20))
-    
-    backtest_log_file = args.trades_log_file.replace('.csv', '_backtest.csv')
-    
+    df = utils.calculate_indicators(
+        df,
+        args.volume_sma_period,
+        args.atr_window,
+        getattr(args, "bollinger_window", 20),
+    )
+
+    backtest_log_file = args.trades_log_file.replace(".csv", "_backtest.csv")
+
     if os.path.exists(backtest_log_file):
         os.remove(backtest_log_file)
     utils.ensure_trades_log_exists(backtest_log_file)
@@ -278,11 +466,11 @@ def run_backtest(args):
     logging.info("Recorriendo velas para encontrar y registrar señales...")
     start_index = max(201, args.atr_window, args.volume_sma_period)
 
-    utils.clear_state() # Ensure a clean state at the beginning of backtest
+    utils.clear_state()  # Ensure a clean state at the beginning of backtest
 
     for i in range(start_index, len(df)):
-        sub_df = df.iloc[:i+1].copy()
-        
+        sub_df = df.iloc[: i + 1].copy()
+
         # Simulate the common_utils.execute_single_run_common logic
         pending_state = utils.load_state()
         signal_message = ""
@@ -295,21 +483,30 @@ def run_backtest(args):
             # If no pending state, evaluate for new signals
             # evaluate_trade will save state if a pending signal is found
             signal_message = evaluate_trade(sub_df, args, backtest_log_file)
-        
-        if signal_message and "⏳ Sin señales claras." not in signal_message and "⚠️ Volatilidad baja" not in signal_message:
+
+        if (
+            signal_message
+            and "⏳ Sin señales claras." not in signal_message
+            and "⚠️ Volatilidad baja" not in signal_message
+        ):
             logging.info(f"[{i}] {signal_message}")
 
     # --- CORRECCIÓN CRÍTICA: Ordenar el log de backtest por fecha ---
-    logging.info(f"Ordenando el archivo de log de backtest '{backtest_log_file}' por fecha...")
+    logging.info(
+        f"Ordenando el archivo de log de backtest '{backtest_log_file}' por fecha..."
+    )
     try:
         log_df = pd.read_csv(backtest_log_file)
-        log_df['timestamp'] = pd.to_datetime(log_df['timestamp'])
-        log_df.sort_values(by='timestamp', inplace=True)
+        log_df["timestamp"] = pd.to_datetime(log_df["timestamp"])
+        log_df.sort_values(by="timestamp", inplace=True)
         log_df.to_csv(backtest_log_file, index=False)
     except Exception as e:
         logging.error(f"No se pudo ordenar el archivo de log de backtest: {e}")
 
-    logging.info(f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'.")
+    logging.info(
+        f"\n✅ Backtest de detección de señales completado. Se encontraron trades en '{backtest_log_file}'."
+    )
+
 
 # -----------------------------
 # MAIN
@@ -317,12 +514,18 @@ def run_backtest(args):
 if __name__ == "__main__":
     # Usar la función de configuración común
     args, telegram_token, chat_id = utils.setup_logging_and_config()
-    
+
     logging.info("==========================================")
-    logging.info("Iniciando Bot Wyckoff Multi-Timeframe v1 (con análisis de volumen HTF)")
+    logging.info(
+        "Iniciando Bot Wyckoff Multi-Timeframe v1 (con análisis de volumen HTF)"
+    )
     logging.info(f"Símbolo: {args.symbol} | Intervalo: {args.interval}")
-    logging.info(f"Risk stop mult: {args.risk_stop_mult} | Risk TP mult: {args.risk_tp_mult} | SL Buffer: {args.sl_buffer}")
-    logging.info(f"Wyckoff PROFESSIONAL: {args.wyckoff_professional} | HTF: {args.htf_interval} | HTF limit: {args.htf_limit}")
+    logging.info(
+        f"Risk stop mult: {args.risk_stop_mult} | Risk TP mult: {args.risk_tp_mult} | SL Buffer: {args.sl_buffer}"
+    )
+    logging.info(
+        f"Wyckoff PROFESSIONAL: {args.wyckoff_professional} | HTF: {args.htf_interval} | HTF limit: {args.htf_limit}"
+    )
     logging.info(f"HTF Volume Multiplier: {args.htf_vol_mult}")
     logging.info("==========================================")
 
@@ -342,4 +545,11 @@ if __name__ == "__main__":
         "El bot está en línea y funcionando correctamente\\."
     )
 
-    utils.run_bot_main_loop(args, telegram_token, chat_id, evaluate_trade, check_confirmation, startup_message)
+    utils.run_bot_main_loop(
+        args,
+        telegram_token,
+        chat_id,
+        evaluate_trade,
+        check_confirmation,
+        startup_message,
+    )

@@ -15,9 +15,12 @@ TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-    raise ValueError("❌ TELEGRAM_TOKEN o TELEGRAM_CHAT_ID no están definidos en el entorno.")
+    raise ValueError(
+        "❌ TELEGRAM_TOKEN o TELEGRAM_CHAT_ID no están definidos en el entorno."
+    )
 
 bot = Bot(token=TELEGRAM_TOKEN)
+
 
 # === FUNCIÓN PARA CARGAR VELAS DE BINANCE ===
 def get_binance_ohlcv(symbol=SYMBOL, interval=INTERVAL, limit=LIMIT):
@@ -25,21 +28,39 @@ def get_binance_ohlcv(symbol=SYMBOL, interval=INTERVAL, limit=LIMIT):
     response = requests.get(url)
     data = response.json()
 
-    df = pd.DataFrame(data, columns=[
-        "timestamp", "open", "high", "low", "close", "volume",
-        "close_time", "quote_asset_volume", "number_of_trades",
-        "taker_buy_base_volume", "taker_buy_quote_volume", "ignore"
-    ])
+    df = pd.DataFrame(
+        data,
+        columns=[
+            "timestamp",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "close_time",
+            "quote_asset_volume",
+            "number_of_trades",
+            "taker_buy_base_volume",
+            "taker_buy_quote_volume",
+            "ignore",
+        ],
+    )
     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
-    df[["open", "high", "low", "close", "volume"]] = df[["open", "high", "low", "close", "volume"]].astype(float)
+    df[["open", "high", "low", "close", "volume"]] = df[
+        ["open", "high", "low", "close", "volume"]
+    ].astype(float)
     return df[["timestamp", "open", "high", "low", "close", "volume"]]
+
 
 # === USO DEL BOT ===
 def main():
     df = get_binance_ohlcv()
-    bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"✅ Cargadas {len(df)} velas de {SYMBOL} ({INTERVAL})")
+    bot.send_message(
+        chat_id=TELEGRAM_CHAT_ID,
+        text=f"✅ Cargadas {len(df)} velas de {SYMBOL} ({INTERVAL})",
+    )
     print(df.tail())
+
 
 if __name__ == "__main__":
     main()
-

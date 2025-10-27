@@ -22,7 +22,9 @@ DATA_PATH = "data/prices.csv"
 SEQ_LENGTH = None
 
 if not os.path.exists(MODEL_PATH) or not os.path.exists(SCALER_PATH):
-    raise SystemExit("Modelo o scaler no encontrados. Ejecuta primero model_forecast.py para entrenar y guardar el modelo.")
+    raise SystemExit(
+        "Modelo o scaler no encontrados. Ejecuta primero model_forecast.py para entrenar y guardar el modelo."
+    )
 
 # Cargar cosas
 model = load_model(MODEL_PATH)
@@ -45,12 +47,19 @@ except Exception:
 if seq_len is None:
     if os.path.exists(CONFIG_PATH):
         import json
+
         with open(CONFIG_PATH, "r") as f:
             meta = json.load(f)
-            seq_len = int(meta.get("seq_length")) if meta.get("seq_length") is not None else None
+            seq_len = (
+                int(meta.get("seq_length"))
+                if meta.get("seq_length") is not None
+                else None
+            )
 
 if seq_len is None:
-    raise SystemExit("No se pudo determinar 'seq_length' (ni desde el modelo ni desde model/config.json).")
+    raise SystemExit(
+        "No se pudo determinar 'seq_length' (ni desde el modelo ni desde model/config.json)."
+    )
 
 SEQ_LENGTH = seq_len
 
@@ -60,7 +69,9 @@ if "price" not in prices.columns:
 
 last_prices = prices["price"].values[-SEQ_LENGTH:]
 if len(last_prices) < SEQ_LENGTH:
-    raise SystemExit(f"No hay suficientes datos: se necesitan {SEQ_LENGTH} muestras, hay {len(last_prices)}.")
+    raise SystemExit(
+        f"No hay suficientes datos: se necesitan {SEQ_LENGTH} muestras, hay {len(last_prices)}."
+    )
 
 # Escalar y preparar input
 scaled = scaler.transform(last_prices.reshape(-1, 1))

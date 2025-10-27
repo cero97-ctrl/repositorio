@@ -1,0 +1,13 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}¿Qué es Google Colaboratory?}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Características Clave}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Aplicación al Proyecto \texttt {IA\_BTC\_FORECAST}}{2}{section.2}%
+\contentsline {section}{\numberline {3}Guía Rápida: Subir y Ejecutar el Proyecto con Git}{2}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Paso 1: Abrir Colab y Clonar el Repositorio}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Paso 2: Navegar al Directorio del Proyecto}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Paso 3: Instalar Dependencias}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Paso 4: Ejecutar los Scripts}{3}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Paso 5: Guardar Artefactos en Google Drive (Recomendado)}{3}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Preguntas Frecuentes}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}¿Necesito registrarme en Colab?}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}¿Solo sirve para programar en Python?}{4}{subsection.4.2}%

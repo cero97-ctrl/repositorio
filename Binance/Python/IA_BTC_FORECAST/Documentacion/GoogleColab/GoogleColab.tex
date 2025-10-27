@@ -1,0 +1,159 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- PREÁMBULO ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Configuración de márgenes
+\geometry{a4paper, total={170mm,257mm}, left=20mm, top=20mm}
+
+% Configuración de hyperref para links
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Guía de Uso de Google Colab para IA_BTC_FORECAST},
+    pdfpagemode=FullScreen,
+}
+
+% --- Estilo para los bloques de código ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,
+    literate={ó}{{\'o}}1 {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ú}{{\'u}}1
+             {Ó}{{\'O}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ú}{{\'U}}1
+             {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1,
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+% --- DOCUMENTO ---
+\begin{document}
+
+\title{Guía de Uso de Google Colab para el Proyecto IA\_BTC\_FORECAST}
+\author{Gemini Code Assist}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{¿Qué es Google Colaboratory?}
+
+\textbf{Google Colaboratory}, comúnmente conocido como "Colab", es un servicio gratuito en la nube proporcionado por Google. Permite escribir y ejecutar código Python directamente en un navegador web, sin necesidad de configuración previa. En esencia, es un entorno de Jupyter Notebook alojado que se ejecuta completamente en los servidores de Google.
+
+\subsection{Características Clave}
+\begin{itemize}
+    \item \textbf{Cero Configuración:} No es necesario instalar Python ni las librerías más comunes de ciencia de datos como \texttt{pandas}, \texttt{numpy}, \texttt{tensorflow}, o \texttt{scikit-learn}, ya que vienen preinstaladas.
+    
+    \item \textbf{Acceso a Hardware Gratuito:} Su principal ventaja es el acceso gratuito a aceleradores de hardware como GPUs (Unidades de Procesamiento Gráfico) y TPUs (Unidades de Procesamiento Tensorial). Esto acelera drásticamente tareas computacionalmente intensivas, como el entrenamiento de modelos de Machine Learning.
+    
+    \item \textbf{Colaboración Sencilla:} Al igual que Google Docs, los notebooks de Colab se pueden compartir fácilmente para que otros los vean, comenten o editen en tiempo real.
+    
+    \item \textbf{Integración con Google Drive:} Se puede "montar" Google Drive en el entorno de Colab, permitiendo leer y escribir archivos (datasets, modelos entrenados, etc.) directamente desde y hacia tu cuenta de Drive.
+\end{itemize}
+
+\section{Aplicación al Proyecto \texttt{IA\_BTC\_FORECAST}}
+
+Tu proyecto es un caso de uso ideal para Google Colab. Migrarlo a esta plataforma ofrece varias ventajas significativas:
+
+\begin{itemize}
+    \item \textbf{Adiós a los problemas de entorno:} Olvídate de la gestión de \texttt{conda} y los archivos \texttt{environment.yml}. Las dependencias se pueden instalar al inicio del notebook con un simple comando.
+    
+    \item \textbf{Solución al error "Illegal instruction":} El error \texttt{exit code 132}, causado por incompatibilidades entre TensorFlow y la arquitectura de la CPU local, desaparece por completo. El código se ejecuta en los servidores estandarizados de Google, que son totalmente compatibles.
+    
+    \item \textbf{Entrenamiento más rápido:} Puedes activar una GPU para entrenar tu modelo LSTM mucho más rápido que en una CPU convencional.
+    
+    \item \textbf{Portabilidad:} Puedes acceder y trabajar en tu proyecto desde cualquier ordenador con un navegador web, sin necesidad de clonar el repositorio y configurar el entorno localmente cada vez.
+\end{itemize}
+
+\section{Guía Rápida: Subir y Ejecutar el Proyecto con Git}
+
+Sigue estos pasos para poner en marcha tu proyecto en un notebook de Colab.
+
+\subsection{Paso 1: Abrir Colab y Clonar el Repositorio}
+En la primera celda de un nuevo notebook, clona tu repositorio desde GitHub.
+
+\begin{lstlisting}[language=bash]
+!git clone https://github.com/ceroiglesias/IA_BTC_FORECAST.git
+\end{lstlisting}
+
+\subsection{Paso 2: Navegar al Directorio del Proyecto}
+Es importante cambiar el directorio de trabajo actual al del proyecto recién clonado.
+
+\begin{lstlisting}[language=Python]
+import os
+os.chdir('IA_BTC_FORECAST')
+\end{lstlisting}
+
+\subsection{Paso 3: Instalar Dependencias}
+Instala las librerías necesarias que no vienen por defecto en Colab. Puedes usar tu archivo \texttt{requirements.txt} o instalarlas manualmente.
+
+\begin{lstlisting}[language=bash]
+# Opción 1: Usando el archivo de requisitos
+!pip install -r requirements.txt
+
+# Opción 2: Instalando manualmente las que falten
+!pip install snscrape pytrends pandas_ta yfinance --quiet
+\end{lstlisting}
+
+\subsection{Paso 4: Ejecutar los Scripts}
+Ahora puedes ejecutar tus scripts directamente desde celdas del notebook.
+
+\begin{lstlisting}[language=bash]
+# Ejecutar la recolección de datos
+!python get_data_btc.py
+
+# Ejecutar el entrenamiento del modelo
+!python model_forecast.py
+\end{lstlisting}
+
+\subsection{Paso 5: Guardar Artefactos en Google Drive (Recomendado)}
+Para que tus datos y modelos no se pierdan al cerrar la sesión de Colab, móntalos en tu Google Drive.
+
+\begin{lstlisting}[language=Python]
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Ahora puedes guardar tu modelo en una carpeta de tu Drive
+# model.save('/content/drive/MyDrive/IA_BTC_FORECAST/model/btc_forecast_model.keras')
+\end{lstlisting}
+
+\section{Preguntas Frecuentes}
+
+\subsection{¿Necesito registrarme en Colab?}
+No es necesario un registro específico para Colab. Solo necesitas una \textbf{cuenta de Google} (la misma que usas para Gmail, Drive, etc.). Tus notebooks se guardarán automáticamente en el Google Drive asociado a esa cuenta.
+
+\subsection{¿Solo sirve para programar en Python?}
+\textbf{Principalmente sí}, Colab está optimizado para Python. Sin embargo, también puedes:
+\begin{itemize}
+    \item Ejecutar comandos de \textbf{shell/bash} en las celdas prefijándolos con un signo de exclamación (\texttt{!}).
+    \item Con algo de configuración adicional, es posible instalar y usar kernels para otros lenguajes como \textbf{R} o \textbf{Julia}.
+\end{itemize}
+
+\end{document}

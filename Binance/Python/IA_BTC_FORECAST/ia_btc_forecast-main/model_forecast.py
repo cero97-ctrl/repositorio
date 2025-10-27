@@ -16,13 +16,15 @@ prices.set_index("timestamp", inplace=True)
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_prices = scaler.fit_transform(prices["price"].values.reshape(-1, 1))
 
+
 # Paso 3: Crear secuencias de datos para el modelo
 def create_sequences(data, seq_length):
     X, y = [], []
     for i in range(len(data) - seq_length):
-        X.append(data[i:i + seq_length])
+        X.append(data[i : i + seq_length])
         y.append(data[i + seq_length])
     return np.array(X), np.array(y)
+
 
 seq_length = 30  # Usaremos los últimos 30 días para predecir el siguiente día
 X, y = create_sequences(scaled_prices, seq_length)
@@ -33,13 +35,15 @@ X_train, X_test = X[:split], X[split:]
 y_train, y_test = y[:split], y[split:]
 
 # Paso 5: Definir la red neuronal LSTM
-model = Sequential([
-    Input(shape=(X_train.shape[1], 1)),
-    LSTM(100, return_sequences=True),
-    LSTM(100),
-    Dense(1)
-])
-model.compile(optimizer='adam', loss='mean_squared_error')
+model = Sequential(
+    [
+        Input(shape=(X_train.shape[1], 1)),
+        LSTM(100, return_sequences=True),
+        LSTM(100),
+        Dense(1),
+    ]
+)
+model.compile(optimizer="adam", loss="mean_squared_error")
 
 # Entrenar el modelo
 model.fit(X_train, y_train, epochs=3, batch_size=1, validation_data=(X_test, y_test))
@@ -51,11 +55,13 @@ y_test_descaled = scaler.inverse_transform(y_test)
 
 # Paso 7: Graficar los resultados
 plt.figure(figsize=(14, 7))
-plt.plot(prices.index[-len(y_test):], y_test_descaled, color='blue', label='Precio Real')
-plt.plot(prices.index[-len(y_test):], predictions, color='red', label='Predicción')
-plt.title('Predicción del Precio de Bitcoin')
-plt.xlabel('Fecha')
-plt.ylabel('Precio en USD')
+plt.plot(
+    prices.index[-len(y_test) :], y_test_descaled, color="blue", label="Precio Real"
+)
+plt.plot(prices.index[-len(y_test) :], predictions, color="red", label="Predicción")
+plt.title("Predicción del Precio de Bitcoin")
+plt.xlabel("Fecha")
+plt.ylabel("Precio en USD")
 plt.legend()
 plt.show()
 
@@ -71,7 +77,7 @@ meta = {
     "seq_length": seq_length,
     "model_file": "model/btc_forecast_model.keras",
     "scaler_file": "model/scaler.pkl",
-    "saved_at": pd.Timestamp.now().isoformat()
+    "saved_at": pd.Timestamp.now().isoformat(),
 }
 with open("model/config.json", "w") as f:
     json.dump(meta, f, indent=2)
