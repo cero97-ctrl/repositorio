@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1761607050.33528 "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" "manual.pdf" "manual" 1761607052.60501 0
+["pdflatex"] 1761642119.18081 "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" "manual.pdf" "manual" 1761642120.89395 0
   "/etc/texmf/web2c/texmf.cnf" 1754246095.34578 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" 1761607049.4869 22931 0d3985f05a4bada43f4af7ff4bf454de ""
+  "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" 1761642118.53566 22923 8b0b5beb802949ccd8a50b80c2d82824 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -99,10 +99,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754246131.98867 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754246351 8211763 bcebfc983d877799c23bfb0bbf784be3 ""
-  "manual.aux" 1761607052.37682 4954 c4929cedc251875bbae3bad2c50200a1 "pdflatex"
-  "manual.out" 1761607052.38181 5979 647a87012f586bb55ded66dd678b389c "pdflatex"
-  "manual.tex" 1761607049.4869 22931 0d3985f05a4bada43f4af7ff4bf454de ""
-  "manual.toc" 1761607052.38181 3172 ad96114b0d4d73480021b683c7d84f56 "pdflatex"
+  "manual.aux" 1761642120.69558 4954 c4929cedc251875bbae3bad2c50200a1 "pdflatex"
+  "manual.out" 1761642120.69858 5979 647a87012f586bb55ded66dd678b389c "pdflatex"
+  "manual.tex" 1761642118.53566 22923 8b0b5beb802949ccd8a50b80c2d82824 ""
+  "manual.toc" 1761642120.69858 3172 ad96114b0d4d73480021b683c7d84f56 "pdflatex"
   (generated)
   "manual.aux"
   "manual.log"
