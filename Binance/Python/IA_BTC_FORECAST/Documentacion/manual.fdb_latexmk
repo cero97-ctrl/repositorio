@@ -1,8 +1,9 @@
 # Fdb version 4
-["pdflatex"] 1761702246.27086 "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" "manual.pdf" "manual" 1761702247.85778 0
+["pdflatex"] 1761703393.19741 "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" "manual.pdf" "manual" 1761703395.31611 0
   "/etc/texmf/web2c/texmf.cnf" 1754246095.34578 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" 1761702240.19774 25019 713c979b59a4b47d3b200519e91af1e4 ""
+  "/home/cero/MEGA/VSCODE/Binance/Python/IA_BTC_FORECAST/Documentacion/manual.tex" 1761703387.70651 32148 1bbf016f152f14428045bc25bcf37f1b ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
+  "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcti1200.tfm" 1136768653 2048 4bf576aaa733142ac4e68faea01bc92e ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbxti10.tfm" 1136768653 1532 9162035f4e7176612125649e348e2195 ""
@@ -96,13 +97,15 @@
   "/usr/share/texlive/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty" 1700082560 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
+  "/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1636152094 2900 1537cc8184ad1792082cd229ecc269f4 ""
+  "/usr/share/texmf/fonts/type1/public/cm-super/sfti1200.pfb" 1754246117.37096 198221 ca5aa71411090ef358a6cc78b7458365 ""
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754246131.98867 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754246351 8211763 bcebfc983d877799c23bfb0bbf784be3 ""
-  "manual.aux" 1761702247.67482 5377 c137aedbd8ad164bbad839ebf2e00ac7 "pdflatex"
-  "manual.out" 1761702247.68182 6492 b1473fce274b23633a73f1d26ac7557e "pdflatex"
-  "manual.tex" 1761702240.19774 25019 713c979b59a4b47d3b200519e91af1e4 ""
-  "manual.toc" 1761702247.68282 3379 948126d175d83d11bc44a92aac2e05f1 "pdflatex"
+  "manual.aux" 1761703395.06555 6966 3ae8989c48cf8f68f52257c912068832 "pdflatex"
+  "manual.out" 1761703395.07355 8973 27d2b7919be154cfc51564b7d3c6f19f "pdflatex"
+  "manual.tex" 1761703387.70651 32148 1bbf016f152f14428045bc25bcf37f1b ""
+  "manual.toc" 1761703395.07555 4516 3ebc5de9e9168c9fdf0e2ab0d6d67dab "pdflatex"
   (generated)
   "manual.aux"
   "manual.log"

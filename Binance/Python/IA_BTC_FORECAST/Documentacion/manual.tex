@@ -531,4 +531,119 @@ Puntos clave de esta salida:
 \end{itemize}
 \end{gemini}
 
+\section{Aceleración del Entrenamiento con GPU}
+
+\subsection{Adaptación del Script de Entrenamiento}
+
+\begin{usuario}
+Ahora que la GPU está activa, ¿cómo adapto mi script de entrenamiento para que la use?
+\end{usuario}
+
+\begin{gemini}
+¡Esa es una excelente pregunta! Y la mejor noticia es que, al usar un framework como TensorFlow/Keras, **prácticamente no necesitas hacer ningún cambio en tu código.**
+
+TensorFlow está diseñado para detectar y utilizar automáticamente una GPU compatible con CUDA cuando está disponible. Cuando llamas a \texttt{model.fit()}, TensorFlow se encarga de:
+\begin{enumerate}
+    \item Mover el modelo a la GPU.
+    \item Enviar los lotes (batches) de datos de entrenamiento a la memoria de la GPU.
+    \item Realizar todos los cálculos intensivos (como la propagación hacia adelante y la retropropagación) directamente en la GPU.
+\end{enumerate}
+
+Tu script \texttt{model\_forecast.py} se beneficiará de la aceleración por hardware sin modificaciones. La forma más sencilla de verificar que la GPU está trabajando durante el entrenamiento es ejecutar el comando \texttt{!nvidia-smi} en otra celda mientras \texttt{model.fit()} está en ejecución. Verás que el uso de memoria (Memory-Usage) y el porcentaje de utilización (GPU-Util) aumentan considerablemente.
+\end{gemini}
+
+\subsection{Conceptos Clave: Épocas y Tamaño de Lote}
+
+\begin{usuario}
+Explícame qué son las "épocas" (epochs) y el "tamaño del lote" (batch size) en `model.fit`.
+\end{usuario}
+
+\begin{gemini}
+¡Claro! Son dos de los hiperparámetros más importantes en el entrenamiento de redes neuronales. Usaremos una analogía: el modelo es un estudiante y el conjunto de datos es su libro de texto.
+
+\subsubsection{Épocas (Epochs)}
+Una \textbf{época} representa una pasada completa del modelo a través de \textbf{todo el conjunto de datos de entrenamiento}.
+
+\begin{itemize}
+    \item \textbf{Analogía:} Una época es como si el estudiante leyera el libro de texto completo, de principio a fin, una vez.
+    \item \textbf{Propósito:} Al igual que un estudiante necesita repasar, el modelo revisa los datos múltiples veces (en múltiples épocas) para aprender mejor los patrones y reducir su error.
+    \item \textbf{En tu código:} \texttt{epochs=3} significa que el modelo "leerá" todo el conjunto de datos de entrenamiento 3 veces.
+    \item \textbf{Riesgos:}
+        \begin{itemize}
+            \item \textbf{Pocas épocas:} El modelo no aprende lo suficiente (\textit{underfitting}).
+            \item \textbf{Demasiadas épocas:} El modelo puede empezar a memorizar los datos de entrenamiento en lugar de generalizar, fallando con datos nuevos (\textit{overfitting}).
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Tamaño del Lote (Batch Size)}
+El \textbf{tamaño del lote} es el número de muestras de entrenamiento que el modelo procesa antes de realizar una actualización de sus parámetros internos (pesos).
+
+\begin{itemize}
+    \item \textbf{Analogía:} El estudiante no puede asimilar el libro entero de una vez. Estudia por partes (capítulos o secciones). El tamaño del lote es el tamaño de esa "sección de estudio".
+    \item \textbf{Proceso:} El conjunto de datos se divide en lotes. El modelo procesa un lote, calcula el error, ajusta sus pesos, y luego pasa al siguiente lote. Cuando ha procesado todos los lotes, ha completado una época.
+    \item \textbf{En tu código:} \texttt{batch\_size=1} es un caso especial. El modelo ajusta sus pesos después de ver cada muestra individual. Es computacionalmente ineficiente y puede ser inestable, aunque a veces ayuda a evitar mínimos locales. Un valor común y más eficiente es 32.
+    \item \textbf{Riesgos:}
+        \begin{itemize}
+            \item \textbf{Batch size pequeño:} Aprendizaje lento y ruidoso, no aprovecha la GPU.
+            \item \textbf{Batch size grande:} Aprendizaje rápido y estable, pero a veces puede converger a una solución menos óptima.
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Resumen del Flujo}
+Si tienes 1000 muestras, \texttt{epochs=5} y \texttt{batch\_size=100}, el modelo hará lo siguiente:
+\begin{enumerate}
+    \item Dividirá las 1000 muestras en 10 lotes de 100.
+    \item En cada época, procesará los 10 lotes, ajustando sus pesos 10 veces.
+    \item Repetirá este proceso 5 veces (5 épocas).
+\end{enumerate}
+\end{gemini}
+
+\section{Optimización del Entrenamiento}
+
+\subsection{Determinación del Número Ideal de Épocas}
+
+\begin{usuario}
+¿Cómo puedo saber cuál es el número ideal de épocas para mi modelo?
+\end{usuario}
+
+\begin{gemini}
+¡Esa es una de las preguntas más importantes en Machine Learning! No existe un número mágico, pero la técnica estándar para encontrar el punto óptimo es usar \textbf{Parada Temprana} (\textit{Early Stopping}).
+
+\subsubsection{El Problema: Subentrenamiento vs. Sobreentrenamiento}
+El objetivo es entrenar lo suficiente para que el modelo aprenda los patrones (\textit{subentrenamiento}), pero no tanto como para que empiece a memorizar los datos de entrenamiento y falle con datos nuevos (\textit{sobreentrenamiento}).
+
+Para detectar esto, monitorizamos dos métricas durante el entrenamiento:
+\begin{itemize}
+    \item \textbf{Pérdida de Entrenamiento (Training Loss):} El error sobre los datos que el modelo usa para aprender. Casi siempre disminuye con más épocas.
+    \item \textbf{Pérdida de Validación (Validation Loss):} El error sobre un conjunto de datos que el modelo no ha visto. Esta es la métrica clave.
+\end{itemize}
+
+El número ideal de épocas es el punto donde la pérdida de validación alcanza su valor mínimo, justo antes de empezar a subir de nuevo.
+
+\subsubsection{La Solución: El Callback \texttt{EarlyStopping} de Keras}
+En lugar de adivinar un número de épocas, le decimos a Keras que monitorice la pérdida de validación y detenga el entrenamiento automáticamente cuando deje de mejorar.
+
+\paragraph{Implementación Práctica:}
+\begin{enumerate}
+    \item \textbf{Importar el callback:}
+    \begin{lstlisting}[language=Python]
+from tensorflow.keras.callbacks import EarlyStopping
+    \end{lstlisting}
+    
+    \item \textbf{Configurar el callback:} Se definen tres parámetros clave:
+    \begin{lstlisting}[language=Python]
+# monitor='val_loss': La métrica a vigilar.
+# patience=10: Cuántas épocas esperar sin mejora antes de parar.
+# restore_best_weights=True: Devuelve el modelo con los pesos de la mejor época.
+early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+    \end{lstlisting}
+    
+    \item \textbf{Añadirlo a \texttt{model.fit()}:} Se pasa el callback y se reserva una parte de los datos para la validación.
+    \begin{lstlisting}[language=Python]
+history = model.fit(X_train, y_train, epochs=200, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+    \end{lstlisting}
+\end{enumerate}
+Con este método, puedes poner un número alto de épocas (ej. 200) con la seguridad de que el entrenamiento se detendrá en el momento óptimo, evitando el sobreentrenamiento y ahorrando tiempo de cómputo.
+\end{gemini}
+
 \end{document}
