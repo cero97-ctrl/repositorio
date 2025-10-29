@@ -498,4 +498,37 @@ device\_type='GPU')]}. Si la lista está vacía (\texttt{[]}), TensorFlow no est
 la GPU.
 \end{gemini}
 
+\section{Verificación del Entorno en Google Colab}
+
+\subsection{Resultado de la Verificación de GPU}
+
+\begin{usuario}
+He activado y verificado la GPU en mi cuenta de "Google Colab" y la respuesta fué la que te muestro en el contexto.
+\end{usuario}
+
+\begin{gemini}
+¡Perfecto! El resultado que me muestras es exactamente lo que esperábamos ver. Confirma que Google Colab te ha asignado correctamente una GPU y que tu entorno está listo para el entrenamiento acelerado.
+
+Analicemos brevemente la salida que recibiste:
+\begin{lstlisting}[language=bash, caption={Salida del comando !nvidia-smi}]
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   56C    P8             12W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+\end{lstlisting}
+Puntos clave de esta salida:
+\begin{itemize}
+    \item \textbf{GPU Name:} Tienes asignada una \texttt{Tesla T4}, una GPU excelente para tareas de Machine Learning.
+    \item \textbf{Memory-Usage:} Dispones de casi 16 GB de memoria de video (\texttt{15360MiB}), que está completamente libre para ser usada.
+    \item \textbf{GPU-Util:} El uso de la GPU es del \texttt{0\%}, lo que indica que está lista y esperando para procesar tu código.
+\end{itemize}
+\end{gemini}
+
 \end{document}
