@@ -1,0 +1,180 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{enumitem} % Para un mejor control de las listas
+
+\title{Plan de Trabajo de 10 Semanas: Circuitos y Dispositivos Electrónicos}
+\author{Prof. CESAR RODRIGUEZ}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Objetivo General}
+Adquirir una comprensión sólida de los fundamentos de la electrónica, el análisis de circuitos y el funcionamiento de los principales dispositivos semiconductores, incluyendo su modelado y aplicaciones básicas.
+
+\section*{Recomendaciones Generales}
+\begin{itemize}
+    \item \textbf{Lectura Activa:} No solo leas, sino toma notas, subraya y resume los 
+    conceptos clave.
+    \item \textbf{Resolución de Problemas:} La electrónica se aprende haciendo. Dedica 
+    tiempo a resolver los 'Cuestiones y problemas' al final de cada capítulo. Los 
+    'Resultados de problemas' (p. 449-455) te serán útiles para verificar tus soluciones.
+    \item \textbf{Simulación (SPICE/DroidTesla):} Si tienes acceso a un simulador como SPICE 
+    (Apéndice B), úsalo para verificar tus análisis y entender mejor el comportamiento de 
+    los circuitos, especialmente en los capítulos donde se menciona explícitamente.
+    \item \textbf{Flexibilidad:} Este es un plan ambicioso. Si un tema te resulta 
+    particularmente difícil, no dudes en dedicarle más tiempo, incluso si eso significa 
+    ajustar las semanas siguientes.
+    \item \textbf{Revisión Constante:} Repasa periódicamente los conceptos de semanas 
+    anteriores para consolidar el conocimiento.
+\end{itemize}
+
+\hrulefill
+\vspace{1cm}
+
+\section{Semana 1: Fundamentos de Circuitos DC}
+\begin{itemize}
+    \item \textbf{Capítulos:}
+    \begin{itemize}
+        \item \textbf{1. Conceptos básicos} (p. 15-31): Magnitudes eléctricas, componentes, señales, leyes de Kirchhoff, símbolos y unidades.
+        \item \textbf{2. Circuitos resistivos} (p. 35-51): Concepto de resistencia, análisis nodal y de mallas, circuito equivalente, resistencias en serie/paralelo, divisores de tensión/corriente, reducción de circuitos.
+    \end{itemize}
+    \item \textbf{Objetivos:} Dominar las leyes fundamentales de los circuitos, el cálculo de magnitudes eléctricas y las técnicas básicas de análisis para circuitos resistivos.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Lectura y comprensión de los conceptos.
+        \item Resolución de ejercicios de análisis nodal y de mallas.
+        \item Práctica con los teoremas de Thévenin y Norton en circuitos resistivos.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 2: Circuitos Lineales y Fuentes Dependientes}
+\begin{itemize}
+    \item \textbf{Capítulos:}
+    \begin{itemize}
+        \item \textbf{3. Circuitos lineales} (p. 57-67): Linealidad, superposición, circuitos equivalentes de Thévenin y Norton (general), transferencia de señal.
+        \item \textbf{4. Fuentes dependientes} (Secciones 4.1-4.3, p. 73-78): Concepto de fuente dependiente lineal, análisis de circuitos con fuentes dependientes, fuentes dependientes y circuitos activos.
+    \end{itemize}
+    \item \textbf{Objetivos:} Entender los teoremas de circuitos lineales y la importancia de las fuentes dependientes en el modelado de dispositivos.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Aplicar superposición, Thévenin y Norton a circuitos más complejos.
+        \item Analizar circuitos con diferentes tipos de fuentes dependientes.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 3: Amplificadores Operacionales (A.O.) y Simulación Básica}
+\begin{itemize}
+    \item \textbf{Capítulos:}
+    \begin{itemize}
+        \item \textbf{4. Fuentes dependientes} (Secciones 4.4-4.8, p. 78-95): El amplificador operacional (A.O.), análisis de circuitos con A.O. (región lineal y no lineal), circuitos de acoplamiento con A.O., análisis con SPICE.
+        \item \textbf{Apéndice B. Introducción al simulador PSPICE} (p. 421-430): Descripción del circuito, tipos de análisis, interacción con el ordenador.
+    \end{itemize}
+    \item \textbf{Objetivos:} Comprender el funcionamiento del A.O. y su modelado, así como introducirse a la simulación de circuitos con SPICE.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Diseñar y analizar circuitos básicos con A.O. (inversor, no inversor, sumador, etc.).
+        \item Realizar simulaciones de estos circuitos en SPICE para verificar resultados.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 4: Componentes Reactivos: Condensadores}
+\begin{itemize}
+    \item \textbf{Capítulos:}
+    \begin{itemize}
+        \item \textbf{5. El condensador, la bobina y el transformador} (Secciones 5.1-5.2, p. 103-124): El condensador (ideal, funcionamiento, asociación), análisis de circuitos RC (respuesta al escalón, respuesta sinusoidal).
+    \end{itemize}
+    \item \textbf{Objetivos:} Entender el concepto de capacidad, el comportamiento del condensador y el análisis de circuitos RC en el dominio del tiempo y la frecuencia.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Resolver problemas de carga y descarga de condensadores.
+        \item Analizar la respuesta de circuitos RC a señales sinusoidales.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 5: Componentes Reactivos: Bobinas y Transformadores}
+\begin{itemize}
+    \item \textbf{Capítulos:}
+    \begin{itemize}
+        \item \textbf{5. El condensador, la bobina y el transformador} (Secciones 5.3-5.7, p. 125-142): La bobina (ideal, funcionamiento, asociación), análisis de circuitos RL, linealidad y energía, el transformador, análisis con SPICE.
+    \end{itemize}
+    \item \textbf{Objetivos:} Comprender el concepto de inductancia, el comportamiento de la bobina y el transformador, y el análisis de circuitos RL.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Resolver problemas de circuitos RL (transitorios).
+        \item Analizar el funcionamiento de transformadores ideales.
+        \item Simular circuitos RLC con SPICE.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 6: El Diodo: Fundamentos y Rectificación}
+\begin{itemize}
+    \item \textbf{Capítulos:} \textbf{6. El diodo. Circuitos con diodos} (Secciones 6.1-6.3, p. 149-161): El diodo (conceptos básicos, en continua y baja frecuencia, rectificador).
+    \item \textbf{Objetivos:} Entender el diodo ideal y real, sus modelos y características i-v, y analizar circuitos rectificadores de media onda y onda completa.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Estudiar los modelos de diodo (exponencial, tramos lineales).
+        \item Resolver problemas de rectificación y análisis gráfico.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 7: El Diodo: Zener, Transitorios y Pequeña Señal}
+\begin{itemize}
+    \item \textbf{Capítulos:} \textbf{6. El diodo. Circuitos con diodos} (Secciones 6.4-6.8, p. 178-198): El diodo zener, régimen dinámico (transitorios), pequeña señal, consideraciones térmicas, análisis con SPICE.
+    \item \textbf{Objetivos:} Comprender el diodo Zener y sus aplicaciones, el comportamiento del diodo en transitorios y pequeña señal, y el impacto de la temperatura.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Analizar circuitos con diodos Zener.
+        \item Estudiar los efectos de la capacidad del diodo y su modelado en pequeña señal.
+        \item Simular circuitos con diodos en SPICE.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 8: Transistor Bipolar (BJT): DC y Amplificación Básica}
+\begin{itemize}
+    \item \textbf{Capítulos:} \textbf{7. El transistor bipolar} (Secciones 7.1-7.5, p. 205-244): Conceptos básicos, en continua y baja frecuencia (curvas características, análisis DC), como interruptor, como amplificador (conceptos básicos, punto de trabajo, márgenes dinámicos).
+    \item \textbf{Objetivos:} Entender la estructura y funcionamiento del BJT, su polarización en DC y los principios de amplificación.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Estudiar las regiones de operación del BJT (corte, activa, saturación).
+        \item Resolver problemas de polarización DC y análisis de gran señal para amplificadores con BJT.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 9: Transistor Bipolar (BJT): Modelos y Etapas Amplificadoras}
+\begin{itemize}
+    \item \textbf{Capítulos:} \textbf{7. El transistor bipolar} (Secciones 7.6-7.10, p. 246-277): Modelos en pequeña señal (híbrido en $\pi$, parámetros h), etapas elementales (emisor común, seguidor, base común), par acoplado por emisor, limitaciones, análisis con SPICE.
+    \item \textbf{Objetivos:} Dominar los modelos de pequeña señal del BJT y analizar las diferentes configuraciones de amplificadores.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Analizar circuitos amplificadores con BJT usando modelos de pequeña señal.
+        \item Estudiar las etapas amplificadoras y el par diferencial.
+        \item Simular circuitos con BJT en SPICE.
+    \end{itemize}
+\end{itemize}
+
+\section{Semana 10: Transistor MOS (MOSFET) y Otros Dispositivos}
+\begin{itemize}
+    \item \textbf{Capítulos:}
+    \begin{itemize}
+        \item \textbf{8. El transistor MOS} (p. 283-321): Conceptos básicos, en continua, régimen dinámico, como resistencia, como interruptor, como amplificador, efectos de segundo orden, análisis con SPICE.
+        \item \textbf{9. Otros dispositivos semiconductores} (p. 329-351): Dispositivos optoelectrónicos (LED, fotodiodo), electrónica de potencia (SCR, triac, IGBT), JFET.
+        \item \textbf{10. Teoría y tecnología de dispositivos semiconductores} (Overview, p. 355-400): Conducción eléctrica, unión PN, fabricación (bipolar, MOS).
+    \end{itemize}
+    \item \textbf{Objetivos:} Comprender el funcionamiento del MOSFET y sus aplicaciones, y obtener una visión general de otros dispositivos semiconductores importantes, así como de la física y tecnología de fabricación.
+    \item \textbf{Actividades:}
+    \begin{itemize}
+        \item Estudiar las características del MOSFET y sus aplicaciones como interruptor y amplificador.
+        \item Revisar los conceptos clave de los dispositivos optoelectrónicos, de potencia y JFET.
+        \item Comprender los principios básicos de la física de semiconductores y los procesos de fabricación.
+    \end{itemize}
+\end{itemize}
+
+\end{document}
