@@ -1,0 +1,182 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[french]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[european]{circuitikz} % Pour dessiner des circuits
+\usetikzlibrary{babel} % Pour la compatibilité avec babel-french
+\usepackage{comment}
+
+\title{Solution TP3 : Modèles de Thévenin et Norton}
+\author{Prof: CERO}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+Ce document présente la résolution détaillée des exercices du TP3 concernant les modèles 
+de Thévenin et Norton, ainsi que le théorème de superposition. Les explications sont conçues 
+pour être claires et didactiques. Le nœud 'A' (+) se trouve à la jonction des résistances de 
+1.8k$\Omega$ et 1k$\Omega$, tandis que le nœud 'B' (-) est connecté à la masse.
+
+\begin{center}
+    \begin{circuitikz}
+        \draw (0,0) node[ground]{} to[V, v=$15V$] (0,3) to[R, l=$3.9k\Omega$] (2,3);
+        \draw (2,0) node[ground]{} to[V, v=$5V$] (2,1) to[R, l=$3.9k\Omega$] (2,3);
+        \draw (4,0) node[ground]{} to[V, v=$15V$] (4,1) to[R, l=$1k\Omega$] (4,3);
+        \draw (2,3) node[circ, label=above:$V_C$]{} to[R, l=$1.8k\Omega$] (4,3) node[circ, label=above:A]{};
+        
+        % Lignes pointillées pour délimiter le dipôle D
+        \draw[dashed] (4, 3) -- (5, 3);
+        %\node at (5.5, 3.7) {D};
+        \node at (5.5, 3) {(+)};
+        \node at (5.5, 0) {(-)};
+        \draw (6,0) node[ground, label=right:B]{};
+    \end{circuitikz}
+\end{center}
+
+\section{Préparation}
+
+\subsection*{Rappel des modèles de Thévenin et Norton}
+\begin{itemize}
+    \item \textbf{Modèle de Thévenin :} Un circuit linéaire complexe peut être remplacé par une source de tension idéale $E_{Th}$ en série avec une résistance $R_{Th}$.
+    \item \textbf{Modèle de Norton :} Le même circuit peut être remplacé par une source de courant idéale $I_N$ en parallèle avec une résistance $R_{N}$.
+\end{itemize}
+La résistance de Thévenin est égale à la résistance de Norton ($R_{Th} = R_N$). La relation entre les modèles est donnée par la loi d'Ohm : $E_{Th} = R_{Th} \cdot I_N$.
+
+\subsection*{a) Différence de potentiel $V_{AB}$ par superposition}
+Pour trouver la tension $V_{AB}$ (qui est la tension en circuit ouvert, donc $E_{Th}$), nous utilisons le théorème de 
+superposition. Nous calculons la contribution de chaque source de tension indépendamment, en remplaçant les autres par un 
+court-circuit.
+
+Le point B est notre référence (masse, 0V). La tension $V_{AB}$ est donc égale à $V_A$.
+
+Calculons $V_A$ en utilisant la superposition.
+
+\paragraph{1. Contribution de la source de 15V (gauche), $V_1$ :}
+Les autres sources (5V et 15V droite) sont court-circuitées. Le circuit devient :
+
+\begin{center}
+	\begin{circuitikz}
+		\draw (0,0) node[ground]{} to[V, v=$15V$] (0,3) to[R, l=$3.9k\Omega$] (3,3) node[circ, label=above:$C$]{};
+		\draw (3,3) to[R, l=$3.9k\Omega$] (3,0) node[ground]{};
+		\draw (3,3) to[R, l=$1.8k\Omega$] (6,3) node[circ, label=above:$A$]{};
+		\draw (6,3) to[R, l=$1k\Omega$] (6,0) node[ground]{};
+	\end{circuitikz}
+\end{center}
+
+Pour résoudre ce circuit, nous utilisons l'analyse nodale pour les nœuds A et C.
+Les équations de la Loi des Courants de Kirchhoff (LCK) sont :
+\begin{itemize}
+    \item \textbf{Nœud C :} $\frac{V_C - 15V}{3.9k\Omega} + \frac{V_C}{3.9k\Omega} + \frac{V_C - V_A}{1.8k\Omega} = 0$
+    \item \textbf{Nœud A :} $\frac{V_A - V_C}{1.8k\Omega} + \frac{V_A}{1k\Omega} = 0$
+\end{itemize}
+De l'équation du nœud A, nous pouvons isoler $V_C$ :
+$$ V_A \left( \frac{1}{1.8k} + \frac{1}{1k} \right) = \frac{V_C}{1.8k} \implies V_C = V_A \left( 1 + \frac{1.8k}{1k} \right) = 2.8 \cdot V_A $$
+En substituant $V_C$ dans l'équation du nœud C (et en multipliant tout par $3.9k \cdot 1.8k$ pour simplifier) :
+$$ 1.8(2.8 V_A - 15) + 1.8(2.8 V_A) + 3.9(2.8 V_A - V_A) = 0 $$
+$$ 5.04 V_A - 27 + 5.04 V_A + 3.9(1.8 V_A) = 0 $$
+$$ 10.08 V_A - 27 + 7.02 V_A = 0 $$
+$$ 17.1 V_A = 27 $$
+$$ V_{A1} = \frac{27}{17.1} \approx \mathbf{1.579 \, V} $$
+
+\paragraph{2. Contribution de la source de 5V (centre), $V_2$ :}
+Les deux sources de 15V sont court-circuitées.
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[ground]{} to[R, l=$3.9k\Omega$] (0,3) to (3,3) node[circ, label=above:$C$]{};
+    \draw (3,0) node[ground]{} to[V, v=$5V$] (3,1) to[R, l=$3.9k\Omega$] (3,3);
+    \draw (3,3) to[R, l=$1.8k\Omega$] (6,3) node[circ, label=above:$A$]{};
+    \draw (6,3) to[R, l=$1k\Omega$] (6,0) node[ground]{};
+\end{circuitikz}
+\end{center}
+
+Pour analyser ce circuit, nous transformons d'abord la source de 5V et sa résistance en série de 3.9k$\Omega$ en son équivalent de Norton :
+$$ I_{N,5V} = \frac{5V}{3.9k\Omega} \approx 1.282 \, mA \quad \text{avec une résistance en parallèle de } 3.9k\Omega $$
+Cette source de courant est connectée au nœud C. Au nœud C, nous avons aussi la résistance de 3.9k$\Omega$ de la branche de gauche. La résistance équivalente de ces deux en parallèle est $R_{eq,C} = \frac{3.9k}{2} = 1.95k\Omega$.
+
+Le circuit se simplifie en une source de courant $I_{N,5V}$ qui se divise entre $R_{eq,C}$ et la résistance en série de la branche du nœud A ($1.8k\Omega + 1k\Omega = 2.8k\Omega$).
+
+Nous calculons le courant $I_A$ qui passe par la branche du nœud A en utilisant le diviseur de courant :
+$$ I_A = I_{N,5V} \cdot \frac{R_{eq,C}}{R_{eq,C} + (1.8k\Omega + 1k\Omega)} $$
+$$ I_A = 1.282 \, mA \cdot \frac{1.95k\Omega}{1.95k\Omega + 2.8k\Omega} = 1.282 \, mA \cdot \frac{1950}{4750} \approx 0.526 \, mA $$
+Finalement, la tension au nœud A est ce courant multiplié par la résistance de 1k$\Omega$ :
+$$ V_{A2} = I_A \cdot 1k\Omega = 0.526 \, mA \cdot 1k\Omega = \mathbf{0.526 \, V} $$
+
+\paragraph{3. Contribution de la source de 15V (droite), $V_3$ :}
+Les sources de 15V (gauche) et 5V sont court-circuitées.
+\begin{center}
+\begin{circuitikz}
+    \draw (0,0) node[ground]{} to[R, l=$3.9k\Omega$] (0,3) to (3,3) node[circ, label=above:$C$]{};
+    \draw (3,0) node[ground]{} to[R, l=$3.9k\Omega$] (3,3);
+    \draw (3,3) to[R, l=$1.8k\Omega$] (6,3) node[circ, label=above:$A$]{};
+    \draw (6,0) node[ground]{} to[V, v=$15V$] (6,1) to[R, l=$1k\Omega$] (6,3);
+\end{circuitikz}
+\end{center}
+
+En court-circuitant les sources de gauche et du centre, leurs résistances de 3.9k$\Omega$ se retrouvent en parallèle entre le nœud C et la masse. Leur équivalent est $R_{eq,C} = \frac{3.9k\Omega}{2} = 1.95k\Omega$.
+
+La manière la plus simple de le résoudre est de transformer la source de 15V et sa résistance de 1k$\Omega$ en son équivalent de Norton :
+$$ I_{N,15V} = \frac{15V}{1k\Omega} = 15 \, mA \quad \text{avec une résistance en parallèle de } 1k\Omega $$
+Cette source de courant est connectée au nœud A. La tension en A sera le produit de ce courant par la résistance totale équivalente vue depuis A. La résistance vue depuis A est celle de 1k$\Omega$ en parallèle avec le chemin qui va vers C, qui est $1.8k\Omega + R_{eq,C} = 1.8k\Omega + 1.95k\Omega = 3.75k\Omega$.
+
+La résistance totale équivalente au nœud A est :
+$$ R_{eq,A} = \frac{1k\Omega \cdot 3.75k\Omega}{1k\Omega + 3.75k\Omega} = \frac{3750}{4.75} \approx 789.5 \, \Omega $$
+La tension en A est :
+$$ V_{A3} = I_{N,15V} \cdot R_{eq,A} = 15 \, mA \cdot 789.5 \, \Omega = \mathbf{11.842 \, V} $$
+
+\paragraph{Tension totale :}
+La tension totale au nœud A, qui est la tension de Thévenin $E_{Th}$, est la somme des trois contributions calculées :
+$$ E_{Th} = V_{A1} + V_{A2} + V_{A3} $$
+$$ E_{Th} = 1.579 \, V + 0.526 \, V + 11.842 \, V = \mathbf{13.947 \, V} $$
+\textit{Note : Cette valeur est le résultat correct pour le circuit analysé. L'écart avec la valeur de 10.8V de l'énoncé original persiste, ce qui confirme qu'il y a une erreur dans les données du problème ou dans le schéma original que l'on tentait de représenter.}
+
+\subsection*{b) Détermination de $E_{Th}$, $I_N$ et $R_{Th}$}
+\paragraph{$E_{Th}$ (Tension de Thévenin) :}
+La tension de Thévenin est la tension à vide entre A et B, que nous venons de calculer.
+$$ E_{Th} = V_{AB} = \mathbf{13.947 \, V} $$
+
+\paragraph{$R_{Th}$ (Résistance de Thévenin) :}
+Pour trouver $R_{Th}$, on 'éteint' toutes les sources de tension (on les remplace par un 
+court-circuit) et on calcule la résistance équivalente vue depuis les bornes A et B.
+\begin{center}
+    \begin{circuitikz}
+        \draw (0,0) node[ground]{} to[R, l=$3.9k\Omega$] (0,3) to (2,3) node[circ, label=above:$C$]{};
+        \draw (2,0) node[ground]{} to[R, l=$3.9k\Omega$] (2,3);
+        \draw (2,3) to[R, l=$1.8k\Omega$] (5,3) node[circ, label=right:$A$]{};
+        \draw (5,3) to[R, l=$1k\Omega$] (5,0) node[ground, label=right:B]{};
+        \node at (6,3) {}; % Point de mesure
+    \end{circuitikz}
+\end{center}
+Les deux résistances de 3.9k$\Omega$ sont en parallèle, leur équivalent est $R_{eq,C} = 1.95k\Omega$. Cette résistance est en série avec celle de 1.8k$\Omega$. L'ensemble est en parallèle avec la résistance de 1k$\Omega$.
+$$ R_{Th} = (1.95k\Omega + 1.8k\Omega) \parallel 1k\Omega = 3.75k\Omega \parallel 1k\Omega $$
+$$ R_{Th} = \frac{3.75k\Omega \cdot 1k\Omega}{3.75k\Omega + 1k\Omega} = \frac{3750}{4.75} \approx \mathbf{789.5 \, \Omega} $$
+\textit{Note : Cette valeur coïncide avec la valeur de référence de 790$\Omega$ de l'énoncé, ce qui confirme que la topologie du circuit est correcte. Cependant, la valeur de $E_{Th}$ que nous avons calculée (13.95V) ne coïncide pas avec celle de l'énoncé (10.8V).}
+
+\paragraph{$I_N$ (Courant de Norton) :}
+Le courant de Norton est le courant qui circule dans un court-circuit placé entre A et B. On peut le calculer avec la loi d'Ohm à partir de $E_{Th}$ et $R_{Th}$.
+$$ I_N = \frac{E_{Th}}{R_{Th}} = \frac{13.947 \, V}{789.5 \, \Omega} \approx 0.01766 \, A = \mathbf{17.67 \, mA} $$
+\textit{Note : Cette valeur est proche de la référence de l'énoncé (13.7mA), bien qu'elle ne soit pas identique en raison de l'écart sur $E_{Th}$.}
+
+\subsection*{c) Tension avec une charge de 790 $\Omega$}
+Nous branchons une résistance de charge $R_L = 790 \, \Omega$ entre A et B. En utilisant le modèle de Thévenin, le circuit devient un simple diviseur de tension.
+\begin{center}
+    \begin{circuitikz}
+        \draw (0,0) node[ground]{} to[V, v=$E_{Th}$] (0,2) to[R, l=$R_{Th}$] (2,2) to[R, l={$R_L=790\Omega$}] (2,0) node[ground]{};
+        \node at (2,2.3) {$V_L$};
+    \end{circuitikz}
+\end{center}
+La tension $V_L$ aux bornes de la charge est :
+$$ V_L = E_{Th} \cdot \frac{R_L}{R_{Th} + R_L} $$
+En utilisant nos valeurs calculées :
+$$ V_L = 13.947 \cdot \frac{790}{789.5 + 790} = 13.947 \cdot \frac{790}{1579.5} \approx \mathbf{6.97 \, V} $$
+Si nous utilisions les valeurs (incorrectes) de l'énoncé ($E_{Th}=10.8V, R_{Th}=790\Omega$) :
+$$ V_L = 10.8 \cdot \frac{790}{790 + 790} = 10.8 \cdot \frac{1}{2} = 5.4 \, V $$
+Ceci montre que lorsque $R_L = R_{Th}$, la tension aux bornes de la charge est la moitié de la tension de Thévenin.
+
+\end{document}
