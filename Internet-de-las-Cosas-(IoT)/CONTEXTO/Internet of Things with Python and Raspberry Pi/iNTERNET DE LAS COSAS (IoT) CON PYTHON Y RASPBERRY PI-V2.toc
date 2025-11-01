@@ -1,0 +1,177 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}INTRODUCCIóN}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Estructura por Etapas}{6}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Resultados}{6}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Guía Prática}{7}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Plataforma IoT en la Nube}{7}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Enfoque Basado en la Resolución de Problemas}{8}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Tecnologías Claves}{9}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Python}{9}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}Raspberry PI}{9}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.3}FLASK}{10}{subsection.1.6.3}%
+\contentsline {subsection}{\numberline {1.6.4}AWS}{11}{subsection.1.6.4}%
+\contentsline {subsection}{\numberline {1.6.5}PubNub}{12}{subsection.1.6.5}%
+\contentsline {chapter}{\numberline {2}ETAPAS DEL SISTEMA IoT}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introducción a IoT}{14}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Que es IoT}{15}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Componentes Mayores (Dispositivos, Sensores, Actuadores)}{15}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Modelos de Comunicación IoT}{16}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Primer Proyecto IoT}{16}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Detector de Movimiento Antirobo}{17}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Sensores (PIR)}{18}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Actuadores (Zunbador)}{19}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Servidor WEB con FLASK (Comunicación Unidireccional y Bidireccional)}{20}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Técnica AJAX para Comunicación}{21}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}Protocolos de Comunicación y Seguridad}{22}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Protocolos en Tiempo Real}{23}{subsection.2.3.1}%
+\contentsline {subsubsection}{WebSockets}{23}{section*.2}%
+\contentsline {subsubsection}{MQTT (Message Queuing Telemetry Transport)}{24}{section*.3}%
+\contentsline {subsubsection}{MQTT}{25}{section*.4}%
+\contentsline {subsubsection}{WebSockets}{26}{section*.5}%
+\contentsline {subsubsection}{DEMOSTRACIÓN CON PUBNUB}{27}{section*.6}%
+\contentsline {subsection}{\numberline {2.3.2}Seguridad en Internet y Criptografía}{27}{subsection.2.3.2}%
+\contentsline {subsubsection}{ALGORITMOS (SIMÉTRICO, ASIMÉTRICO)}{29}{section*.7}%
+\contentsline {subsubsection}{CIFRADO}{29}{section*.8}%
+\contentsline {subsubsection}{FIRMA DIGITAL}{30}{section*.9}%
+\contentsline {subsubsection}{SSL/TLS (HTTPS)}{31}{section*.10}%
+\contentsline {section}{\numberline {2.4}Reconstrucción del Proyecto y Despliegue en la NUBE}{32}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Uso de PubNub Como Protocolo Principal (en lugar de AJAX)}{33}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Despliegue del Servidor IoT en AWS}{33}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Desarrollo de Seguridad}{34}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Dominio Personalizado Seguro con SSL/TLS (Encriptación)}{35}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Funcionalidad Segura de Inicio de Sesión de Usuario}{36}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Almacenamiento de Detalles de Usuario en DB Integrada}{37}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}Conexión Segura de Usuarios Y Dispositivos}{38}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Conexión Segura con Servidor IoT}{39}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}PubNub Access Manager (Usuarios Admin/No Admin)}{40}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Panel de Control (Lista de Usuarios online, Permisos de Lectura/Escritura)}{41}{subsection.2.6.3}%
+\contentsline {section}{\numberline {2.7}Proyecto Final: Sistema de Monitoreo (Paciente Diabético/Nivel de Carga de Batería)}{43}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Mas Sensores y Actuadores}{44}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}Convertidores Digitales}{44}{subsection.2.7.2}%
+\contentsline {subsection}{\numberline {2.7.3}Iinterfaz Periférica Serial}{45}{subsection.2.7.3}%
+\contentsline {subsection}{\numberline {2.7.4}Panel con Gráficos Visuales en Tiempo Real}{45}{subsection.2.7.4}%
+\contentsline {chapter}{\numberline {3}PRIMER PROYECTO IoT: Detector de Movimiento}{47}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Descripción del Proyecto}{48}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Dispositivo IoT de Defensa Antirrobo}{49}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Detección de Movimiento}{50}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Activación de la Alarma}{52}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Envío de Alertas (Unidireccional)}{53}{subsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.1.5}Funcionalidad para Desactivar Alarma (Bidireccional)}{54}{subsection.3.1.5}%
+\contentsline {section}{\numberline {3.2}Componentes de Hardware}{56}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Sensor PIR (Infrarrojo Pasivo)}{57}{subsection.3.2.1}%
+\contentsline {subsubsection}{ELEMENTO SENSOR: RE200B}{58}{section*.11}%
+\contentsline {subsubsection}{TIPO: PIEZOELéCTRICO}{59}{section*.12}%
+\contentsline {subsubsection}{DETECCIóN: CALOR (RADIACIóN INFRAROJA DE CUERPOS)}{59}{section*.13}%
+\contentsline {subsubsection}{PASIVO: NO EMITE ENERGíA}{60}{section*.14}%
+\contentsline {subsubsection}{TAPA PLASTICA: EXPANDE áREA DE DETECCIóN}{60}{section*.15}%
+\contentsline {subsubsection}{PINES}{61}{section*.16}%
+\contentsline {subsubsection}{POTENCIOMETROS}{61}{section*.17}%
+\contentsline {subsubsection}{MODOS DE DISPARO (JUMPER)}{62}{section*.18}%
+\contentsline {subsection}{\numberline {3.2.2}Zumbador}{62}{subsection.3.2.2}%
+\contentsline {subsubsection}{COMPONENTE: ELEMENTO PIEZOELéCTRICO, DISCO DE VIBRACIóN METáLICO.}{63}{section*.19}%
+\contentsline {subsubsection}{SONIDO: VIBRACIóN DE DISCO}{64}{section*.20}%
+\contentsline {subsubsection}{PINES}{64}{section*.21}%
+\contentsline {subsubsection}{CONTROL: ONDA CUADRADA (ALTA, ESPERAR; BAJA, ESPERAR)}{64}{section*.22}%
+\contentsline {section}{\numberline {3.3}Funcionamiento Técnico}{65}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Conexión PIR y Zumbador con Raspberry PI}{66}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Código Python para Detección de Movimiento y Control del Zumbador}{68}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Servidor WEB FLASK en Raspberry PI (Red Local).}{69}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Solisitud de HTTP del Navegador del Usuario}{70}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Solisitudes KEEPALIVE Periódicas (cada 5s)}{72}{subsection.3.3.5}%
+\contentsline {subsection}{\numberline {3.3.6}Botón en Página WEB para Controlar Actuadores (Desactivar Zumbador)}{72}{subsection.3.3.6}%
+\contentsline {subsection}{\numberline {3.3.7}Acceso solo Dentro de la Red Local}{74}{subsection.3.3.7}%
+\contentsline {section}{\numberline {3.4}Configuración de Raspberry PI}{75}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Tarjeta SD de 8GB Mínimo (OS)}{75}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Monitor HDMI O Escritorio Remoto}{76}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Habilitar SSH}{76}{subsection.3.4.3}%
+\contentsline {chapter}{\numberline {4}PROTOCOLOS DE COMUNICACIóN IoT}{78}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Websockets}{80}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Actualizaciones solo Cuando Ocurren (sin sondeo)}{81}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Sesión de Comunicación Interactiva Persistente (una conexión TCP)}{81}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Bidireccional Y Full Duplex}{82}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Baja Latencia}{82}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Funcionamiento}{82}{subsection.4.1.5}%
+\contentsline {subsubsection}{CLIENTE SOLICITA ACTUALIZACIóN A PROTOCOLO WEBSOCKETS (HTTP)}{83}{section*.23}%
+\contentsline {subsubsection}{SERVIDOR RECONOCE HANDSHAKE COMO RESPUESTA}{83}{section*.24}%
+\contentsline {subsubsection}{SESIóN ABIERTA Y PERSISTENTE}{84}{section*.25}%
+\contentsline {subsubsection}{PAQUETES DE DATOS PEQUEñOS}{84}{section*.26}%
+\contentsline {section}{\numberline {4.2}MQTT (Message Queuing Telemetry Transport)}{84}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Protocolo de Mensajería Ligero}{85}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Máquina a Máquina (M2M) e IoT}{86}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Muy Eficiente en Ancho de Banda (2 Bytes de Sobre Carga)}{87}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Escenario de Datos Uno a Uno, Uno a Muchos y Muchos a Muchos}{87}{subsection.4.2.4}%
+\contentsline {subsubsection}{Uno a Uno}{88}{section*.27}%
+\contentsline {subsubsection}{Uno a Muchos}{88}{section*.28}%
+\contentsline {subsubsection}{Muchos a Muchos}{89}{section*.29}%
+\contentsline {subsection}{\numberline {4.2.5}Modelo Publicar/Suscribir}{89}{subsection.4.2.5}%
+\contentsline {subsubsection}{Dispositivos se Suscriben a Tópicos para Recibir Datos}{91}{section*.30}%
+\contentsline {subsection}{\numberline {4.2.6}Corre Sobre TCP/IP y Puede Correr Sobre Websockets}{92}{subsection.4.2.6}%
+\contentsline {subsection}{\numberline {4.2.7}No Confundir con Websockets (MQTT es un 'Servicio de Entrega' que Corre Encima de Websockets)}{93}{subsection.4.2.7}%
+\contentsline {subsection}{\numberline {4.2.8}Funcionamiento}{94}{subsection.4.2.8}%
+\contentsline {subsection}{\numberline {4.2.9}Escalabilidad: Clientes no Necesitan Conocerse Entre SÍ, Solo Comunicarse a Través del Tópico}{95}{subsection.4.2.9}%
+\contentsline {subsection}{\numberline {4.2.10}Inconveniente: Entidad Central (BROKER), Si Flla, Toda la Comunicación se Pierde}{96}{subsection.4.2.10}%
+\contentsline {subsection}{\numberline {4.2.11}Ejemplos}{96}{subsection.4.2.11}%
+\contentsline {subsubsection}{Usuario Publica Temperatura-> Aire Acondicionado se Suscribe}{97}{section*.31}%
+\contentsline {chapter}{\numberline {5}SERVIDOR IoT SEGURO Y LOGIN DE USUARIO}{98}{chapter.5}%
+\contentsline {subsection}{\numberline {5.0.1}Asegurar Dominio Personalizado con SSL/TLS}{99}{subsection.5.0.1}%
+\contentsline {subsection}{\numberline {5.0.2}Autoridad de Certificación: Let's Encrypt}{101}{subsection.5.0.2}%
+\contentsline {subsubsection}{Gratuito}{102}{section*.32}%
+\contentsline {subsubsection}{Automatizado}{102}{section*.33}%
+\contentsline {subsubsection}{Código Abierto}{103}{section*.34}%
+\contentsline {subsubsection}{Respaldado por Grandes Patrocinadores}{103}{section*.35}%
+\contentsline {subsection}{\numberline {5.0.3}Instalación de CERTBOT (Software de Terceros)}{103}{subsection.5.0.3}%
+\contentsline {subsubsection}{CONECTAR AL SERVIDOR (Putty)}{104}{section*.36}%
+\contentsline {subsubsection}{AGREGAR REPOSITORIO CERTBOT}{105}{section*.37}%
+\contentsline {subsubsection}{ACTUALIZAR LISTA DE PAQUETES}{105}{section*.38}%
+\contentsline {subsubsection}{INSTALAR CERTBOT PARA APACHE}{106}{section*.39}%
+\contentsline {subsection}{\numberline {5.0.4}Configuración del Certificado SSL para APACHE}{106}{subsection.5.0.4}%
+\contentsline {subsubsection}{EJECUTAR CERBOT}{107}{section*.40}%
+\contentsline {subsubsection}{PROPORCIONAR CORREO ELECTRóNICO (RECUPERACIóN DE CLAVE)}{108}{section*.41}%
+\contentsline {subsubsection}{REDIRECCIóN DE HTTP A HTTPS (TYPE 2 TO ENTER)}{109}{section*.42}%
+\contentsline {subsection}{\numberline {5.0.5}Ubicación de Certificados Generados: /etc/letsencrypt/live/}{109}{subsection.5.0.5}%
+\contentsline {subsection}{\numberline {5.0.6}Verificar Estado del Certificado: SSL LABS (ssltest.com)}{110}{subsection.5.0.6}%
+\contentsline {subsubsection}{PROBLEMA INICIAL: FALTAN REGLAS DE SEGURIDAD DE ENTRADA HTTPS EN AWS EC2}{110}{section*.43}%
+\contentsline {subsubsection}{SOLUCIóN: AGREGAR REGLAS HTTPS (PUERTO 443) EN AWS INBOUND RULES}{111}{section*.44}%
+\contentsline {subsection}{\numberline {5.0.7}Detalles del Certificado: Firmado Para 'pact IOT server', Emitido por Let's Encrypt. Válido por 3 meses.}{112}{subsection.5.0.7}%
+\contentsline {subsubsection}{RESULTADO: REDIRECCIóN A HTTPS CON CANDADO VERDE (COMUNICACIóN ENCRIPTADA DE EXTREMO A EXTREMO)}{113}{section*.45}%
+\contentsline {chapter}{\numberline {6}REGLAS PARA USUARIOS ADMINISTRADORES Y NO ADMINISTRADORES}{114}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Mejoras del Servidor IoT}{115}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Iinterfaz de Usuario (index.html)}{117}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}etapa para Usuarios ONLINE}{118}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Lista de Usuarios ON-LINE}{119}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Botones Tipo \texttt { 'SWITCH '} Para Permisos de Lectura y Escritura}{120}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Botón 'APPLY' Para Aplicar Cambios}{122}{subsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.2.5}Extructura del Código HTML (usando Bootstrap, divs)}{122}{subsection.6.2.5}%
+\contentsline {subsection}{\numberline {6.2.6}Elementos de la Fila de Usuario}{123}{subsection.6.2.6}%
+\contentsline {subsubsection}{NOMBRE DE USUARIO}{124}{section*.46}%
+\contentsline {subsubsection}{BOTóN DE LECTURA}{125}{section*.47}%
+\contentsline {subsubsection}{BOTóN DE ESCRITURA}{126}{section*.48}%
+\contentsline {subsubsection}{BOTóN APLICAR}{127}{section*.49}%
+\contentsline {section}{\numberline {6.3}Funcionalidad del Lado del Servidor (Python Flask)}{128}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Población de la Lista de Usuarios Online}{129}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Retorna \texttt {user-id} y \texttt {online-users-record} a la Página web}{130}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Función \texttt {get-all-logged-in-users}}{131}{subsection.6.3.3}%
+\contentsline {section}{\numberline {6.4}Renderizado de la Interfaz (Jinja Templates)}{135}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Bucle \texttt {'for n in online-users-record'}}{136}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Acceso a Datos por índice}{137}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.5}Visibilidad del Panel de Control (Admin Solamente)}{138}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Sentencia \texttt {'if user-id == my-admin-user-id'} en HTML (codificado)}{139}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Verificar \texttt {'session.user-id'} en consola}{140}{subsection.6.5.2}%
+\contentsline {subsection}{\numberline {6.5.3}Prueba con Usuario No Administrador (no tiene acceso al panel)}{141}{subsection.6.5.3}%
+\contentsline {subsection}{\numberline {6.5.4}Prueba con Administrador (puede ver otros usuarios en lista online)}{142}{subsection.6.5.4}%
+\contentsline {section}{\numberline {6.6}ENDPOINT Para el BOTóN \texttt {APLICAR}}{142}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Método JavaScript en \textbf {main.js}}{144}{subsection.6.6.1}%
+\contentsline {subsubsection}{ESCUCHA CLICKS EN BOTONES CON ID QUE EMPIEZAN POR 'XS'}{144}{section*.50}%
+\contentsline {subsubsection}{EXTRAE USER ID DEL ID DEL BOTóN}{145}{section*.51}%
+\contentsline {subsubsection}{LEE ESTADO DE BOTONES DE LECTURA ESCRITURA}{146}{section*.52}%
+\contentsline {subsubsection}{ENVIA SOLISITUD POST AL SERVIDOR}{147}{section*.53}%
+\contentsline {subsection}{\numberline {6.6.2}Endpoint en FLASK para Recibir Solisitud \textbf {grant user-id read and write}}{147}{subsection.6.6.2}%
+\contentsline {subsubsection}{Verificar si la Solisitud Procede de un Usuario Administrador}{148}{section*.54}%
+\contentsline {subsubsection}{Responder 'Acceso Denegado' o 'Acceso Concedido'}{149}{section*.55}%
+\contentsline {subsubsection}{Almacenar Permisos de Lectura/Escritura en la Base de Datos}{150}{section*.56}%
+\contentsline {subsubsection}{Llamar a Pub/Nub para Conceder Acceso al Usuario}{151}{section*.57}%
+\contentsline {subsection}{\numberline {6.6.3}Manejar Respuesta en \textbf {main.js}}{152}{subsection.6.6.3}%
+\contentsline {subsubsection}{Extraer JSON de la Respuesta}{153}{section*.58}%
+\contentsline {subsubsection}{Si 'access' es 'granted', re-suscribirse al canal}{154}{section*.59}%
+\contentsline {subsubsection}{Modificar Método 'SUBSCRIBE para Confirmación de éxito}{155}{section*.60}%
+\contentsline {subsection}{\numberline {6.6.4}Requisito Previo: Generar Clave de Autorización y Almacenar en Base de Datos}{156}{subsection.6.6.4}%

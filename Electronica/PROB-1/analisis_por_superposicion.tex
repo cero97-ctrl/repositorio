@@ -1,0 +1,90 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[european]{circuitikz}
+\usetikzlibrary{babel}
+
+\title{Análisis de Tensión por Superposición}
+\author{Gemini Code Assist}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción del Circuito}
+
+El circuito consta de dos ramas conectadas en paralelo entre un nodo 'A' y tierra (GND). Cada rama contiene una fuente de tensión en serie con una resistencia. El objetivo es determinar la fórmula para la tensión $V_A$ utilizando el teorema de superposición.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (0,3) node[circ, label=above:A] (A) {};
+        
+        % Rama 1: Fuente E1 y R1
+        \draw (A) to[R, l=$R_1$] (-3,3) to[V, v<=$E_1$] (-3,0) -- (gnd);
+        
+        % Rama 2: Fuente E2 y R2
+        \draw (A) to[R, l=$R_2$] (3,3) to[V, v<=$E_2$] (3,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+\section{Aplicación del Teorema de Superposición}
+
+El teorema de superposición nos permite calcular la contribución de cada fuente independiente por separado y luego sumar los resultados.
+
+\subsection{Paso 1: Contribución de la fuente $E_1$}
+
+Apagamos la fuente $E_2$ (la reemplazamos por un cortocircuito). El circuito se convierte en un divisor de tensión. La tensión en el nodo A, que llamaremos $V_{A1}$, es la tensión que cae en la resistencia $R_2$.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (0,3) node[circ, label=above:A] (A) {};
+        \draw (A) to[R, l=$R_1$] (-3,3) to[V, v<=$E_1$] (-3,0) -- (gnd);
+        \draw (A) to[R, l=$R_2$] (3,3) to[short] (3,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+La tensión $V_{A1}$ se calcula con la fórmula del divisor de tensión:
+\begin{equation}
+    V_{A1} = E_1 \cdot \frac{R_2}{R_1 + R_2}
+\end{equation}
+
+\subsection{Paso 2: Contribución de la fuente $E_2$}
+
+Ahora, apagamos la fuente $E_1$ (la reemplazamos por un cortocircuito) y calculamos la contribución de $E_2$. De nuevo, tenemos un divisor de tensión. La tensión en el nodo A, $V_{A2}$, es la que cae en la resistencia $R_1$.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (0,3) node[circ, label=above:A] (A) {};
+        \draw (A) to[R, l=$R_1$] (-3,3) to[short] (-3,0) -- (gnd);
+        \draw (A) to[R, l=$R_2$] (3,3) to[V, v<=$E_2$] (3,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+La tensión $V_{A2}$ se calcula de forma análoga:
+\begin{equation}
+    V_{A2} = E_2 \cdot \frac{R_1}{R_1 + R_2}
+\end{equation}
+
+\subsection{Paso 3: Tensión Total en el Nodo A}
+
+La tensión total $V_A$ es la suma de las contribuciones individuales:
+\begin{equation}
+    V_A = V_{A1} + V_{A2} = E_1 \frac{R_2}{R_1 + R_2} + E_2 \frac{R_1}{R_1 + R_2}
+\end{equation}
+Simplificando la expresión, obtenemos la fórmula final para la tensión en el nodo A:
+\begin{equation}
+    V_A = \frac{E_1 R_2 + E_2 R_1}{R_1 + R_2}
+\end{equation}
+
+\textit{Nota: Esta es la fórmula clásica del Teorema de Millman para dos ramas con fuentes de tensión.}
+
+\end{document}

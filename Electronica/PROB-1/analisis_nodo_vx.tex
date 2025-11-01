@@ -1,0 +1,93 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[european]{circuitikz}
+\usetikzlibrary{babel} % Para compatibilidad con babel-spanish
+\usepackage{comment} % Para poder usar entornos de comentario
+
+\title{Análisis Nodal del Circuito}
+\author{Gemini Code Assist}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción del Circuito}
+
+El circuito a analizar consta de tres ramas en paralelo conectadas entre un nodo superior, que denominaremos $V_x$, y tierra (GND). El objetivo es determinar la fórmula para calcular la tensión $V_x$.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (0,3) node[circ, label=above:$V_x$] (vx) {};
+        
+        % Rama Izquierda (R1 e Is)
+        \draw (vx) to[R, l=$R_1$] (-3,3) to[I, i<=$I_s$] (-3,0) -- (gnd);
+        
+        % Rama Central (R3)
+        \draw (vx) to[R, l=$R_3$] (0,0);
+        
+        % Rama Derecha (R2 y E3)
+        \draw (vx) to[R, l=$R_2$] (3,3) to[V, v^<=$E_3$] (3,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+Los valores de los componentes son:
+\begin{itemize}
+    \item Resistencia $R_1 = 50 \, \Omega$
+    \item Resistencia $R_2 = 50 \, \Omega$
+    \item Resistencia $R_3 = 200 \, \Omega$
+    \item Fuente de corriente $I_s = 50 \, \text{mA} = 0.05 \, \text{A}$
+    \item Fuente de tensión $E_3 = 50 \, \text{V}$
+\end{itemize}
+
+\section{Derivación de la Fórmula para $V_x$}
+
+Para encontrar la tensión en el nodo $V_x$, aplicamos la Ley de Corrientes de Kirchhoff (LCK), estableciendo que la suma de las corrientes que salen del nodo es igual a cero.
+
+\begin{equation}
+    I_{R3} + I_{R2} - I_s = 0
+\end{equation}
+
+Donde la corriente que sale del nodo $V_x$ por cada rama es:
+\begin{itemize}
+    \item \textbf{Rama Izquierda:} La corriente que llega al nodo es $I_s$, por lo que la corriente que sale es $-I_s$. La resistencia $R_1$ no influye en la tensión del nodo $V_x$ al estar en serie con una fuente de corriente ideal.
+    \item \textbf{Rama Central:} La corriente que sale por $R_3$ es $I_{R3} = \frac{V_x}{R_3}$.
+    \item \textbf{Rama Derecha:} La corriente que sale por $R_2$ es $I_{R2} = \frac{V_x - E_3}{R_2}$. El potencial en el terminal superior de la fuente $E_3$ es $+E_3$ con respecto a tierra.
+\end{itemize}
+
+Sustituyendo estas expresiones en la ecuación de la LCK:
+\begin{equation}
+    \frac{V_x}{R_3} + \frac{V_x - E_3}{R_2} - I_s = 0
+\end{equation}
+
+Agrupamos los términos que contienen $V_x$:
+\begin{equation}
+    V_x \left( \frac{1}{R_2} + \frac{1}{R_3} \right) - \frac{E_3}{R_2} - I_s = 0
+\end{equation}
+
+Finalmente, despejamos $V_x$ para obtener la fórmula general:
+\begin{equation}
+    V_x = \frac{I_s + \frac{E_3}{R_2}}{\frac{1}{R_2} + \frac{1}{R_3}}
+\end{equation}
+
+\section{Cálculo del Valor de $V_x$}
+
+Sustituyendo los valores numéricos del circuito en la fórmula obtenida:
+\begin{align*}
+    V_x &= \frac{0.05 \, \text{A} + \frac{50 \, \text{V}}{50 \, \Omega}}{\frac{1}{50 \, \Omega} + \frac{1}{200 \, \Omega}} \\
+    V_x &= \frac{0.05 + 1}{0.02 + 0.005} \\
+    V_x &= \frac{1.05}{0.025} \\
+    V_x &= 42 \, \text{V}
+\end{align*}
+
+La tensión en el punto de unión de las tres resistencias es \textbf{42 V}, el
+cual coincide con el reultado que arroja el simulador (\textbf{DroidTesla}).
+
+\end{document}

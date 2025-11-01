@@ -1,0 +1,79 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[european]{circuitikz}
+\usetikzlibrary{babel}
+
+\title{Análisis de Corriente en Circuito Paralelo}
+\author{Gemini Code Assist}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción del Circuito}
+
+El circuito consta de tres ramas conectadas en paralelo entre un nodo superior, denominado "A", y tierra (GND). El objetivo es determinar la fórmula para calcular la corriente que circula a través de la combinación en serie de las resistencias $R_3$ y $R_{ch}$.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (0,3) node[circ, label=above:A] (A) {};
+        
+        % Rama 1: Fuente E y R1
+        \draw (A) to[R, l=$R_1$] (-4,3) to[V, v<=$E$] (-4,0) -- (gnd);
+        
+        % Rama 2: Resistencia R2
+        \draw (A) to[R, l=$R_2$] (0,0);
+        
+        % Rama 3: Resistencias R3 y Rch
+        \draw (A) to[R, l=$R_3$] (4,3) to[R, l=$R_{ch}$] (4,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+\section{Derivación de la Fórmula}
+
+Para resolver este problema, primero calcularemos la tensión en el nodo A ($V_A$) y luego usaremos la Ley de Ohm para encontrar la corriente deseada, que llamaremos $I_{ch}$.
+
+\subsection{Paso 1: Calcular la Tensión en el Nodo A ($V_A$)}
+
+Para encontrar la tensión $V_A$, aplicamos la Ley de Corrientes de Kirchhoff (LCK) en el nodo "A". La ley establece que la suma de las corrientes que salen del nodo es igual a cero.
+\begin{equation}
+    I_1 + I_2 + I_3 = 0
+\end{equation}
+Donde $I_1$, $I_2$ e $I_3$ son las corrientes que salen del nodo A por cada una de las tres ramas.
+\begin{itemize}
+    \item \textbf{Corriente en Rama 1:} $I_1 = \frac{V_A - E}{R_1}$
+    \item \textbf{Corriente en Rama 2:} $I_2 = \frac{V_A}{R_2}$
+    \item \textbf{Corriente en Rama 3:} $I_3 = \frac{V_A}{R_3 + R_{ch}}$
+\end{itemize}
+
+Sustituyendo estas expresiones en la ecuación de la LCK:
+\begin{equation}
+    \frac{V_A - E}{R_1} + \frac{V_A}{R_2} + \frac{V_A}{R_3 + R_{ch}} = 0
+\end{equation}
+Agrupando los términos que contienen $V_A$ y despejando, obtenemos la misma expresión que con el Teorema de Millman:
+\begin{equation}
+    V_A = \frac{\frac{E}{R_1}}{\frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3 + R_{ch}}}
+\end{equation}
+
+\subsection{Paso 2: Calcular la Corriente $I_{ch}$}
+
+Una vez conocida la tensión $V_A$, que es la tensión aplicada a la tercera rama, la corriente $I_{ch}$ que circula por ella se calcula directamente con la Ley de Ohm. La resistencia total de esta rama es la suma de las resistencias en serie.
+
+\begin{equation}
+    I_{ch} = \frac{V_A}{R_3 + R_{ch}}
+\end{equation}
+
+Sustituyendo la expresión de $V_A$ que encontramos en el paso anterior, obtenemos la fórmula final para la corriente $I_{ch}$:
+\begin{equation}
+    I_{ch} = \frac{1}{R_3 + R_{ch}} \left( \frac{\frac{E}{R_1}}{\frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3 + R_{ch}}} \right)
+\end{equation}
+
+\end{document}

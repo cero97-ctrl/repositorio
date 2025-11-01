@@ -1,0 +1,96 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[european]{circuitikz}
+\usetikzlibrary{babel}
+
+\title{Equivalente de Norton del Circuito}
+\author{Gemini Code Assist}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Objetivo}
+
+El objetivo es encontrar el circuito equivalente de Norton para la parte del 
+circuito a la izquierda de la rama que contiene $R_3$ y $R_{ch}$. 
+Este equivalente se verá desde los terminales del nodo 'A' y tierra (GND).
+
+El circuito original a simplificar consta de dos ramas en paralelo:
+\begin{itemize}
+    \item Rama 1: Fuente de tensión $E$ en serie con resistencia $R_1$.
+    \item Rama 2: Resistencia $R_2$.
+\end{itemize}
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,3) node[circ, label=above:A] (A) {};
+        \draw (0,0) node[ground] (gnd) {};
+        
+        % Circuito a simplificar
+        \draw (A) to[R, l=$R_1$] (-3,3) to[V, v<=$E$] (-3,0) -- (gnd);
+        \draw (A) to[R, l=$R_2$] (0,0);
+
+        % Terminales de salida
+        \draw[dashed] (A) -- (2,3);
+        \draw[dashed] (gnd) -- (2,0);
+        \node at (2.5, 3) {(+)};
+        \node at (2.5, 0) {(-)};
+    \end{circuitikz}
+\end{center}
+
+\section{Cálculo de la Resistencia de Norton ($R_N$)}
+
+Para calcular la resistencia de Norton ($R_N$), que es igual a la resistencia 
+de Thévenin ($R_{Th}$), se anulan las fuentes independientes. La fuente de 
+tensión $E$ se reemplaza por un cortocircuito.
+
+Al hacer esto, las resistencias $R_1$ y $R_2$ quedan conectadas en paralelo 
+entre el nodo 'A' y GND.
+
+\begin{equation}
+    R_N = R_1 \parallel R_2 = \frac{R_1 \cdot R_2}{R_1 + R_2}
+\end{equation}
+
+\section{Cálculo de la Corriente de Norton ($I_N$)}
+
+La corriente de Norton ($I_N$) es la corriente que circula por un cortocircuito colocado entre los terminales de salida (entre 'A' y GND). Esta corriente es la suma de las corrientes que aportan las dos ramas al cortocircuito.
+
+\begin{itemize}
+    \item \textbf{Corriente de la Rama 1 ($I_1$):} La fuente $E$ entrega corriente a través de $R_1$ al cortocircuito. Según la Ley de Ohm, esta corriente es $I_1 = \frac{E}{R_1}$.
+    \item \textbf{Corriente de la Rama 2 ($I_2$):} La resistencia $R_2$ queda con sus dos terminales conectados al cortocircuito, por lo que la tensión a través de ella es 0 V. Por lo tanto, no circula corriente por ella: $I_2 = 0$.
+\end{itemize}
+
+La corriente total de Norton es la suma de ambas:
+\begin{equation}
+    I_N = I_1 + I_2 = \frac{E}{R_1} + 0 = \frac{E}{R_1}
+\end{equation}
+
+\section{Circuito Equivalente de Norton}
+
+El circuito original a la izquierda de la rama 3 puede ser reemplazado por una fuente de corriente $I_N$ en paralelo con una resistencia $R_N$.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (2,3) node[circ, label=above:A] (A) {};
+        \draw (-2,3) node[circ] (B) {};
+        \draw (B) -- (A);
+        
+        % Equivalente de Norton
+        % Ambos componentes están en paralelo, conectados entre el nodo A y tierra (gnd)
+        \draw (B) to[I, i<=$I_N$] (-2,0) -- (gnd);
+        \draw (A) to[R, l=$R_N$] (2,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+Este circuito equivalente simplifica enormemente el análisis, ya que ahora la corriente $I_{ch}$ se puede calcular usando un simple divisor de corriente entre $R_N$ y la resistencia de la rama 3 ($R_3 + R_{ch}$).
+
+\end{document}

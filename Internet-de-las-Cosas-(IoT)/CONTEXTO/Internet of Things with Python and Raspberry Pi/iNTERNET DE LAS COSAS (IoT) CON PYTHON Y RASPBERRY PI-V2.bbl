@@ -1,0 +1,23 @@
+\begin{thebibliography}{1}
+
+\bibitem{python}
+{Python Software Foundation}, ``{Python Language Reference}.'' \url{https://www.python.org}, 2023.
+\newblock Accessed: 2023-10-27.
+
+\bibitem{raspberrypi}
+{Raspberry Pi Foundation}, ``{Raspberry Pi Documentation}.'' \url{https://www.raspberrypi.org/documentation/}, 2023.
+\newblock Accessed: 2023-10-27.
+
+\bibitem{flask}
+{Pocoo}, ``{Flask - Web Development, One Drop at a Time}.'' \url{https://flask.palletsprojects.com/}, 2023.
+\newblock Accessed: 2023-10-27.
+
+\bibitem{AWS}
+{Amazon Web Services, Inc.}, ``{What is AWS?}.'' \url{https://aws.amazon.com/what-is-aws/}, 2023.
+\newblock Accessed: 2023-10-27.
+
+\bibitem{pubnub}
+{PubNub Inc.}, ``{Real-time Communication APIs and Platform}.'' \url{https://www.pubnub.com/}, 2023.
+\newblock Accessed: 2023-10-27.
+
+\end{thebibliography}
