@@ -10,7 +10,7 @@
 \usetikzlibrary{babel}
 
 \title{Equivalente de Norton del Circuito}
-\author{Gemini Code Assist}
+\author{Gemini Code Assist and Prof. CERO}
 \date{\today}
 
 \begin{document}
@@ -91,6 +91,16 @@ El circuito original a la izquierda de la rama 3 puede ser reemplazado por una f
     \end{circuitikz}
 \end{center}
 
-Este circuito equivalente simplifica enormemente el análisis, ya que ahora la corriente $I_{ch}$ se puede calcular usando un simple divisor de corriente entre $R_N$ y la resistencia de la rama 3 ($R_3 + R_{ch}$).
+Este circuito equivalente simplifica enormemente el análisis, ya que ahora la 
+corriente $I_{ch}$ se puede calcular usando un simple divisor de corriente 
+entre $R_N$ y la resistencia de la rama 3 ($R_3 + R_{ch}$).
+
+\section{Conclusión}
+Hemos encontrado el circuito equivalente de Norton para la parte del circuito a la 
+izquierda de la rama que contiene $R_3$ y $R_{ch}$. 
+Este equivalente consta de una fuente de corriente $I_N = \frac{E}{R_1}$ en 
+paralelo con una resistencia $R_N = \frac{R_1 \cdot R_2}{R_1 + R_2}$. 
+Este enfoque facilita el análisis del circuito completo al permitir el uso de 
+técnicas simples de análisis de circuitos.
 
 \end{document}

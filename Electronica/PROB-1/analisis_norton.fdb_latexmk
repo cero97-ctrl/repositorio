@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1762018288.75223 "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_norton.tex" "analisis_norton.pdf" "analisis_norton" 1762018290.87998 0
+["pdflatex"] 1762033734.44307 "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_norton.tex" "analisis_norton.pdf" "analisis_norton" 1762033736.56346 0
   "/etc/texmf/web2c/texmf.cnf" 1754246095.34578 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_norton.tex" 1762018288.35299 3616 8f795b4c263cc00e82fc1836496ff885 ""
+  "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_norton.tex" 1762033731.43403 4066 2b59a9ff3dc3072b7aed67ac40eb6b60 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1136768653 3584 402da0b29eafbad07963b1224b222f18 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1728.tfm" 1136768653 3584 ad49a18d8515beef6d92d4d3f197d0fd ""
@@ -32,6 +32,7 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1248133631 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/share/texlive/texmf-dist/tex/generic/babel-spanish/spanish.ldf" 1622145181 26965 3b6d1655ad716f98e788b1fb9f2e87b8 ""
   "/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty" 1704662920 150008 7a05b0fdc0167c04e192003e780ab195 ""
@@ -168,8 +169,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754246131.98867 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754246351 8211763 bcebfc983d877799c23bfb0bbf784be3 ""
-  "analisis_norton.aux" 1762018290.64994 670 5d280f53187984e17e7fe23ae8d24b41 "pdflatex"
-  "analisis_norton.tex" 1762018288.35299 3616 8f795b4c263cc00e82fc1836496ff885 ""
+  "analisis_norton.aux" 1762033736.29205 769 d7142303df641f4a95a3841c913e0519 "pdflatex"
+  "analisis_norton.tex" 1762033731.43403 4066 2b59a9ff3dc3072b7aed67ac40eb6b60 ""
   (generated)
   "analisis_norton.aux"
   "analisis_norton.log"

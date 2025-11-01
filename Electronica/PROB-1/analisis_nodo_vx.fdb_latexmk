@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1762007394.0321 "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_nodo_vx.tex" "analisis_nodo_vx.pdf" "analisis_nodo_vx" 1762007395.91431 0
+["pdflatex"] 1762033356.5101 "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_nodo_vx.tex" "analisis_nodo_vx.pdf" "analisis_nodo_vx" 1762033359.03434 0
   "/etc/texmf/web2c/texmf.cnf" 1754246095.34578 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_nodo_vx.tex" 1762007393.68565 3491 4a5090ce2b3db7cf069c4d35f837efde ""
+  "/home/cero/MEGA/VSCODE/Electronica/PROB-1/analisis_nodo_vx.tex" 1762033356.12066 3506 29ebd8bc6a93da0a565f8eccb2600c8a ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1136768653 3584 402da0b29eafbad07963b1224b222f18 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1728.tfm" 1136768653 3584 ad49a18d8515beef6d92d4d3f197d0fd ""
@@ -168,8 +168,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754246131.98867 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754246351 8211763 bcebfc983d877799c23bfb0bbf784be3 ""
-  "analisis_nodo_vx.aux" 1762007395.69337 547 3df864e7f940eba2d6746c6a7ac5c435 "pdflatex"
-  "analisis_nodo_vx.tex" 1762007393.68565 3491 4a5090ce2b3db7cf069c4d35f837efde ""
+  "analisis_nodo_vx.aux" 1762033358.76664 547 3df864e7f940eba2d6746c6a7ac5c435 "pdflatex"
+  "analisis_nodo_vx.tex" 1762033356.12066 3506 29ebd8bc6a93da0a565f8eccb2600c8a ""
   (generated)
   "analisis_nodo_vx.aux"
   "analisis_nodo_vx.log"

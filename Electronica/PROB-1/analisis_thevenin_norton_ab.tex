@@ -1,0 +1,118 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[european]{circuitikz}
+\usetikzlibrary{babel}
+
+\title{Análisis de Equivalentes de Thévenin y Norton}
+\author{Gemini Code Assist and Prof. CERO}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción del Circuito}
+
+El objetivo es determinar el circuito equivalente de Thévenin y de Norton entre los terminales del nodo "A" y tierra (GND). El circuito tiene dos nodos principales, "A" y "B".
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (-4,3) node[circ, label=above:A] (A) {};
+        \draw (4,3) node[circ, label=above:B] (B) {};
+        
+        % Ramas conectadas al nodo A
+        \draw (A) to[R, l=$R_2$] (-6,3) to[V, v<=$E_2$] (-6,0) -- (gnd);
+        \draw (A) to[R, l=$R_3$] (-4,0) -- (gnd);
+        
+        % Conexión entre A y B
+        \draw (A) to[R, l=$R_5$] (B);
+        
+        % Ramas conectadas al nodo B
+        \draw (B) to[R, l=$R_4$] (4,0) -- (gnd);
+        \draw (B) to[R, l=$R_1$] (6,3) to[V, v<=$E_1$] (6,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+\section{Cálculo de la Tensión de Thévenin ($E_{Th}$)}
+
+La tensión de Thévenin es la tensión en circuito abierto entre A y GND, es decir, $E_{Th} = V_A$. Para calcularla, primero debemos encontrar la tensión en el nodo B, $V_B$.
+
+\subsection{Paso 1: Calcular la Tensión en el Nodo B ($V_B$)}
+
+El nodo B tiene dos ramas en paralelo conectadas a GND: la rama con $R_4$ y la rama con la serie de $E_1$ y $R_1$. Usando el Teorema de Millman en el nodo B:
+\begin{equation}
+    V_B = \frac{\frac{E_1}{R_1} + \frac{0}{R_4}}{\frac{1}{R_1} + \frac{1}{R_4}} = \frac{\frac{E_1}{R_1}}{\frac{R_1+R_4}{R_1 R_4}} = E_1 \frac{R_4}{R_1 + R_4}
+\end{equation}
+Esto es un simple divisor de tensión, ya que la rama que va hacia el nodo A está en circuito abierto y no consume corriente.
+
+\subsection{Paso 2: Calcular la Tensión en el Nodo A ($V_A$)}
+
+Ahora que conocemos $V_B$, podemos calcular $V_A$. El nodo A tiene tres ramas en paralelo: la rama con $E_2$ y $R_2$, la rama con $R_3$, y la rama con $R_5$ que se conecta a un punto con potencial $V_B$. Aplicando nuevamente el Teorema de Millman en el nodo A:
+\begin{equation}
+    V_A = \frac{\frac{E_2}{R_2} + \frac{0}{R_3} + \frac{V_B}{R_5}}{\frac{1}{R_2} + \frac{1}{R_3} + \frac{1}{R_5}}
+\end{equation}
+Sustituyendo la expresión de $V_B$ que encontramos, obtenemos la fórmula para $E_{Th}$:
+\begin{equation}
+    E_{Th} = V_A = \frac{\frac{E_2}{R_2} + \frac{1}{R_5}\left(E_1 \frac{R_4}{R_1 + R_4}\right)}{\frac{1}{R_2} + \frac{1}{R_3} + \frac{1}{R_5}}
+\end{equation}
+
+\section{Cálculo de la Resistencia de Thévenin ($R_{Th}$)}
+
+Para encontrar $R_{Th}$, apagamos todas las fuentes de tensión (las reemplazamos por cortocircuitos) y calculamos la resistencia equivalente vista desde los terminales A y GND.
+
+\begin{center}
+    \begin{circuitikz}[scale=1.2, transform shape]
+        \draw (0,0) node[ground] (gnd) {};
+        \draw (-4,3) node[circ, label=above:A] (A) {};
+        \draw (4,3) node[circ, label=above:B] (B) {};
+        
+        % Ramas en A
+        \draw (A) to[R, l=$R_2$] (-6,3) to[short] (-6,0) -- (gnd);
+        \draw (A) to[R, l=$R_3$] (-4,0) -- (gnd);
+        \draw (A) to[R, l=$R_5$] (B);
+        
+        % Ramas en B
+        \draw (B) to[R, l=$R_4$] (4,0) -- (gnd);
+        \draw (B) to[R, l=$R_1$] (6,3) to[short] (6,0) -- (gnd);
+    \end{circuitikz}
+\end{center}
+
+Desde el punto de vista del nodo A, tenemos tres caminos en paralelo hacia GND:
+\begin{enumerate}
+    \item La resistencia $R_2$.
+    \item La resistencia $R_3$.
+    \item La resistencia $R_5$ en serie con la resistencia equivalente en el nodo B.
+\end{enumerate}
+La resistencia equivalente en el nodo B ($R_{eqB}$) es el paralelo de $R_1$ y $R_4$:
+\begin{equation}
+    R_{eqB} = R_1 \parallel R_4 = \frac{R_1 R_4}{R_1 + R_4}
+\end{equation}
+La resistencia total de la tercera rama es $R_5 + R_{eqB}$.
+
+Finalmente, la resistencia de Thévenin $R_{Th}$ es el paralelo de estas tres ramas:
+\begin{equation}
+    R_{Th} = R_2 \parallel R_3 \parallel (R_5 + R_{eqB}) = \left( \frac{1}{R_2} + \frac{1}{R_3} + \frac{1}{R_5 + \frac{R_1 R_4}{R_1 + R_4}} \right)^{-1}
+\end{equation}
+
+\section{Circuito Equivalente de Norton}
+
+El circuito equivalente de Norton se obtiene directamente a partir de los valores de Thévenin.
+\begin{itemize}
+    \item \textbf{Resistencia de Norton ($R_N$):} Es igual a la resistencia de Thévenin.
+    \begin{equation}
+        R_N = R_{Th}
+    \end{equation}
+    \item \textbf{Corriente de Norton ($I_N$):} Se calcula con la Ley de Ohm.
+    \begin{equation}
+        I_N = \frac{E_{Th}}{R_{Th}}
+    \end{equation}
+\end{itemize}
+
+\end{document}
