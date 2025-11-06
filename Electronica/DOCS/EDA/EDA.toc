@@ -1,0 +1,72 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}¿Qué es The OpenROAD Project?}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}¿Cuál es su principal objetivo?}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Etapas del Flujo de Diseño que Cubre OpenROAD}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}¿Por qué es tan importante?}{5}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Primeros Pasos con OpenROAD}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Paso 1: Prerrequisitos}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Paso 2: Preparar el Entorno y el Diseño}{6}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Archivo de diseño Verilog (\texttt {inversor.v})}{6}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Archivo de restricciones de diseño (\texttt {constraints.sdc})}{6}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Archivo de configuración (\texttt {config.tcl})}{6}{subsubsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.3}Paso 3: Ejecutar el Flujo de OpenROAD}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Paso 4: Revisar los Resultados}{7}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Diferencias entre LEF, DEF y GDS}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}LEF (Library Exchange Format) - La 'Librería de Componentes'}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}DEF (Design Exchange Format) - El 'Plano de Colocación y Cableado'}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}GDSII (Graphic Data System) - El 'Archivo para Fabricación'}{8}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Resumen Comparativo}{9}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Herramientas de Visualización}{10}{section.4}%
+\contentsline {section}{\numberline {5}Scripts de Análisis con KLayout}{10}{section.5}%
+\contentsline {section}{\numberline {6}Bibliografía y Aprendizaje}{12}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Conocimientos Previos Fundamentales}{12}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Recursos Directos para Aprender OpenROAD}{12}{subsection.6.2}%
+\contentsline {section}{\numberline {7}De lo Analógico a lo Digital}{13}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Enfoque 1: Modelar el Comportamiento (El Enfoque del 'Datapath')}{13}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Enfoque 2: Abstraer a un Nivel Lógico (El Enfoque del 'Comparador')}{13}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Fundamentos del Diseño Digital}{14}{section.8}%
+\contentsline {section}{\numberline {9}El Ecosistema Abierto: RISC-V y OpenROAD}{16}{section.9}%
+\contentsline {subsection}{\numberline {9.1}¿Qué es RISC-V?}{16}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}La Sinergia Perfecta: RISC-V + OpenROAD}{16}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}¿Cómo se ve en la práctica?}{17}{subsection.9.3}%
+\contentsline {section}{\numberline {10}El Objetivo Final: System-on-Chip (SoC)}{18}{section.10}%
+\contentsline {subsection}{\numberline {10.1}¿Qué es un SoC?}{18}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Componentes Típicos de un SoC}{18}{subsection.10.2}%
+\contentsline {section}{\numberline {11}Estructura de un Proyecto de SoC con RISC-V}{20}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Estructura de Archivos del Proyecto \texttt {mi\_soc\_riscv}}{20}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Explicación de cada Directorio}{20}{subsection.11.2}%
+\contentsline {section}{\numberline {12}La Interconexión del SoC: El Bus AMBA}{22}{section.12}%
+\contentsline {subsection}{\numberline {12.1}¿Qué es AMBA?}{22}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}APB (Advanced Peripheral Bus) - La 'Calle Residencial'}{22}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}AHB (Advanced High-performance Bus) - La 'Avenida Principal'}{22}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}AXI (Advanced eXtensible Interface) - La 'Autopista de Alta Velocidad'}{23}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}Arquitectura Jerárquica y Puentes (Bridges)}{23}{subsection.12.5}%
+\contentsline {section}{\numberline {13}Ejemplo de Código Verilog: \texttt {soc\_top.v} y \texttt {interconnect.v}}{24}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Prerrequisito: El Mapa de Memoria}{24}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}1. \texttt {interconnect.v} - El Decodificador de Direcciones}{24}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}2. \texttt {soc\_top.v} - El Ensamblaje Final}{25}{subsection.13.3}%
+\contentsline {section}{\numberline {14}Optimizando el Flujo de Datos: El Controlador DMA}{28}{section.14}%
+\contentsline {subsection}{\numberline {14.1}¿Qué es un Controlador DMA?}{28}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}El Problema: La CPU como Cuello de Botella}{28}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}La Solución: Delegar en el Especialista (DMA)}{28}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}El Papel que Juega en un SoC}{29}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Analogía Final}{29}{subsection.14.5}%
+\contentsline {section}{\numberline {15}Verificación Funcional: El Banco de Pruebas (Testbench)}{30}{section.15}%
+\contentsline {subsection}{\numberline {15.1}¿Qué es un Testbench?}{30}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}\texttt {tb\_soc\_top.v} - El Banco de Pruebas para Nuestro SoC}{30}{subsection.15.2}%
+\contentsline {section}{\numberline {16}La Comunicación Asíncrona: Interrupciones}{32}{section.16}%
+\contentsline {subsection}{\numberline {16.1}¿Qué es una Interrupción?}{32}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}El Flujo de una Interrupción}{32}{subsection.16.2}%
+\contentsline {subsection}{\numberline {16.3}Interrupciones en el Ecosistema RISC-V}{33}{subsection.16.3}%
+\contentsline {section}{\numberline {17}El Puente a la Realidad Física: El PDK}{34}{section.17}%
+\contentsline {subsection}{\numberline {17.1}¿Qué es un PDK?}{34}{subsection.17.1}%
+\contentsline {subsection}{\numberline {17.2}Componentes Clave de un PDK}{34}{subsection.17.2}%
+\contentsline {subsection}{\numberline {17.3}El Rol del PDK en OpenROAD}{35}{subsection.17.3}%
+\contentsline {section}{\numberline {18}El Gran Desafío: Timing Closure}{36}{section.18}%
+\contentsline {subsection}{\numberline {18.1}¿Qué es el 'Timing Closure'?}{36}{subsection.18.1}%
+\contentsline {subsection}{\numberline {18.2}¿Por Qué es uno de los Mayores Desafíos?}{36}{subsection.18.2}%
+\contentsline {section}{\numberline {19}Hoja de Ruta del Proyecto: De un SoC a un Sistema Paralelo}{38}{section.19}%
+\contentsline {subsection}{\numberline {19.1}Fase 1: Diseño y Fabricación de un SoC RISC-V Autónomo}{38}{subsection.19.1}%
+\contentsline {subsection}{\numberline {19.2}Fase 2: Modificación para Trabajo en Paralelo}{39}{subsection.19.2}%
+\contentsline {section}{\numberline {20}Estructura de una Propuesta de Financiamiento}{40}{section.20}%
+\contentsline {subsection}{\numberline {20.1}Estructura Sugerida para la Propuesta}{40}{subsection.20.1}%
