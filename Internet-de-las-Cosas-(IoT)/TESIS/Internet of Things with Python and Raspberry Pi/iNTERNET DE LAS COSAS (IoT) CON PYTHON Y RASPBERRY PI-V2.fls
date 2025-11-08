@@ -1,9 +1,9 @@
-PWD /home/cero/MEGA/VSCODE/Informatica-UDO/CONTEXTO/Internet of Things with Python and Raspberry Pi
+PWD /home/cero/MEGA/VSCODE/Internet-de-las-Cosas-(IoT)/TESIS/Internet of Things with Python and Raspberry Pi
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/cero/MEGA/VSCODE/Informatica-UDO/CONTEXTO/Internet of Things with Python and Raspberry Pi/iNTERNET DE LAS COSAS (IoT) CON PYTHON Y RASPBERRY PI-V2.tex
+INPUT /home/cero/MEGA/VSCODE/Internet-de-las-Cosas-(IoT)/TESIS/Internet of Things with Python and Raspberry Pi/iNTERNET DE LAS COSAS (IoT) CON PYTHON Y RASPBERRY PI-V2.tex
 OUTPUT iNTERNET DE LAS COSAS (IoT) CON PYTHON Y RASPBERRY PI-V2.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/report.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/report.cls
@@ -159,9 +159,9 @@ OUTPUT iNTERNET DE LAS COSAS (IoT) CON PYTHON Y RASPBERRY PI-V2.toc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm2074.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx2074.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm
-INPUT /usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm1440.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1440.tfm
+INPUT /usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbi1000.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecti1000.tfm
