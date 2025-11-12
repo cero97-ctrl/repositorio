@@ -1,0 +1,171 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+\geometry{a4paper, margin=1in}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Conceptos Teóricos que deben dominarse para llevar a cabo la Tarea 1 \\ \large{\textbf{Fase de Reconocimiento}}}
+\author{Basado en 'Hackers 6: Secretos y Soluciones de Seguridad en Redes'}
+\author{Prof. César Rodríguez}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    Este documento resume los conceptos teóricos fundamentales de la Parte 1 del libro 'Hackers 6', titulada \textbf{'Reconocimiento de lo establecido'}. El objetivo es proporcionar a los estudiantes una base sólida para llevar a cabo la \textbf{Tarea 1}, que se centra en las fases iniciales de una auditoría de seguridad: \textbf{Recopilación de Información, Escaneo y Enumeración}.
+\end{abstract}
+
+\section{Introducción: La Mentalidad del Atacante}
+
+Como lo describe el libro, antes de que un hacker pueda si quiera pensar en explotar un sistema, debe realizar tres pasos esenciales que constituyen la fase de \textbf{reconocimiento}. Esta fase es vital para proteger los activos de una organización.
+
+\begin{quote}
+    \textit{'Al igual que un ladrón vigilará un banco antes de llevar a cabo su gran golpe, sus adversarios de Internet harán lo mismo. Escarbarán sistemáticamente hasta encontrar las debilidades de su presencia en Internet.'} (Pág. 31)
+\end{quote}
+
+El objetivo de esta fase es crear un perfil lo más completo posible de la seguridad de la organización. La Tarea 1 se centró en dominar estas técnicas desde una perspectiva ética. Los tres pilares de esta fase son:
+
+\begin{enumerate}
+    \item \textbf{Recopilación de información (Footprinting):} Recolectar información de manera pasiva, a menudo sin enviar un solo paquete al objetivo.
+    \item \textbf{Escaneo (Scanning):} Identificar sistemas activos y los servicios que están ejecutando.
+    \item \textbf{Enumeración (Enumeration):} Extraer información detallada de los servicios identificados, como cuentas de usuario, recursos de red, etc.
+\end{enumerate}
+
+\section{Recopilación de Información (Footprinting)}
+
+La recopilación de información es el primer paso y, a menudo, el más subestimado. El objetivo es obtener una visión general de la presencia de la organización en Internet.
+
+\subsection{Paso 1: Información Disponible Públicamente}
+
+Sorprendentemente, una gran cantidad de información valiosa está disponible públicamente. Los atacantes buscan:
+\begin{itemize}
+    \item \textbf{Páginas Web de la compañía:} No solo el contenido principal, sino también comentarios en el código fuente (HTML, CSS, JS). Herramientas como \texttt{wget} o \texttt{Teleport Pro} son útiles para descargar sitios completos para un análisis offline.
+    \item \textbf{Organizaciones relacionadas:} Socios, proveedores o empresas de desarrollo web pueden revelar información confidencial.
+    \item \textbf{Detalles de ubicación:} Direcciones físicas pueden ser el punto de partida para ataques de ingeniería social. Herramientas como \textbf{Google Maps} y \textbf{Google Earth} son tesoros de información.
+    \item \textbf{Datos de empleados:} Nombres, correos y números de teléfono son cruciales. Las convenciones de nombres de usuario (ej. \textit{jperez}, \textit{juan.perez}) se pueden deducir.
+    \item \textbf{Motores de búsqueda:} El 'Hackeo con Google' es una disciplina en sí misma. Usando operadores avanzados como \texttt{site:}, \texttt{filetype:}, \texttt{inurl:}, se puede encontrar información que no debería ser pública.
+\end{itemize}
+
+\subsection{Paso 2: WHOIS y Enumeración DNS}
+
+Una vez que se tiene una idea general, el siguiente paso es obtener información técnica de los registros públicos.
+
+\subsubsection{Búsquedas WHOIS}
+
+WHOIS es un protocolo para consultar bases de datos que almacenan información sobre los propietarios de dominios de Internet y rangos de direcciones IP.
+\begin{itemize}
+    \item \textbf{Dominios:} Proporciona contactos (administrativo, técnico), fechas de registro y, crucialmente, los \textbf{servidores de nombres (NS)} autorizados para ese dominio.
+    \item \textbf{Direcciones IP:} Permite rastrear a qué organización (y a qué Registro Regional de Internet como ARIN, RIPE, APNIC) pertenece un bloque de red.
+\end{itemize}
+
+\subsubsection{Transferencias de Zona DNS}
+
+Una de las configuraciones erróneas más graves es permitir una \textbf{transferencia de zona DNS} a usuarios no autorizados. Esto permite a un atacante obtener una lista completa de todos los hosts (nombres y direcciones IP) dentro de un dominio.
+
+\begin{lstlisting}[language=bash, caption={Ejemplo de transferencia de zona con nslookup}]
+[bash]$ nslookup
+> server ns1.ejemplo.com
+> set type=any
+> ls -d ejemplo.com > /tmp/zona.txt
+\end{lstlisting}
+
+El archivo de salida contendrá registros A (dirección), MX (correo), HINFO (información del host/SO), etc., que son de un valor incalculable para un atacante.
+
+\section{Escaneo (Scanning)}
+
+El objetivo del escaneo es 'golpear las paredes para encontrar todas las puertas y ventanas'. En esta fase, interactuamos directamente con los sistemas del objetivo para determinar cuáles están activos y qué servicios ofrecen.
+
+\subsection{Determinar si un Sistema está Vivo}
+
+El método más común es el \textbf{barrido de ping}, enviando paquetes ICMP ECHO\_REQUEST y esperando una respuesta. Sin embargo, muchos sistemas bloquean ICMP. Por lo tanto, se deben usar técnicas alternativas:
+\begin{itemize}
+    \item \textbf{Ping TCP:} Enviar paquetes TCP (como ACK o SYN) a puertos comunes (ej. 80, 443). Si se recibe una respuesta (como RST), el host está vivo. Herramientas como \texttt{nmap} con la opción \texttt{-sP -PT80} son excelentes para esto.
+    \item \textbf{Hping2:} Permite un control granular sobre los paquetes TCP/UDP enviados, pudiendo incluso enviar paquetes fragmentados para evadir firewalls simples.
+\end{itemize}
+
+\subsection{Escaneo de Puertos}
+
+Una vez que se sabe que un host está activo, el siguiente paso es determinar qué \textbf{servicios} están escuchando en él. Esto se logra escaneando los puertos TCP y UDP.
+\begin{itemize}
+    \item \textbf{Escaneo de Conexión TCP (-sT en nmap):} Completa el saludo de tres vías de TCP. Es fiable pero muy ruidoso (fácil de detectar).
+    \item \textbf{Escaneo SYN (-sS en nmap):} También conocido como 'escaneo medio abierto'. Envía un paquete SYN y espera un SYN/ACK. Si lo recibe, el puerto está abierto, y el escáner envía un RST para no completar la conexión. Es más sigiloso.
+    \item \textbf{Escaneo UDP (-sU en nmap):} Es más lento y menos fiable, ya que UDP es un protocolo sin conexión. Si un puerto UDP no responde, se asume que está abierto. Si devuelve un error 'ICMP port unreachable', está cerrado.
+\end{itemize}
+
+\section{Enumeración}
+
+La enumeración es el proceso de establecer una conexión activa con los servicios descubiertos para extraer información detallada. Es una fase mucho más intrusiva.
+
+\subsection{Captura de Anuncios (Banner Grabbing)}
+
+La técnica más simple. Consiste en conectarse a un puerto abierto y leer el 'anuncio' o mensaje de bienvenida que el servicio envía. Este anuncio a menudo revela el tipo de software y la versión.
+\begin{lstlisting}[language=bash, caption={Captura de anuncio HTTP con netcat}]
+C:\> nc -v www.ejemplo.com 80
+HEAD / HTTP/1.1
+
+HTTP/1.1 200 OK
+Server: Microsoft-IIS/5.0
+...
+\end{lstlisting}
+En el ejemplo anterior, sabemos inmediatamente que el servidor es Microsoft IIS 5.0, lo que nos permite buscar vulnerabilidades específicas para esa plataforma.
+
+\subsection{Enumeración de NetBIOS y SMB (Puertos 137, 139, 445)}
+
+Esta es la 'joya de la corona' de la enumeración en redes Windows. Una \textbf{sesión nula} permite a un atacante conectarse al recurso IPC\$ de un sistema sin credenciales.
+\begin{lstlisting}[language=bash, caption={Estableciendo una sesión nula}]
+C:\> net use \\192.168.202.33\IPC$ '' /u:''
+\end{lstlisting}
+Una vez establecida, se puede enumerar:
+\begin{itemize}
+    \item \textbf{Recursos compartidos:} Usando \texttt{net view \\<IP>}.
+    \item \textbf{Usuarios y grupos:} Con herramientas como \texttt{DumpSec} o \texttt{sid2user}.
+    \item \textbf{Información del registro:} Con \texttt{reg query}.
+\end{itemize}
+
+\subsection{Enumeración de SNMP (Puerto 161)}
+
+El Protocolo Simple de Administración de Red (SNMP) está diseñado para proporcionar información detallada sobre dispositivos de red. A menudo está protegido por 'cadenas de comunidad' que funcionan como contraseñas. La cadena de comunidad de solo lectura más común y predeterminada es \textbf{'public'}.
+
+Un atacante puede usar herramientas como \texttt{snmpwalk} para 'caminar' por el árbol de información (MIB) del dispositivo y extraer datos como nombres de usuario, servicios en ejecución y rutas de red.
+
+\section{Conclusión para la Tarea 1}
+
+La fase de reconocimiento es un proceso metódico y paciente. El éxito en las fases posteriores de un ataque depende casi por completo de la calidad de la información recopilada en esta etapa inicial. Para la Tarea 1, los estudiantes se enfocaron en aplicar estas técnicas de manera sistemática, documentando cada hallazgo. \textbf{Operando siempre dentro de un marco ético y con la debida autorización}.
+
+\end{document}
